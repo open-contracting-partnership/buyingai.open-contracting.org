@@ -1,0 +1,101 @@
+{
+  "title": "Buying AI: tips and tools for the public sector",
+  "sections": [
+    {
+      "number": 1,
+      "title": "Introduction",
+      "chapters": [
+        {
+          "slug": "01-introduction",
+          "title": "Introduction",
+          "order": 1
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "title": "AI adoption",
+      "chapters": [
+        {
+          "slug": "02-gen-ai-adoption-in-government",
+          "title": "AI adoption in the public sector",
+          "order": 2
+        },
+        {
+          "slug": "03-ai-101",
+          "title": "AI 101",
+          "order": 3
+        },
+        {
+          "slug": "04-myth-busting",
+          "title": "AI adoption myth-busting",
+          "order": 4
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "title": "How to buy AI",
+      "chapters": [
+        {
+          "slug": "05-hacks-for-better-gen-ai-procurement",
+          "title": "Hacks for better AI procurement",
+          "order": 5
+        },
+        {
+          "slug": "06-ways-to-buy-ai",
+          "title": "Ways to buy AI",
+          "order": 6
+        },
+        {
+          "slug": "07-building-your-procurement-strategy",
+          "title": "Building your procurement strategy",
+          "order": 7
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "title": "Tips and tools",
+      "chapters": [
+        {
+          "slug": "08-who-to-involve",
+          "title": "Who to involve",
+          "order": 8
+        },
+        {
+          "slug": "09-key-questions-to-ask",
+          "title": "Key questions to ask",
+          "order": 9
+        },
+        {
+          "slug": "10-solicitation-tips",
+          "title": "Solicitation tips",
+          "order": 10
+        },
+        {
+          "slug": "11-evaluation-tips",
+          "title": "Evaluation tips",
+          "order": 11
+        }
+      ]
+    },
+    {
+      "number": 5,
+      "title": "Resources",
+      "chapters": [
+        {
+          "slug": "20-technical-annex",
+          "title": "RFP questions and evaluation",
+          "order": 12
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "totalSections": 5,
+    "totalChapters": 12,
+    "version": "1.0",
+    "lastUpdated": "2025-10-17"
+  }
+}
