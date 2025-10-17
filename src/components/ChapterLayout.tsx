@@ -5,6 +5,7 @@ import Link from 'next/link'
 import type { Chapter } from '@/lib/markdown'
 import { SectionsStructure, getChapterInSection, getSectionColor } from '@/lib/sections-types'
 import { StickyNavbar } from './StickyNavbar'
+import { BannerCarousel } from './BannerCarousel'
 
 interface ChapterLayoutProps {
   currentSlug: string
@@ -40,16 +41,16 @@ export function ChapterLayout({
       setScrolled(true)
       setShowStickyNav(true)
 
-      // Scroll to position after banner
+      // Scroll to position after banner with smooth animation
       const scrollToContent = () => {
         window.scrollTo({
           top: 700,
-          behavior: 'instant'
+          behavior: 'smooth'
         })
       }
 
-      scrollToContent()
-      setTimeout(scrollToContent, 10)
+      // Small delay to ensure page is rendered before smooth scroll
+      setTimeout(scrollToContent, 100)
     }
   }, [currentSlug])
 
@@ -125,8 +126,8 @@ export function ChapterLayout({
       <div className="bg-[#3D393D] text-white">
         <div className="relative max-w-7xl mx-auto px-20 py-24">
           <div className="flex gap-12 items-center">
-            {/* Left: Title - takes less than 50% */}
-            <div className="w-[40%]">
+            {/* Left: Title - 1/3 of space */}
+            <div className="w-[33.33%]">
               <h1 className="text-7xl font-bold mb-8 bg-gradient-to-r from-[#23B2A7] to-[#C8D419] bg-clip-text text-transparent leading-tight">
                 Buying AI
               </h1>
@@ -135,93 +136,25 @@ export function ChapterLayout({
               </p>
             </div>
 
-            {/* Right: Section Cards - takes more than 50%, no gaps */}
-            <div className="flex-1 relative h-[460px] flex items-center">
-              {structure.sections.map((section, idx) => {
-                const color = getSectionColor(section.number)
-                const isCurrentSection = currentSection?.number === section.number
-                const baseWidth = isCurrentSection ? 420 : 72
-                const firstChapterSlug = section.chapters[0]?.slug
-
-                return (
-                  <div
-                    key={section.number}
-                    className="h-full rounded-tl-lg rounded-tr-[36px] rounded-bl-[36px] rounded-br-lg transition-all duration-300 overflow-hidden"
-                    style={{
-                      backgroundColor: color.bg,
-                      width: `${baseWidth}px`,
-                      minWidth: `${baseWidth}px`
-                    }}
-                  >
-                    {isCurrentSection ? (
-                      // Expanded card with chapter list
-                      <div className="p-8 h-full flex flex-col justify-between">
-                        <div>
-                          <div className="text-5xl font-bold text-black mb-4">
-                            {section.number.toString().padStart(2, '0')}
-                          </div>
-                          <h3 className="text-2xl font-medium text-black mb-6">
-                            {section.title}
-                          </h3>
-
-                          {/* Chapter list in current section */}
-                          <div className="space-y-2">
-                            {section.chapters.slice(0, 6).map((ch, chIdx) => (
-                              <Link
-                                key={ch.slug}
-                                href={`/chapter/${ch.slug}#content`}
-                                scroll={false}
-                                className="flex items-center gap-2 text-sm text-black/80 hover:text-black transition-colors group"
-                              >
-                                <span className="font-mono text-xs">{String.fromCharCode(97 + chIdx)}.</span>
-                                <span className="flex-1 line-clamp-1">{ch.title}</span>
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="opacity-0 group-hover:opacity-100 transition-opacity">
-                                  <polyline points="7 13 12 18 17 13"/>
-                                  <polyline points="7 6 12 11 17 6"/>
-                                </svg>
-                              </Link>
-                            ))}
-                          </div>
-                        </div>
-
-                        <div className="flex items-center gap-2 text-black mt-4">
-                          <span className="text-sm font-medium">Open chapter {section.number}</span>
-                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="-rotate-90">
-                            <circle cx="12" cy="12" r="10"/>
-                            <polyline points="12 8 16 12 12 16"/>
-                            <line x1="8" y1="12" x2="16" y2="12"/>
-                          </svg>
-                        </div>
-                      </div>
-                    ) : (
-                      // Collapsed card - clickable to navigate
-                      <Link
-                        href={`/chapter/${firstChapterSlug}#content`}
-                        scroll={false}
-                        className="h-full flex items-start justify-center pt-8 group cursor-pointer hover:scale-105 transition-transform"
-                      >
-                        <span className="text-5xl font-bold text-black/50 group-hover:text-black/70 transition-colors">
-                          {section.number.toString().padStart(2, '0')}
-                        </span>
-                      </Link>
-                    )}
-                  </div>
-                )
-              })}
-            </div>
+            {/* Right: Section Cards - 2/3 of space */}
+            <BannerCarousel structure={structure} currentSlug={currentSlug} />
           </div>
         </div>
       </div>
 
       <div className="flex relative">
-        {/* Sidebar - Shows after scrolling */}
+        {/* Sidebar - Always takes space, becomes sticky after scrolling */}
         <aside
           className={`w-[366px] bg-white border-r border-gray-200 transition-all duration-300 ${
-            scrolled && sidebarVisible ? 'sticky h-[calc(100vh-148px)]' : 'absolute -left-full opacity-0'
+            scrolled && sidebarVisible ? 'sticky h-[calc(100vh-148px)]' : ''
+          } ${
+            sidebarVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
           }`}
-          style={{
-            top: showStickyNav ? '148px' : '88px' // Account for header (88px) + chapter navbar (60px)
-          }}
+          style={
+            scrolled && sidebarVisible
+              ? { top: showStickyNav ? '148px' : '88px' }
+              : {}
+          }
         >
           <div className="p-8">
             <div className="flex items-center justify-between mb-6">

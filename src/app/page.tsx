@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { getAllChapters } from '@/lib/markdown'
 import { getSectionsStructure } from '@/lib/sections'
-import { getSectionColor } from '@/lib/sections-types'
+import { BannerCarousel } from '@/components/BannerCarousel'
 
 export default function Home() {
   const chapters = getAllChapters().filter(ch => ch.slug !== '00-toc')
@@ -53,8 +53,8 @@ export default function Home() {
       {/* Hero Section */}
       <div className="relative max-w-7xl mx-auto px-20 py-24">
         <div className="flex gap-12 items-center">
-          {/* Left: Title - takes less than 50% */}
-          <div className="w-[40%]">
+          {/* Left: Title - 1/3 of space */}
+          <div className="w-[33.33%]">
             <h1 className="text-7xl font-bold mb-8 bg-gradient-to-r from-[#23B2A7] to-[#C8D419] bg-clip-text text-transparent leading-tight">
               Buying AI
             </h1>
@@ -63,57 +63,8 @@ export default function Home() {
             </p>
           </div>
 
-          {/* Right: Section Cards - takes more than 50%, no gaps */}
-          <div className="flex-1 relative h-[460px] flex items-center">
-            {structure.sections.map((section, idx) => {
-              const color = getSectionColor(section.number)
-              const isFirst = idx === 0
-              const baseWidth = isFirst ? 420 : 72
-              const firstChapterSlug = section.chapters[0]?.slug
-
-              return (
-                <Link
-                  key={section.number}
-                  href={`/chapter/${firstChapterSlug}`}
-                  className="h-full rounded-tl-lg rounded-tr-[36px] rounded-bl-[36px] rounded-br-lg transition-all duration-300 overflow-hidden group cursor-pointer hover:scale-105"
-                  style={{
-                    backgroundColor: color.bg,
-                    width: `${baseWidth}px`,
-                    minWidth: `${baseWidth}px`
-                  }}
-                >
-                  {isFirst ? (
-                    // Expanded first card
-                    <div className="p-8 h-full flex flex-col justify-between">
-                      <div>
-                        <div className="text-5xl font-bold text-black mb-4">
-                          {section.number.toString().padStart(2, '0')}
-                        </div>
-                        <h3 className="text-2xl font-medium text-black">
-                          {section.title}
-                        </h3>
-                      </div>
-                      <div className="flex items-center gap-2 text-black">
-                        <span className="text-base font-medium">Begin here</span>
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="-rotate-90">
-                          <circle cx="12" cy="12" r="10"/>
-                          <polyline points="12 8 16 12 12 16"/>
-                          <line x1="8" y1="12" x2="16" y2="12"/>
-                        </svg>
-                      </div>
-                    </div>
-                  ) : (
-                    // Collapsed cards
-                    <div className="h-full flex items-start justify-center pt-8">
-                      <span className="text-3xl font-medium text-black/50 group-hover:text-black/70 transition-colors">
-                        {section.number.toString().padStart(2, '0')}
-                      </span>
-                    </div>
-                  )}
-                </Link>
-              )
-            })}
-          </div>
+          {/* Right: Section Cards - 2/3 of space */}
+          <BannerCarousel structure={structure} />
         </div>
       </div>
 

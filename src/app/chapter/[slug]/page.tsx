@@ -76,7 +76,16 @@ export default async function ChapterPage({ params }: PageProps) {
             prose-img:rounded-lg prose-img:shadow-md
             prose-hr:border-gray-200 prose-hr:my-8
           ">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              components={{
+                img: ({ src, alt, ...props }) => {
+                  // Only render image if src is valid
+                  if (!src) return null
+                  return <img src={src} alt={alt || ''} {...props} />
+                }
+              }}
+            >
               {chapter.content}
             </ReactMarkdown>
           </div>
@@ -87,7 +96,8 @@ export default async function ChapterPage({ params }: PageProps) {
           <div>
             {previous && (
               <Link
-                href={`/chapter/${previous.slug}`}
+                href={`/chapter/${previous.slug}#content`}
+                scroll={false}
                 className="flex items-center gap-2 text-gray-600 hover:text-black transition-colors group"
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="group-hover:-translate-x-1 transition-transform">
@@ -103,7 +113,8 @@ export default async function ChapterPage({ params }: PageProps) {
           <div className="text-right">
             {next && (
               <Link
-                href={`/chapter/${next.slug}`}
+                href={`/chapter/${next.slug}#content`}
+                scroll={false}
                 className="flex items-center gap-2 text-gray-600 hover:text-black transition-colors group"
               >
                 <div>
