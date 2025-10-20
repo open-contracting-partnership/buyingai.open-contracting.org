@@ -89,17 +89,23 @@ export default async function ChapterPage({ params }: PageProps) {
                   if (!src) return null
                   return <img src={src} alt={alt || ''} {...props} />
                 },
-                code: ({ inline, className, children, ...props }: any) => {
-                  // Inline code
-                  if (inline) {
-                    return <code className="bg-gray-100 px-1 py-0.5 rounded text-sm" {...props}>{children}</code>
+                pre: ({ children, ...props }: any) => {
+                  // Get the text content from children
+                  let content = ''
+                  if (typeof children === 'string') {
+                    content = children
+                  } else if (React.isValidElement(children) && children.props.children) {
+                    content = String(children.props.children)
                   }
                   
-                  // Code blocks - parse content for special styling
-                  const content = String(children).trim()
+                  content = content.trim()
+                  if (!content) {
+                    return null
+                  }
+                  
+                  const lines = content.split('\n')
                   
                   // Check if it's a Who/What box
-                  const lines = content.split('\n')
                   const whoLine = lines.find(line => line.trim().startsWith('- Who:'))
                   const whatLine = lines.find(line => line.trim().startsWith('- What:'))
                   
@@ -108,42 +114,52 @@ export default async function ChapterPage({ params }: PageProps) {
                     const whatContent = whatLine.replace(/^-\s*What:\s*/, '').trim()
                     
                     return (
-                      <div className="my-6 px-8 py-5 bg-[#F5F7E6] rounded-2xl">
-                        <div className="space-y-3">
-                          <div className="flex items-start gap-6">
-                            <div className="font-bold text-[#8B9A2E] text-lg flex-shrink-0 w-16">Who</div>
-                            <div className="text-gray-800 text-base leading-relaxed flex-1" style={{ wordWrap: 'break-word', overflowWrap: 'break-word' }}>{whoContent}</div>
-                          </div>
-                          <div className="flex items-start gap-6">
-                            <div className="font-bold text-[#8B9A2E] text-lg flex-shrink-0 w-16">What</div>
-                            <div className="text-gray-800 text-base leading-relaxed flex-1" style={{ wordWrap: 'break-word', overflowWrap: 'break-word' }}>{whatContent}</div>
-                          </div>
-                        </div>
+                      <div className="not-prose my-6 px-8 py-5 bg-[#F5F7E6] rounded-2xl">
+                        <table style={{ width: '100%', tableLayout: 'fixed', borderCollapse: 'collapse' }}>
+                          <tbody>
+                            <tr>
+                              <td style={{ width: '80px', fontWeight: 'bold', color: '#8B9A2E', fontSize: '1.125rem', paddingRight: '1.5rem', verticalAlign: 'top', paddingBottom: '0.75rem', border: 'none' }}>Who</td>
+                              <td style={{ color: '#1f2937', fontSize: '1rem', paddingBottom: '0.75rem', border: 'none', wordWrap: 'break-word', overflowWrap: 'break-word' }}>{whoContent}</td>
+                            </tr>
+                            <tr>
+                              <td style={{ width: '80px', fontWeight: 'bold', color: '#8B9A2E', fontSize: '1.125rem', paddingRight: '1.5rem', verticalAlign: 'top', border: 'none' }}>What</td>
+                              <td style={{ color: '#1f2937', fontSize: '1rem', border: 'none', wordWrap: 'break-word', overflowWrap: 'break-word' }}>{whatContent}</td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     )
                   }
                   
-                  // Check if it's a resource/info box (has a title and bullets)
+                  // Check if it's a resource/info box
                   const firstLine = lines[0]
                   const hasBullets = lines.some(line => line.trim().startsWith('-'))
                   
                   if (firstLine && hasBullets && !firstLine.startsWith('-')) {
-                    // It's a resource box with a title - full width strap style
                     const title = firstLine.trim()
-                    const bulletContent = lines.slice(1).filter(line => line.trim()).join('\n')
+                    // Keep all content after the title, preserving empty lines
+                    const bulletContent = lines.slice(1).join('\n').trim()
                     
                     return (
                       <div className="my-8 -mx-12 px-12 py-6 bg-[#F5F7E6]">
-                        <h4 className="font-bold text-gray-900 text-lg mb-4 break-words">{title}</h4>
-                        <div className="prose prose-sm max-w-none prose-ul:my-0 prose-ul:ml-0 prose-li:my-2 prose-li:text-gray-700 prose-li:leading-relaxed prose-li:break-words prose-a:text-[#23B2A7] prose-a:no-underline prose-a:break-words hover:prose-a:underline">
+                        <h4 className="font-bold text-gray-900 text-lg mb-4">{title}</h4>
+                        <div className="prose prose-sm max-w-none prose-ul:my-2 prose-ul:list-disc prose-ul:pl-5 prose-li:my-1 prose-li:text-gray-700 prose-li:leading-relaxed prose-p:my-2 prose-p:text-gray-700 prose-p:leading-relaxed prose-a:text-[#23B2A7] prose-a:no-underline hover:prose-a:underline">
                           <ReactMarkdown remarkPlugins={[remarkGfm]}>{bulletContent}</ReactMarkdown>
                         </div>
                       </div>
                     )
                   }
                   
-                  // Regular code block - don't render, skip it
+                  // Regular code block - hide it
                   return null
+                },
+                code: ({ inline, children, ...props }: any) => {
+                  // Only handle inline code here
+                  if (inline) {
+                    return <code className="bg-gray-100 px-1 py-0.5 rounded text-sm" {...props}>{children}</code>
+                  }
+                  // Block code is handled by pre component
+                  return <code {...props}>{children}</code>
                 },
                 table: ({ children, ...props }) => {
                   // Check if this is a header-only table by examining the children
