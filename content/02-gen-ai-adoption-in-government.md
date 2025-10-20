@@ -1,7 +1,9 @@
 # GenAI adoption in government and your role
 
-| Who: Government leaders and procurement teams What: How to support GenAI adoption in government, and the role of a procurement  |
-| :---- |
+```
+- Who: Government leaders and procurement teams
+- What: How to support GenAI adoption in government, and the role of a procurement 
+```
 
 ## GenAI adoption in government 
 
@@ -27,10 +29,24 @@ Institutional AI-readiness is established at the leadership level, often by peop
 
 * **Create and use an institutional AI adoption strategy.** A robust AI adoption strategy includes your vision, priorities, governance and oversight mechanisms for implementing GenAI across government agencies in effective and responsible ways. It should address key risks, including technical, operational, ethical, and reputational considerations, as well as set out clear requirements for data privacy, transparency and accountability, security, bias monitoring, and regular risk assessments.   
     
-  Different uses and technologies carry different levels of risk. Your institutional AI strategy should establish clear criteria for categorizing AI systems based on their potential impact and risk level. Your procurement approach should allow for quick access to low-risk use cases, and implement stricter requirements for high-risk AI systems, including enhanced documentation and human oversight.
+  Different uses and technologies carry different levels of risk. Your institutional AI strategy should establish clear criteria for categorizing AI systems based on their potential impact and risk level. Your procurement approach should allow for quick access to low-risk use cases, and implement stricter requirements for high-risk AI systems, including enhanced documentation and human oversight.  
+  
 
-| AI strategy resources  Don’t have an institutional AI strategy? Check out these resources:  The Gov AI coalition has [resources](https://www.sanjoseca.gov/your-government/departments-offices/information-technology/artificial-intelligence-inventory/govai-coalition/templates-resources) for creating AI strategies, governance frameworks and more, targeted at local-level governments The OECD AI Policy Observatory has [guiding principles](https://oecd.ai/en/ai-principles) for national and subnational governments for designing AI policies The World Economic Forum has a [framework](https://www.weforum.org/publications/a-framework-for-developing-a-national-artificial-intelligence-strategy/) for developing national AI strategies Many countries already have national or subnational AI strategies. For example:     The [AI Act](https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai) (European Union)  [Artificial Intelligence 4.0 programme](https://julkaisut.valtioneuvosto.fi/bitstream/handle/10024/164468/TEM_2022_63.pdf?sequence=1&isAllowed=y) (Finland)  [America’s AI Action Plan](https://www.whitehouse.gov/wp-content/uploads/2025/07/Americas-AI-Action-Plan.pdf) (United States)   [Artificial Intelligence (AI) Action Plan](https://www.industry.gov.au/publications/australias-artificial-intelligence-action-plan) (Australia)  |
-| :---- |
+
+```
+AI strategy resources
+
+Don’t have an institutional AI strategy? Check out these resources: 
+- The Gov AI coalition has resources for creating AI strategies, governance frameworks and more, targeted at local-level governments
+- The OECD AI Policy Observatory has guiding principles for national and subnational governments for designing AI policies
+- The World Economic Forum has a framework for developing national AI strategies
+
+Many countries already have national or subnational AI strategies. For example:    
+- The AI Act (European Union) 
+- Artificial Intelligence 4.0 programme (Finland) 
+- America’s AI Action Plan (United States)  
+- Artificial Intelligence (AI) Action Plan (Australia) 
+```
 
 ### Departmental or project team AI-readiness
 

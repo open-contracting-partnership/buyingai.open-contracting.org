@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import React from 'react'
 import { getAllChapters, getChapterBySlug, getAdjacentChapters } from '@/lib/markdown'
 import { getSectionsStructure } from '@/lib/sections'
 import { ChapterLayout } from '@/components/ChapterLayout'
@@ -71,10 +72,14 @@ export default async function ChapterPage({ params }: PageProps) {
             prose-ol:my-4 prose-ol:list-decimal prose-ol:pl-6
             prose-li:text-gray-700 prose-li:mb-2
             prose-blockquote:border-l-4 prose-blockquote:border-[#C8D419] prose-blockquote:pl-4 prose-blockquote:italic
-            prose-code:bg-gray-100 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:text-sm
-            prose-pre:bg-gray-900 prose-pre:text-gray-100
+            prose-code:bg-transparent prose-code:p-0
             prose-img:rounded-lg prose-img:shadow-md
             prose-hr:border-gray-200 prose-hr:my-8
+            prose-table:border-collapse prose-table:border prose-table:border-gray-300 prose-table:my-6
+            prose-th:border prose-th:border-gray-300 prose-th:bg-gray-50 prose-th:px-4 prose-th:py-2 prose-th:text-left prose-th:font-medium prose-th:text-sm
+            prose-td:border prose-td:border-gray-300 prose-td:px-4 prose-td:py-2 prose-td:text-sm
+            prose-thead:bg-gray-50
+            prose-pre:bg-transparent prose-pre:p-0 prose-pre:m-0 prose-pre:overflow-visible
           ">
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
@@ -83,6 +88,130 @@ export default async function ChapterPage({ params }: PageProps) {
                   // Only render image if src is valid
                   if (!src) return null
                   return <img src={src} alt={alt || ''} {...props} />
+                },
+                code: ({ inline, className, children, ...props }: any) => {
+                  // Inline code
+                  if (inline) {
+                    return <code className="bg-gray-100 px-1 py-0.5 rounded text-sm" {...props}>{children}</code>
+                  }
+                  
+                  // Code blocks - parse content for special styling
+                  const content = String(children).trim()
+                  
+                  // Check if it's a Who/What box
+                  const lines = content.split('\n')
+                  const whoLine = lines.find(line => line.trim().startsWith('- Who:'))
+                  const whatLine = lines.find(line => line.trim().startsWith('- What:'))
+                  
+                  if (whoLine && whatLine) {
+                    const whoContent = whoLine.replace(/^-\s*Who:\s*/, '').trim()
+                    const whatContent = whatLine.replace(/^-\s*What:\s*/, '').trim()
+                    
+                    return (
+                      <div className="my-6 px-8 py-5 bg-[#F5F7E6] rounded-2xl">
+                        <div className="space-y-3">
+                          <div className="flex items-start gap-6">
+                            <div className="font-bold text-[#8B9A2E] text-lg flex-shrink-0 w-16">Who</div>
+                            <div className="text-gray-800 text-base leading-relaxed flex-1" style={{ wordWrap: 'break-word', overflowWrap: 'break-word' }}>{whoContent}</div>
+                          </div>
+                          <div className="flex items-start gap-6">
+                            <div className="font-bold text-[#8B9A2E] text-lg flex-shrink-0 w-16">What</div>
+                            <div className="text-gray-800 text-base leading-relaxed flex-1" style={{ wordWrap: 'break-word', overflowWrap: 'break-word' }}>{whatContent}</div>
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  }
+                  
+                  // Check if it's a resource/info box (has a title and bullets)
+                  const firstLine = lines[0]
+                  const hasBullets = lines.some(line => line.trim().startsWith('-'))
+                  
+                  if (firstLine && hasBullets && !firstLine.startsWith('-')) {
+                    // It's a resource box with a title - full width strap style
+                    const title = firstLine.trim()
+                    const bulletContent = lines.slice(1).filter(line => line.trim()).join('\n')
+                    
+                    return (
+                      <div className="my-8 -mx-12 px-12 py-6 bg-[#F5F7E6]">
+                        <h4 className="font-bold text-gray-900 text-lg mb-4 break-words">{title}</h4>
+                        <div className="prose prose-sm max-w-none prose-ul:my-0 prose-ul:ml-0 prose-li:my-2 prose-li:text-gray-700 prose-li:leading-relaxed prose-li:break-words prose-a:text-[#23B2A7] prose-a:no-underline prose-a:break-words hover:prose-a:underline">
+                          <ReactMarkdown remarkPlugins={[remarkGfm]}>{bulletContent}</ReactMarkdown>
+                        </div>
+                      </div>
+                    )
+                  }
+                  
+                  // Regular code block - don't render, skip it
+                  return null
+                },
+                table: ({ children, ...props }) => {
+                  // Check if this is a header-only table by examining the children
+                  const hasOnlyHeaders = React.Children.toArray(children).every(child => {
+                    if (React.isValidElement(child) && child.type === 'thead') {
+                      return true
+                    }
+                    if (React.isValidElement(child) && child.type === 'tbody') {
+                      // Check if tbody has any tr children
+                      const tbodyChildren = React.Children.toArray(child.props.children)
+                      return tbodyChildren.length === 0 || 
+                        tbodyChildren.every(tr => 
+                          React.isValidElement(tr) && tr.type === 'tr' && 
+                          React.Children.toArray(tr.props.children).every(td => 
+                            React.isValidElement(td) && td.type === 'td' && 
+                            (!td.props.children || 
+                             (typeof td.props.children === 'string' && td.props.children.trim() === '') ||
+                             (Array.isArray(td.props.children) && td.props.children.every(c => 
+                               typeof c === 'string' && c.trim() === '')))
+                          )
+                        )
+                    }
+                    return false
+                  })
+
+                  if (hasOnlyHeaders) {
+                    return (
+                      <div className="my-6 px-6 py-4 bg-[#F5F7E6] border-l-4 border-[#8B9A2E] rounded-xl">
+                        <table className="w-full" {...props}>
+                          {children}
+                        </table>
+                      </div>
+                    )
+                  }
+
+                  return (
+                    <table className="w-full border-collapse border border-gray-300" {...props}>
+                      {children}
+                    </table>
+                  )
+                },
+                thead: ({ children, ...props }) => {
+                  return (
+                    <thead {...props}>
+                      {children}
+                    </thead>
+                  )
+                },
+                th: ({ children, ...props }) => {
+                  return (
+                    <th className="px-0 py-2 text-left font-semibold text-base text-gray-900 border-0" {...props}>
+                      {children}
+                    </th>
+                  )
+                },
+                tr: ({ children, ...props }) => {
+                  return (
+                    <tr className="border-0" {...props}>
+                      {children}
+                    </tr>
+                  )
+                },
+                td: ({ children, ...props }) => {
+                  return (
+                    <td className="border border-gray-300 px-4 py-2 text-sm" {...props}>
+                      {children}
+                    </td>
+                  )
                 }
               }}
             >
