@@ -94,8 +94,11 @@ export default async function ChapterPage({ params }: PageProps) {
                   let content = ''
                   if (typeof children === 'string') {
                     content = children
-                  } else if (React.isValidElement(children) && children.props.children) {
-                    content = String(children.props.children)
+                  } else if (React.isValidElement(children)) {
+                    const childProps = children.props as { children?: string }
+                    if (childProps.children) {
+                      content = String(childProps.children)
+                    }
                   }
                   
                   content = content.trim()
@@ -161,7 +164,7 @@ export default async function ChapterPage({ params }: PageProps) {
                   // Block code is handled by pre component
                   return <code {...props}>{children}</code>
                 },
-                table: ({ children, ...props }) => {
+                table: ({ children, ...props }: any) => {
                   // Check if this is a header-only table by examining the children
                   const hasOnlyHeaders = React.Children.toArray(children).every(child => {
                     if (React.isValidElement(child) && child.type === 'thead') {
@@ -169,18 +172,21 @@ export default async function ChapterPage({ params }: PageProps) {
                     }
                     if (React.isValidElement(child) && child.type === 'tbody') {
                       // Check if tbody has any tr children
-                      const tbodyChildren = React.Children.toArray(child.props.children)
+                      const childProps = child.props as { children?: React.ReactNode }
+                      const tbodyChildren = React.Children.toArray(childProps.children)
                       return tbodyChildren.length === 0 || 
-                        tbodyChildren.every(tr => 
-                          React.isValidElement(tr) && tr.type === 'tr' && 
-                          React.Children.toArray(tr.props.children).every(td => 
-                            React.isValidElement(td) && td.type === 'td' && 
-                            (!td.props.children || 
-                             (typeof td.props.children === 'string' && td.props.children.trim() === '') ||
-                             (Array.isArray(td.props.children) && td.props.children.every(c => 
+                        tbodyChildren.every(tr => {
+                          if (!React.isValidElement(tr) || tr.type !== 'tr') return false
+                          const trProps = tr.props as { children?: React.ReactNode }
+                          return React.Children.toArray(trProps.children).every(td => {
+                            if (!React.isValidElement(td) || td.type !== 'td') return false
+                            const tdProps = td.props as { children?: React.ReactNode }
+                            return (!tdProps.children || 
+                             (typeof tdProps.children === 'string' && tdProps.children.trim() === '') ||
+                             (Array.isArray(tdProps.children) && tdProps.children.every(c => 
                                typeof c === 'string' && c.trim() === '')))
-                          )
-                        )
+                          })
+                        })
                     }
                     return false
                   })
