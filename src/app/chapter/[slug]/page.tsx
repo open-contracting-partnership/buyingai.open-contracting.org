@@ -1,53 +1,57 @@
-import { notFound } from 'next/navigation'
-import Link from 'next/link'
-import ReactMarkdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
-import React from 'react'
-import { getAllChapters, getChapterBySlug, getAdjacentChapters } from '@/lib/markdown'
-import { getSectionsStructure } from '@/lib/sections'
-import { ChapterLayout } from '@/components/ChapterLayout'
+import { notFound } from "next/navigation";
+import Link from "next/link";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import React from "react";
+import {
+  getAllChapters,
+  getChapterBySlug,
+  getAdjacentChapters,
+} from "@/lib/markdown";
+import { getSectionsStructure } from "@/lib/sections";
+import { ChapterLayout } from "@/components/ChapterLayout";
 
 interface PageProps {
   params: Promise<{
-    slug: string
-  }>
+    slug: string;
+  }>;
 }
 
 // Generate static paths for all chapters
 export async function generateStaticParams() {
-  const chapters = getAllChapters()
+  const chapters = getAllChapters();
   return chapters.map((chapter) => ({
-    slug: chapter.slug
-  }))
+    slug: chapter.slug,
+  }));
 }
 
 // Generate metadata for each chapter
 export async function generateMetadata({ params }: PageProps) {
-  const { slug } = await params
-  const chapter = getChapterBySlug(slug)
+  const { slug } = await params;
+  const chapter = getChapterBySlug(slug);
 
   if (!chapter) {
     return {
-      title: 'Chapter Not Found'
-    }
+      title: "Chapter Not Found",
+    };
   }
 
   return {
-    title: `${chapter.title} - Buying AI`
-  }
+    title: `${chapter.title} - Buying AI`,
+  };
 }
 
 export default async function ChapterPage({ params }: PageProps) {
-  const { slug } = await params
-  const chapter = getChapterBySlug(slug)
+  const { slug } = await params;
+  const chapter = getChapterBySlug(slug);
 
   if (!chapter) {
-    notFound()
+    notFound();
   }
 
-  const allChapters = getAllChapters().filter(ch => ch.slug !== '00-toc')
-  const { previous, next } = getAdjacentChapters(slug)
-  const structure = getSectionsStructure()
+  const allChapters = getAllChapters().filter((ch) => ch.slug !== "00-toc");
+  const { previous, next } = getAdjacentChapters(slug);
+  const structure = getSectionsStructure();
 
   return (
     <ChapterLayout
@@ -60,7 +64,8 @@ export default async function ChapterPage({ params }: PageProps) {
       <div className="max-w-3xl mx-auto">
         {/* Content Card */}
         <article className="bg-white rounded-lg shadow-sm p-12 mb-8">
-          <div className="prose prose-slate max-w-none
+          <div
+            className="prose prose-slate max-w-none
             prose-headings:font-bold
             prose-h1:text-4xl prose-h1:mb-6 prose-h1:mt-0
             prose-h2:text-3xl prose-h2:mb-4 prose-h2:mt-8
@@ -80,116 +85,218 @@ export default async function ChapterPage({ params }: PageProps) {
             prose-td:border prose-td:border-gray-300 prose-td:px-4 prose-td:py-2 prose-td:text-sm
             prose-thead:bg-gray-50
             prose-pre:bg-transparent prose-pre:p-0 prose-pre:m-0 prose-pre:overflow-visible
-          ">
+          "
+          >
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               components={{
                 img: ({ src, alt, ...props }) => {
                   // Only render image if src is valid
-                  if (!src) return null
-                  return <img src={src} alt={alt || ''} {...props} />
+                  if (!src) return null;
+                  return <img src={src} alt={alt || ""} {...props} />;
                 },
                 pre: ({ children, ...props }: any) => {
                   // Get the text content from children
-                  let content = ''
-                  if (typeof children === 'string') {
-                    content = children
+                  let content = "";
+                  if (typeof children === "string") {
+                    content = children;
                   } else if (React.isValidElement(children)) {
-                    const childProps = children.props as { children?: string }
+                    const childProps = children.props as { children?: string };
                     if (childProps.children) {
-                      content = String(childProps.children)
+                      content = String(childProps.children);
                     }
                   }
-                  
-                  content = content.trim()
+
+                  content = content.trim();
                   if (!content) {
-                    return null
+                    return null;
                   }
-                  
-                  const lines = content.split('\n')
-                  
+
+                  const lines = content.split("\n");
+
                   // Check if it's a Who/What box
-                  const whoLine = lines.find(line => line.trim().startsWith('- Who:'))
-                  const whatLine = lines.find(line => line.trim().startsWith('- What:'))
-                  
+                  const whoLine = lines.find((line) =>
+                    line.trim().startsWith("- Who:")
+                  );
+                  const whatLine = lines.find((line) =>
+                    line.trim().startsWith("- What:")
+                  );
+
                   if (whoLine && whatLine) {
-                    const whoContent = whoLine.replace(/^-\s*Who:\s*/, '').trim()
-                    const whatContent = whatLine.replace(/^-\s*What:\s*/, '').trim()
-                    
+                    const whoContent = whoLine
+                      .replace(/^-\s*Who:\s*/, "")
+                      .trim();
+                    const whatContent = whatLine
+                      .replace(/^-\s*What:\s*/, "")
+                      .trim();
+
                     return (
                       <div className="not-prose my-6 px-8 py-5 bg-[#F5F7E6] rounded-2xl">
-                        <table style={{ width: '100%', tableLayout: 'fixed', borderCollapse: 'collapse' }}>
+                        <table
+                          style={{
+                            width: "100%",
+                            tableLayout: "fixed",
+                            borderCollapse: "collapse",
+                          }}
+                        >
                           <tbody>
                             <tr>
-                              <td style={{ width: '80px', fontWeight: 'bold', color: '#8B9A2E', fontSize: '1.125rem', paddingRight: '1.5rem', verticalAlign: 'top', paddingBottom: '0.75rem', border: 'none' }}>Who</td>
-                              <td style={{ color: '#1f2937', fontSize: '1rem', paddingBottom: '0.75rem', border: 'none', wordWrap: 'break-word', overflowWrap: 'break-word' }}>{whoContent}</td>
+                              <td
+                                style={{
+                                  width: "80px",
+                                  fontWeight: "bold",
+                                  color: "#8B9A2E",
+                                  fontSize: "1.125rem",
+                                  paddingRight: "1.5rem",
+                                  verticalAlign: "top",
+                                  paddingBottom: "0.75rem",
+                                  border: "none",
+                                }}
+                              >
+                                Who
+                              </td>
+                              <td
+                                style={{
+                                  color: "#1f2937",
+                                  fontSize: "1rem",
+                                  paddingBottom: "0.75rem",
+                                  border: "none",
+                                  wordWrap: "break-word",
+                                  overflowWrap: "break-word",
+                                }}
+                              >
+                                {whoContent}
+                              </td>
                             </tr>
                             <tr>
-                              <td style={{ width: '80px', fontWeight: 'bold', color: '#8B9A2E', fontSize: '1.125rem', paddingRight: '1.5rem', verticalAlign: 'top', border: 'none' }}>What</td>
-                              <td style={{ color: '#1f2937', fontSize: '1rem', border: 'none', wordWrap: 'break-word', overflowWrap: 'break-word' }}>{whatContent}</td>
+                              <td
+                                style={{
+                                  width: "80px",
+                                  fontWeight: "bold",
+                                  color: "#8B9A2E",
+                                  fontSize: "1.125rem",
+                                  paddingRight: "1.5rem",
+                                  verticalAlign: "top",
+                                  border: "none",
+                                }}
+                              >
+                                What
+                              </td>
+                              <td
+                                style={{
+                                  color: "#1f2937",
+                                  fontSize: "1rem",
+                                  border: "none",
+                                  wordWrap: "break-word",
+                                  overflowWrap: "break-word",
+                                }}
+                              >
+                                {whatContent}
+                              </td>
                             </tr>
                           </tbody>
                         </table>
                       </div>
-                    )
+                    );
                   }
-                  
+
                   // Check if it's a resource/info box
-                  const firstLine = lines[0]
-                  const hasBullets = lines.some(line => line.trim().startsWith('-'))
-                  
-                  if (firstLine && hasBullets && !firstLine.startsWith('-')) {
-                    const title = firstLine.trim()
+                  const firstLine = lines[0];
+                  const hasBullets = lines.some((line) =>
+                    line.trim().startsWith("-")
+                  );
+
+                  if (firstLine && hasBullets && !firstLine.startsWith("-")) {
+                    const title = firstLine.trim();
                     // Keep all content after the title, preserving empty lines
-                    const bulletContent = lines.slice(1).join('\n').trim()
-                    
+                    const bulletContent = lines.slice(1).join("\n").trim();
+
                     return (
                       <div className="my-8 -mx-12 px-12 py-6 bg-[#F5F7E6]">
-                        <h4 className="font-bold text-gray-900 text-lg mb-4">{title}</h4>
+                        <h4 className="font-bold text-gray-900 text-lg mb-4">
+                          {title}
+                        </h4>
                         <div className="prose prose-sm max-w-none prose-ul:my-2 prose-ul:list-disc prose-ul:pl-5 prose-li:my-1 prose-li:text-gray-700 prose-li:leading-relaxed prose-p:my-2 prose-p:text-gray-700 prose-p:leading-relaxed prose-a:text-[#23B2A7] prose-a:no-underline hover:prose-a:underline">
-                          <ReactMarkdown remarkPlugins={[remarkGfm]}>{bulletContent}</ReactMarkdown>
+                          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                            {bulletContent}
+                          </ReactMarkdown>
                         </div>
                       </div>
-                    )
+                    );
                   }
-                  
+
                   // Regular code block - hide it
-                  return null
+                  return null;
                 },
                 code: ({ inline, children, ...props }: any) => {
                   // Only handle inline code here
                   if (inline) {
-                    return <code className="bg-gray-100 px-1 py-0.5 rounded text-sm" {...props}>{children}</code>
+                    return (
+                      <code
+                        className="bg-gray-100 px-1 py-0.5 rounded text-sm"
+                        {...props}
+                      >
+                        {children}
+                      </code>
+                    );
                   }
                   // Block code is handled by pre component
-                  return <code {...props}>{children}</code>
+                  return <code {...props}>{children}</code>;
                 },
                 table: ({ children, ...props }: any) => {
                   // Check if this is a header-only table by examining the children
-                  const hasOnlyHeaders = React.Children.toArray(children).every(child => {
-                    if (React.isValidElement(child) && child.type === 'thead') {
-                      return true
-                    }
-                    if (React.isValidElement(child) && child.type === 'tbody') {
-                      // Check if tbody has any tr children
-                      const childProps = child.props as { children?: React.ReactNode }
-                      const tbodyChildren = React.Children.toArray(childProps.children)
-                      return tbodyChildren.length === 0 || 
-                        tbodyChildren.every(tr => {
-                          if (!React.isValidElement(tr) || tr.type !== 'tr') return false
-                          const trProps = tr.props as { children?: React.ReactNode }
-                          return React.Children.toArray(trProps.children).every(td => {
-                            if (!React.isValidElement(td) || td.type !== 'td') return false
-                            const tdProps = td.props as { children?: React.ReactNode }
-                            return (!tdProps.children || 
-                             (typeof tdProps.children === 'string' && tdProps.children.trim() === '') ||
-                             (Array.isArray(tdProps.children) && tdProps.children.every(c => 
-                               typeof c === 'string' && c.trim() === '')))
+                  const hasOnlyHeaders = React.Children.toArray(children).every(
+                    (child) => {
+                      if (
+                        React.isValidElement(child) &&
+                        child.type === "thead"
+                      ) {
+                        return true;
+                      }
+                      if (
+                        React.isValidElement(child) &&
+                        child.type === "tbody"
+                      ) {
+                        // Check if tbody has any tr children
+                        const childProps = child.props as {
+                          children?: React.ReactNode;
+                        };
+                        const tbodyChildren = React.Children.toArray(
+                          childProps.children
+                        );
+                        return (
+                          tbodyChildren.length === 0 ||
+                          tbodyChildren.every((tr) => {
+                            if (!React.isValidElement(tr) || tr.type !== "tr")
+                              return false;
+                            const trProps = tr.props as {
+                              children?: React.ReactNode;
+                            };
+                            return React.Children.toArray(
+                              trProps.children
+                            ).every((td) => {
+                              if (!React.isValidElement(td) || td.type !== "td")
+                                return false;
+                              const tdProps = td.props as {
+                                children?: React.ReactNode;
+                              };
+                              return (
+                                !tdProps.children ||
+                                (typeof tdProps.children === "string" &&
+                                  tdProps.children.trim() === "") ||
+                                (Array.isArray(tdProps.children) &&
+                                  tdProps.children.every(
+                                    (c) =>
+                                      typeof c === "string" && c.trim() === ""
+                                  ))
+                              );
+                            });
                           })
-                        })
+                        );
+                      }
+                      return false;
                     }
-                    return false
-                  })
+                  );
 
                   if (hasOnlyHeaders) {
                     return (
@@ -198,43 +305,48 @@ export default async function ChapterPage({ params }: PageProps) {
                           {children}
                         </table>
                       </div>
-                    )
+                    );
                   }
 
                   return (
-                    <table className="w-full border-collapse border border-gray-300" {...props}>
+                    <table
+                      className="w-full border-collapse border border-gray-300"
+                      {...props}
+                    >
                       {children}
                     </table>
-                  )
+                  );
                 },
                 thead: ({ children, ...props }) => {
-                  return (
-                    <thead {...props}>
-                      {children}
-                    </thead>
-                  )
+                  return <thead {...props}>{children}</thead>;
                 },
                 th: ({ children, ...props }) => {
                   return (
-                    <th className="px-0 py-2 text-left font-semibold text-base text-gray-900 border-0" {...props}>
+                    <th
+                      className="px-0 py-2 text-left font-semibold text-base text-gray-900 border-0"
+                      {...props}
+                    >
                       {children}
                     </th>
-                  )
+                  );
                 },
                 tr: ({ children, ...props }) => {
                   return (
                     <tr className="border-0" {...props}>
                       {children}
                     </tr>
-                  )
+                  );
                 },
                 td: ({ children, ...props }) => {
                   return (
-                    <td className="border border-gray-300 px-4 py-2 text-sm" {...props}>
+                    <td
+                      className="border border-gray-300 px-4 py-2 text-sm"
+                      {...props}
+                    >
                       {children}
                     </td>
-                  )
-                }
+                  );
+                },
               }}
             >
               {chapter.content}
@@ -251,11 +363,21 @@ export default async function ChapterPage({ params }: PageProps) {
                 scroll={false}
                 className="flex items-center gap-2 text-gray-600 hover:text-black transition-colors group"
               >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="group-hover:-translate-x-1 transition-transform">
-                  <polyline points="15 18 9 12 15 6"/>
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  className="group-hover:-translate-x-1 transition-transform"
+                >
+                  <polyline points="15 18 9 12 15 6" />
                 </svg>
                 <div>
-                  <div className="text-xs text-gray-400 uppercase tracking-wide">Previous</div>
+                  <div className="text-xs text-gray-400 uppercase tracking-wide">
+                    Previous
+                  </div>
                   <div className="font-medium">{previous.title}</div>
                 </div>
               </Link>
@@ -269,11 +391,21 @@ export default async function ChapterPage({ params }: PageProps) {
                 className="flex items-center gap-2 text-gray-600 hover:text-black transition-colors group"
               >
                 <div>
-                  <div className="text-xs text-gray-400 uppercase tracking-wide">Next</div>
+                  <div className="text-xs text-gray-400 uppercase tracking-wide">
+                    Next
+                  </div>
                   <div className="font-medium">{next.title}</div>
                 </div>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="group-hover:translate-x-1 transition-transform">
-                  <polyline points="9 18 15 12 9 6"/>
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  className="group-hover:translate-x-1 transition-transform"
+                >
+                  <polyline points="9 18 15 12 9 6" />
                 </svg>
               </Link>
             )}
@@ -281,6 +413,5 @@ export default async function ChapterPage({ params }: PageProps) {
         </div>
       </div>
     </ChapterLayout>
-  )
+  );
 }
-
