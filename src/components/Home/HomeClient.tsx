@@ -16,9 +16,9 @@ export default function HomeClient({ chapters, structure }: HomeClientProps) {
     <>
       {/* Hero Section */}
       <div className="relative max-w-7xl mx-auto px-20 py-24">
-        <div className="flex gap-12 items-center">
+        <div className="flex flex-col md:flex-row gap-12 items-center">
           {/* Left: Title - 1/3 of space */}
-          <div className="w-[33.33%]">
+          <div className="w-full md:w-[33.33%]">
             <h1 className="text-7xl font-bold bg-gradient-to-r from-[#C8D419] to-[#23B2A7] bg-clip-text text-transparent leading-tight font-gteesti-display">
               Buying AI
             </h1>
@@ -28,7 +28,9 @@ export default function HomeClient({ chapters, structure }: HomeClientProps) {
           </div>
 
           {/* Right: Section Cards - 2/3 of space */}
-          <BannerCarousel structure={structure} />
+          <div className="w-full md:w-[66.66%]">
+            <BannerCarousel structure={structure} />
+          </div>
         </div>
       </div>
 

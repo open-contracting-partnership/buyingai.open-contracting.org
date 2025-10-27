@@ -22,7 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${ibmPlexSans.variable} antialiased min-h-screen !bg-[#3D393D] text-white font-gteesti-text`}
+        className={`${ibmPlexSans.variable} antialiased min-h-screen !bg-[#3D393D] text-white font-gteesti-text overflow-x-hidden`}
       >
         <Header />
         <main>{children}</main>

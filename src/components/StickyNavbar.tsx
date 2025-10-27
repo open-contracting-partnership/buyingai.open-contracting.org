@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { useState, useEffect } from "react";
 import { SectionsStructure, getSectionColor } from "@/lib/sections-types";
+import { ChevronRightIcon } from "lucide-react";
 
 interface StickyNavbarProps {
   structure: SectionsStructure;
@@ -18,6 +20,17 @@ export function StickyNavbar({
   sidebarVisible,
   onToggleSidebar,
 }: StickyNavbarProps) {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
   // Find current section based on current slug
   const currentSectionNumber =
     structure.sections.find((section) =>
@@ -26,7 +39,7 @@ export function StickyNavbar({
 
   return (
     <nav
-      className={`fixed left-0 right-0 z-50 transition-opacity duration-300 bg-[#C8D419] ${
+      className={`fixed left-0 right-0 z-40 transition-opacity duration-300 bg-[#C8D419] ${
         visible ? "opacity-100" : "opacity-0 pointer-events-none"
       }`}
       style={{
@@ -34,21 +47,21 @@ export function StickyNavbar({
       }}
     >
       {/* Chapter Indicator Bar */}
-      <div className="h-[60px] flex">
+      <div className="h-[60px] flex overflow-x-auto overflow-y-hidden scrollbar-hide">
         {/* Sidebar Space - Only when sidebar is visible */}
-        {sidebarVisible && (
-          <div className="w-[366px] bg-transparent">&nbsp;</div>
+        {sidebarVisible && !isMobile && (
+          <div className="w-[366px] bg-transparent flex-shrink-0">&nbsp;</div>
         )}
 
         {/* Show Sidebar Button - Only when sidebar is hidden */}
         {!sidebarVisible && (
           <button
-            className="flex items-center px-4 bg-white rounded-tr-[8px] rounded-br-[8px] cursor-pointer"
+            className="flex items-center px-2 md:px-4 bg-white rounded-tr-[8px] rounded-br-[8px] cursor-pointer flex-shrink-0"
             style={{ boxShadow: "4px 4px 4px 0 rgba(0, 0, 0, 0.15)" }}
             onClick={onToggleSidebar}
           >
             <div
-              className="size-8 grid place-items-center text-[#92C36F]"
+              className="size-6 md:size-8 grid place-items-center text-[#92C36F]"
               aria-label="Show sidebar"
             >
               <svg
@@ -68,7 +81,7 @@ export function StickyNavbar({
         )}
 
         {/* Chapter Segments */}
-        <div className="flex-1 flex">
+        <div className="flex-1 flex min-w-max">
           {structure.sections.map((section) => {
             const color = getSectionColor(section.number);
             const isActive = section.number === currentSectionNumber;
@@ -79,53 +92,40 @@ export function StickyNavbar({
                 key={section.number}
                 href={`/chapter/${firstChapterSlug}#content`}
                 scroll={false}
-                className={`flex items-center transition-all duration-300 hover:brightness-95 cursor-pointer ${
-                  isActive ? "flex-1" : ""
+                className={`flex items-center transition-all duration-300 hover:brightness-95 cursor-pointer flex-shrink-0 ${
+                  isActive ? "md:flex-1" : ""
                 }`}
                 style={{
                   backgroundColor: color.bg,
-                  minWidth: isActive ? "420px" : "60px",
-                  width: isActive ? "auto" : "60px",
+                  minWidth: isActive ? (isMobile ? "200px" : "420px") : "50px",
+                  width: isActive ? "auto" : undefined,
                 }}
               >
                 <div
                   className={`flex items-center ${
-                    isActive ? "px-6 gap-4" : "justify-center w-full"
+                    isActive
+                      ? "px-2 md:px-6 gap-2 md:gap-4"
+                      : "justify-center w-full"
                   }`}
                 >
                   {/* Section Number */}
-                  <span className="text-black font-medium text-base">
+                  <span className="text-black font-medium text-sm md:text-base">
                     {section.number.toString().padStart(2, "0")}
                   </span>
 
                   {/* Expanded Details (only for active section) */}
                   {isActive && (
                     <>
-                      {/* Icon */}
-                      <div className="w-6 h-6 flex items-center justify-center">
-                        <svg
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                        >
-                          <rect x="2" y="2" width="20" height="20" rx="2" />
-                          <path d="M12 8v8M8 12h8" />
-                        </svg>
-                      </div>
-
-                      {/* Section Title */}
-                      <span className="text-black font-medium text-base">
+                      {/* Section Title - hidden on mobile */}
+                      <span className="hidden md:inline text-black font-medium text-base">
                         {section.title}
                       </span>
 
-                      {/* Arrow */}
-                      <span className="text-black mx-2">→</span>
+                      {/* Arrow - hidden on mobile */}
+                      <ChevronRightIcon className="hidden md:inline size-6 text-black" />
 
-                      {/* Current Chapter */}
-                      <span className="text-black text-sm">
+                      {/* Current Chapter - abbreviated on mobile */}
+                      <span className="text-black text-xs md:text-sm truncate max-w-[120px] md:max-w-none">
                         {section.chapters.find((ch) => ch.slug === currentSlug)
                           ?.title || section.chapters[0]?.title}
                       </span>

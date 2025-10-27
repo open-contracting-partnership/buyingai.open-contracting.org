@@ -33,7 +33,24 @@ export function ChapterLayout({
   // Always initialize as false to avoid hydration mismatch
   const [scrolled, setScrolled] = useState(false);
   const [showStickyNav, setShowStickyNav] = useState(false);
-  const [sidebarVisible, setSidebarVisible] = useState(true);
+  const [sidebarVisible, setSidebarVisible] = useState(() => {
+    if (typeof window !== "undefined") {
+      return window.innerWidth >= 768; // Sidebar visible by default only on desktop
+    }
+    return true; // Assume visible during SSR/hydration, will correct on client
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setSidebarVisible(window.innerWidth >= 768);
+    };
+    window.addEventListener("resize", handleResize);
+
+    // On mount: force-check once for client viewport width
+    handleResize();
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   // Use intersection observer hook
   const activeSectionId = useIntersectionObserver({
@@ -103,29 +120,42 @@ export function ChapterLayout({
 
       {/* Hero Section - Dynamic based on current chapter */}
       <div className="bg-[#3D393D] text-white">
-        <div className="relative max-w-7xl mx-auto px-20 py-24">
-          <div className="flex gap-12 items-center">
-            {/* Left: Title - 1/3 of space */}
-            <div className="w-[33.33%]">
-              <h1 className="text-7xl font-bold mb-8 bg-gradient-to-r from-[#23B2A7] to-[#C8D419] bg-clip-text text-transparent leading-tight">
+        <div className="relative max-w-7xl mx-auto px-6 md:px-20 py-12 md:py-24">
+          <div className="flex flex-col md:flex-row gap-6 md:gap-12 items-center">
+            {/* Left: Title - full width on mobile, 1/3 on desktop */}
+            <div className="w-full md:w-[33.33%]">
+              <h1 className="text-4xl md:text-7xl font-bold mb-4 md:mb-8 bg-gradient-to-r from-[#C8D419] to-[#23B2A7] bg-clip-text text-transparent leading-tight">
                 Buying AI
               </h1>
-              <p className="text-2xl text-white/90">
+              <p className="text-lg md:text-2xl text-white/90">
                 Tips and tools for the public sector
               </p>
             </div>
 
-            {/* Right: Section Cards - 2/3 of space */}
-            <BannerCarousel structure={structure} currentSlug={currentSlug} />
+            {/* Right: Section Cards - full width on mobile, 2/3 on desktop */}
+            <div className="w-full md:w-[66.66%]">
+              <BannerCarousel structure={structure} currentSlug={currentSlug} />
+            </div>
           </div>
         </div>
       </div>
 
       <div className="flex relative">
-        {/* Sidebar - Fixed width, can be hidden, sticky */}
+        {/* Overlay for mobile when sidebar is open */}
+        {sidebarVisible && (
+          <div
+            className="fixed inset-0 bg-black/50 z-40 md:hidden"
+            onClick={toggleSidebar}
+            aria-label="Close sidebar overlay"
+          />
+        )}
+
+        {/* Sidebar - Fixed on mobile, sticky on desktop */}
         <aside
-          className={`w-[366px] bg-white border-r border-gray-200 transition-all duration-300 sticky top-[119px] h-screen z-50 ${
-            sidebarVisible ? "translate-x-0" : "-translate-x-full"
+          className={`bg-white border-r border-gray-200 transition-all duration-300 h-screen z-50 ${
+            sidebarVisible
+              ? "w-[366px] fixed top-[119px] translate-x-0 md:sticky"
+              : "fixed top-[119px] w-full -translate-x-full overflow-hidden md:sticky md:w-0 md:translate-x-0"
           }`}
         >
           <div className="">
@@ -240,17 +270,11 @@ export function ChapterLayout({
         </aside>
 
         {/* Main Content */}
-        <main
-          className={`transition-all duration-300 ${
-            sidebarVisible ? "flex-1" : "w-full"
-          }`}
-        >
+        <main className="transition-all duration-300 w-full md:flex-1">
           <SectionMarker sectionId={currentSlug}>
             <div
               id="content"
-              className={`px-12 py-12 transition-all duration-300 ${
-                sidebarVisible ? "max-w-4xl mx-auto" : "w-full"
-              }`}
+              className="px-6 md:px-12 py-12 transition-all duration-300 w-full md:max-w-4xl md:mx-auto"
             >
               {children}
             </div>
