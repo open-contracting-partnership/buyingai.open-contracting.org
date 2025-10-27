@@ -16,19 +16,19 @@ export default function HomeClient({ chapters, structure }: HomeClientProps) {
     <>
       {/* Hero Section */}
       <div className="relative max-w-7xl mx-auto md:px-20 px-6 py-12 md:py-24">
-        <div className="flex flex-col md:flex-row gap-12 items-center">
+        <div className="flex flex-col lg:flex-row gap-12 items-center">
           {/* Left: Title - 1/3 of space */}
-          <div className="w-full md:w-[33.33%]">
+          <div className="w-full lg:w-[33.33%]">
             <h1 className="text-4xl md:text-7xl font-bold bg-gradient-to-r from-[#C8D419] to-[#23B2A7] bg-clip-text text-transparent leading-tight font-gteesti-display">
               Buying AI
             </h1>
-            <p className="mt-2 text-base md:text-2xl text-white/90 font-gteesti-pro-display">
+            <p className="mt-2 text-base lg:text-2xl text-white/90 font-gteesti-pro-display">
               Tips and tools for the public sector
             </p>
           </div>
 
           {/* Right: Section Cards - 2/3 of space */}
-          <div className="w-full md:w-[66.66%]">
+          <div className="w-full lg:w-[66.66%]">
             <BannerCarousel structure={structure} />
           </div>
         </div>

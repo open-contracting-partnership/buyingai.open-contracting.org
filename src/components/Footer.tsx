@@ -40,7 +40,10 @@ export default function Footer() {
               <div className="md:w-1/3">
                 <h3 className="font-bold text-white">Connect with us:</h3>
                 <div className="mt-5 grid grid-cols-2 gap-4 w-1/2 md:translate-x-4 lg:translate-x-6">
-                  <Link href="/" target="_blank">
+                  <Link
+                    href="https://twitter.com/opencontracting"
+                    target="_blank"
+                  >
                     <Image
                       src={twitterIcon}
                       alt="Twitter"
@@ -48,7 +51,10 @@ export default function Footer() {
                       height={26}
                     />
                   </Link>
-                  <Link href="/" target="_blank">
+                  <Link
+                    href="https://github.com/open-contracting-partnership/"
+                    target="_blank"
+                  >
                     <Image
                       src={githubIcon}
                       alt="GitHub"
@@ -56,7 +62,10 @@ export default function Footer() {
                       height={26}
                     />
                   </Link>
-                  <Link href="/" target="_blank">
+                  <Link
+                    href="https://www.facebook.com/OpenContracting"
+                    target="_blank"
+                  >
                     <Image
                       src={facebookIcon}
                       alt="Facebook"
@@ -64,7 +73,10 @@ export default function Footer() {
                       height={26}
                     />
                   </Link>
-                  <Link href="/" target="_blank">
+                  <Link
+                    href="https://soundcloud.com/opencontracting"
+                    target="_blank"
+                  >
                     <Image
                       src={soundcloudIcon}
                       alt="SoundCloud"
@@ -72,7 +84,10 @@ export default function Footer() {
                       height={26}
                     />
                   </Link>
-                  <Link href="/" target="_blank">
+                  <Link
+                    href="https://www.linkedin.com/company/open-contracting-partnership"
+                    target="_blank"
+                  >
                     <Image
                       src={linkedinIcon}
                       alt="LinkedIn"
@@ -80,7 +95,10 @@ export default function Footer() {
                       height={26}
                     />
                   </Link>
-                  <Link href="/" target="_blank">
+                  <Link
+                    href="https://www.youtube.com/OpenContractingPartnership"
+                    target="_blank"
+                  >
                     <Image
                       src={youtubeIcon}
                       alt="YouTube"

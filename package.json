@@ -9,6 +9,7 @@
     "figma:fetch": "tsx scripts/fetch-figma.ts"
   },
   "dependencies": {
+    "@radix-ui/react-popover": "^1.1.15",
     "@tailwindcss/typography": "^0.5.19",
     "clsx": "^2.1.1",
     "lucide-react": "^0.548.0",

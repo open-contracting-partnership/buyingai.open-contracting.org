@@ -73,22 +73,22 @@ export function BannerCarousel({
           ? isHovered
           : isCurrentSection;
 
-        // Responsive widths: mobile 180px expanded, 80px collapsed
+        // Responsive widths: mobile 320px expanded, 100px collapsed
         const baseWidth = isMobile
           ? shouldExpand
-            ? 280
-            : 80
+            ? 320
+            : 100
           : shouldExpand
           ? 400
           : 120;
 
         const firstChapterSlug = section.chapters[0]?.slug;
 
-        // Responsive overlap: less overlap on mobile
+        // Responsive overlap: better spacing on mobile
         const overlap = isMobile
           ? shouldExpand
-            ? "0px"
-            : "-40px"
+            ? "12px"
+            : "-20px"
           : shouldExpand
           ? "-20px"
           : "-60px";
@@ -114,20 +114,20 @@ export function BannerCarousel({
               // Expanded card with chapter list
               <div
                 className={`${
-                  isMobile ? "p-4" : "p-8"
+                  isMobile ? "px-6 py-5" : "p-8"
                 } h-full flex flex-col justify-between`}
               >
                 <div>
                   <div
                     className={`${
-                      isMobile ? "text-3xl" : "text-5xl"
+                      isMobile ? "text-4xl" : "text-5xl"
                     } font-bold text-black font-gteesti-display`}
                   >
                     {section.number.toString().padStart(2, "0")}
                   </div>
                   <h3
                     className={`${
-                      isMobile ? "my-1 text-base" : "my-2 text-2xl"
+                      isMobile ? "my-2 text-lg" : "my-2 text-2xl"
                     } font-medium text-black font-gteesti-pro-display`}
                   >
                     {section.title}
@@ -136,30 +136,30 @@ export function BannerCarousel({
                   {/* Chapter list - show fewer chapters on mobile */}
                   {section.chapters.length > 0 && (
                     <div
-                      className={`${isMobile ? "space-y-1.5" : "space-y-2"}`}
+                      className={`${isMobile ? "space-y-2 mt-3" : "space-y-2"}`}
                     >
                       {section.chapters
-                        .slice(0, isMobile ? 3 : 6)
+                        .slice(0, isMobile ? 4 : 6)
                         .map((ch, chIdx) => (
                           <Link
                             key={ch.slug}
                             href={`/chapter/${ch.slug}#content`}
                             scroll={false}
                             onClick={(e) => e.stopPropagation()}
-                            className={`flex items-center gap-2 ${
-                              isMobile ? "text-xs" : "text-sm"
+                            className={`flex items-center gap-2.5 ${
+                              isMobile ? "text-sm" : "text-sm"
                             } text-black/80 hover:text-black transition-colors group`}
                           >
                             <span
                               className={`${
                                 isMobile
-                                  ? "font-mono text-[10px]"
+                                  ? "font-mono text-xs"
                                   : "font-mono text-xs"
                               }`}
                             >
                               {String.fromCharCode(97 + chIdx)}.
                             </span>
-                            <span className="flex-1 line-clamp-1">
+                            <span className="flex-1 line-clamp-2">
                               {ch.title}
                             </span>
                             {!isMobile && (
@@ -218,12 +218,12 @@ export function BannerCarousel({
               // Collapsed card
               <div
                 className={`h-full flex items-start justify-center ${
-                  isMobile ? "pt-6 pl-8" : "pt-8 pl-16"
+                  isMobile ? "pt-5 pl-5" : "pt-8 pl-16"
                 }`}
               >
                 <span
                   className={`${
-                    isMobile ? "text-4xl" : "text-5xl"
+                    isMobile ? "text-5xl" : "text-5xl"
                   } font-bold text-black/50 transition-colors`}
                 >
                   {section.number.toString().padStart(2, "0")}

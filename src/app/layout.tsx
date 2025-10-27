@@ -3,6 +3,7 @@ import { IBM_Plex_Sans } from "next/font/google";
 import Header from "@/components/Header";
 import "./globals.css";
 import Footer from "@/components/Footer";
+import { getAllChapters } from "@/lib/markdown";
 
 const ibmPlexSans = IBM_Plex_Sans({
   variable: "--font-ibm-plex-sans",
@@ -19,12 +20,15 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Get chapters at build time
+  const chapters = getAllChapters().filter((ch) => ch.slug !== "00-toc");
+
   return (
     <html lang="en">
       <body
         className={`${ibmPlexSans.variable} antialiased min-h-screen !bg-[#3D393D] text-white font-gteesti-text overflow-x-hidden`}
       >
-        <Header />
+        <Header chapters={chapters} />
         <main>{children}</main>
         <Footer />
       </body>

@@ -81,24 +81,36 @@ export function StickyNavbar({
         )}
 
         {/* Chapter Segments */}
-        <div className="flex-1 flex min-w-max">
-          {structure.sections.map((section) => {
+        <div className={`flex-1 flex ${isMobile ? "" : "min-w-max"}`}>
+          {structure.sections.map((section, index) => {
             const color = getSectionColor(section.number);
             const isActive = section.number === currentSectionNumber;
             const firstChapterSlug = section.chapters[0]?.slug;
+            const isLast = index === structure.sections.length - 1;
 
             return (
               <Link
                 key={section.number}
                 href={`/chapter/${firstChapterSlug}#content`}
                 scroll={false}
-                className={`flex items-center transition-all duration-300 hover:brightness-95 cursor-pointer flex-shrink-0 ${
-                  isActive ? "md:flex-1" : ""
+                className={`flex items-center transition-all duration-300 hover:brightness-95 cursor-pointer ${
+                  isMobile
+                    ? "flex-1" // Mobile: todos usan flex-1 para distribuir uniformemente
+                    : isActive
+                    ? "md:flex-1 flex-shrink-0"
+                    : "flex-shrink-0"
+                } ${
+                  isLast && isMobile ? "rounded-tr-[8px] rounded-br-[8px]" : ""
                 }`}
                 style={{
                   backgroundColor: color.bg,
-                  minWidth: isActive ? (isMobile ? "200px" : "420px") : "50px",
-                  width: isActive ? "auto" : undefined,
+                  // Desktop: mantiene comportamiento original con minWidth
+                  minWidth: !isMobile
+                    ? isActive
+                      ? "420px"
+                      : "50px"
+                    : undefined,
+                  width: !isMobile && isActive ? "auto" : undefined,
                 }}
               >
                 <div

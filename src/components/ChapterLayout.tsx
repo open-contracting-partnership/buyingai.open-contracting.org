@@ -120,10 +120,10 @@ export function ChapterLayout({
 
       {/* Hero Section - Dynamic based on current chapter */}
       <div className="bg-[#3D393D] text-white">
-        <div className="relative max-w-7xl mx-auto md:px-20 px-6 py-12 md:py-24">
-          <div className="flex flex-col md:flex-row gap-12 items-center">
+        <div className="relative max-w-7xl mx-auto lg:px-20 px-6 py-12 lg:py-24">
+          <div className="flex flex-col lg:flex-row gap-12 items-center">
             {/* Left: Title - 1/3 of space */}
-            <div className="w-full md:w-[33.33%]">
+            <div className="w-full lg:w-[33.33%]">
               <h1 className="text-4xl md:text-7xl font-bold bg-gradient-to-r from-[#C8D419] to-[#23B2A7] bg-clip-text text-transparent leading-tight font-gteesti-display">
                 Buying AI
               </h1>
@@ -133,7 +133,7 @@ export function ChapterLayout({
             </div>
 
             {/* Right: Section Cards - 2/3 of space */}
-            <div className="w-full md:w-[66.66%]">
+            <div className="w-full lg:w-[66.66%]">
               <BannerCarousel structure={structure} currentSlug={currentSlug} />
             </div>
           </div>
@@ -144,7 +144,7 @@ export function ChapterLayout({
         {/* Overlay for mobile when sidebar is open */}
         {sidebarVisible && (
           <div
-            className="fixed inset-0 bg-black/50 z-40 md:hidden"
+            className="fixed inset-0 bg-black/50 z-40 lg:hidden"
             onClick={toggleSidebar}
             aria-label="Close sidebar overlay"
           />
@@ -154,8 +154,8 @@ export function ChapterLayout({
         <aside
           className={`bg-white border-r border-gray-200 transition-all duration-300 h-screen z-50 ${
             sidebarVisible
-              ? "w-[366px] fixed top-[119px] translate-x-0 md:sticky"
-              : "fixed top-[119px] w-full -translate-x-full overflow-hidden md:sticky md:w-0 md:translate-x-0"
+              ? "w-[366px] fixed top-[119px] translate-x-0 lg:sticky"
+              : "fixed top-[119px] w-full -translate-x-full overflow-hidden lg:sticky lg:w-0 lg:translate-x-0"
           }`}
         >
           <div className="">
@@ -270,11 +270,11 @@ export function ChapterLayout({
         </aside>
 
         {/* Main Content */}
-        <main className="transition-all duration-300 w-full md:flex-1">
+        <main className="transition-all duration-300 w-full lg:flex-1">
           <SectionMarker sectionId={currentSlug}>
             <div
               id="content"
-              className="px-6 md:px-12 py-12 transition-all duration-300 w-full md:max-w-4xl md:mx-auto"
+              className="px-6 lg:px-12 py-12 transition-all duration-300 w-full lg:max-w-4xl lg:mx-auto"
             >
               {children}
             </div>
