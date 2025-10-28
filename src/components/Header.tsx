@@ -297,7 +297,7 @@ export default function Header({ chapters }: HeaderProps) {
               </Popover.Portal>
             </Popover.Root>
             <Link
-              href="/chapter/01-introduction"
+              href="/chapter/01-introduction#content"
               className="px-6 py-2.5 bg-[#C8D419] text-black font-semibold rounded hover:bg-[#B5C115] transition-colors font-ibm-plex-sans"
             >
               Get the playbook
@@ -405,7 +405,7 @@ export default function Header({ chapters }: HeaderProps) {
 
                 {/* CTA button */}
                 <Link
-                  href="/chapter/01-introduction"
+                  href="/chapter/01-introduction#content"
                   onClick={toggleMenu}
                   className="mt-4 px-6 py-3 bg-[#C8D419] text-black font-semibold rounded-lg hover:bg-[#B5C115] transition-colors text-center"
                 >
