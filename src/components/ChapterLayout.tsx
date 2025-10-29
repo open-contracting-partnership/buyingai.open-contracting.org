@@ -83,7 +83,7 @@ export function ChapterLayout({
       const scrollToContent = () => {
         const contentElement = document.getElementById("content");
         if (contentElement) {
-          const headerHeight = 119; // Height of sticky header
+          const headerHeight = 119.72; // Height of sticky header
           const elementPosition = contentElement.getBoundingClientRect().top;
           const offsetPosition =
             elementPosition + window.pageYOffset - headerHeight;
