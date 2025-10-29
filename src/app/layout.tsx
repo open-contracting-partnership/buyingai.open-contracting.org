@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Script from "next/script";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import { IBM_Plex_Sans } from "next/font/google";
 import Header from "@/components/Header";
 import "./globals.css";
@@ -60,18 +60,7 @@ export default function RootLayout({
       <body
         className={`${ibmPlexSans.variable} antialiased min-h-screen !bg-[#3D393D] text-white font-gteesti-text overflow-x-hidden`}
       >
-        <Script
-          async
-          src="https://www.googletagmanager.com/gtag/js?id=G-ST56FGCHR2"
-        />
-        <Script id="gtag-init" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-ST56FGCHR2');
-          `}
-        </Script>
+        <GoogleAnalytics gaId="G-ST56FGCHR2" />
         <Header chapters={chapters} />
         <main>{children}</main>
         <Footer />
