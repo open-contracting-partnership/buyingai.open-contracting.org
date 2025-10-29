@@ -10,7 +10,7 @@ import githubIcon from "@/app/assets/images/github-icon.svg";
 
 export default function Footer() {
   return (
-    <footer className="pt-8 pb-10 border-t border-white/10">
+    <footer className="pt-8 pb-10 border-t border-white/10 bg-[#3D393D] text-white">
       <div className="w-11/12 mx-auto max-w-7xl">
         <div className="flex flex-col gap-y-8 lg:flex-row lg:justify-between">
           <div className="lg:w-1/12">

@@ -212,7 +212,7 @@ export default function Header({ chapters }: HeaderProps) {
               {!isSearchOpen && (
                 <button
                   onClick={toggleSearch}
-                  className="p-2 hover:bg-white/10 rounded transition-all"
+                  className="p-2 hover:bg-white/10 rounded transition-all text-white"
                 >
                   <svg
                     width="24"
@@ -230,7 +230,7 @@ export default function Header({ chapters }: HeaderProps) {
             </div>
             <Popover.Root>
               <Popover.Trigger asChild>
-                <button className="p-2 hover:bg-white/10 rounded">
+                <button className="p-2 hover:bg-white/10 rounded text-white">
                   <svg
                     width="24"
                     height="24"
@@ -249,7 +249,7 @@ export default function Header({ chapters }: HeaderProps) {
               </Popover.Trigger>
               <Popover.Portal>
                 <Popover.Content
-                  className="rounded-lg bg-[#3D393D] p-4 shadow-2xl w-[200px] z-50 animate-in fade-in slide-in-from-top-2 duration-200 border border-white/10"
+                  className="rounded-lg bg-[#3D393D] p-4 shadow-2xl w-[200px] z-[999] animate-in fade-in slide-in-from-top-2 duration-200 border border-white/10"
                   sideOffset={8}
                 >
                   <div className="flex flex-col gap-3">
