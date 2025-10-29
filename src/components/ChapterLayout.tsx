@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import type { Chapter } from "@/lib/markdown";
 import {
@@ -12,7 +12,6 @@ import { StickyNavbar } from "./StickyNavbar";
 import { BannerCarousel } from "./BannerCarousel";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import { SectionMarker } from "./SectionMarker";
-
 interface ChapterLayoutProps {
   currentSlug: string;
   allChapters: Chapter[];
@@ -39,6 +38,11 @@ export function ChapterLayout({
     }
     return true; // Assume visible during SSR/hydration, will correct on client
   });
+
+  console.log(`${currentSlug}#content`);
+
+  const sidebarRef = useRef<HTMLDivElement>(null);
+  const navRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const handleResize = () => {
@@ -107,6 +111,60 @@ export function ChapterLayout({
     setSidebarVisible(!sidebarVisible);
   };
 
+  // Save scroll position when navigating
+  useEffect(() => {
+    const nav = navRef.current;
+    if (!nav) return;
+
+    const handleScroll = () => {
+      sessionStorage.setItem("toc-scroll-position", nav.scrollTop.toString());
+    };
+
+    nav.addEventListener("scroll", handleScroll);
+    return () => nav.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Restore scroll position and scroll active item into view
+  useEffect(() => {
+    const nav = navRef.current;
+    if (!nav) return;
+
+    const activeItem = nav.querySelector(
+      `[data-chapter-slug="${currentSlug}"]`
+    ) as HTMLElement;
+
+    if (activeItem) {
+      // Check if the active item is already in view
+      const navRect = nav.getBoundingClientRect();
+      const itemRect = activeItem.getBoundingClientRect();
+      const isInView =
+        itemRect.top >= navRect.top && itemRect.bottom <= navRect.bottom;
+
+      // If not in view, scroll it into view (this maintains context)
+      if (!isInView) {
+        // First restore saved position to maintain context
+        const savedScroll = sessionStorage.getItem("toc-scroll-position");
+        if (savedScroll) {
+          nav.scrollTop = parseInt(savedScroll, 10);
+        }
+
+        // Then scroll the active item into view with a small delay
+        setTimeout(() => {
+          activeItem.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+        }, 50);
+      }
+    } else {
+      // If active item not found, restore saved position
+      const savedScroll = sessionStorage.getItem("toc-scroll-position");
+      if (savedScroll) {
+        nav.scrollTop = parseInt(savedScroll, 10);
+      }
+    }
+  }, [currentSlug]);
+
   return (
     <div className="min-h-screen bg-[#EFEEEF]">
       {/* Sticky Navbar - appears on scroll */}
@@ -152,6 +210,7 @@ export function ChapterLayout({
 
         {/* Sidebar - Fixed on mobile, sticky on desktop */}
         <aside
+          ref={sidebarRef}
           className={`bg-white border-r border-gray-200 transition-all duration-300 h-screen z-50 ${
             sidebarVisible
               ? "w-[366px] fixed top-[119px] translate-x-0 lg:sticky"
@@ -186,7 +245,10 @@ export function ChapterLayout({
                     Table of content
                   </h2>
                 </div>
-                <nav className="space-y-0 max-h-[calc(100vh-240px)] overflow-y-auto">
+                <nav
+                  ref={navRef}
+                  className="space-y-0 max-h-[calc(100vh-240px)] overflow-y-auto"
+                >
                   {structure.sections.map((section) => {
                     // Check if this section is active based on intersection observer or current chapter
                     const hasCurrentChapter = section.chapters.some(
@@ -247,6 +309,7 @@ export function ChapterLayout({
                                 key={ch.slug}
                                 href={`/chapter/${ch.slug}#content`}
                                 scroll={false}
+                                data-chapter-slug={ch.slug}
                                 className={`block px-3 py-2 text-sm transition-colors rounded ${
                                   isActiveChapter
                                     ? "bg-green-100 text-green-800 font-medium"
