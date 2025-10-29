@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { IBM_Plex_Sans } from "next/font/google";
 import Header from "@/components/Header";
 import "./globals.css";
@@ -10,7 +11,8 @@ const ibmPlexSans = IBM_Plex_Sans({
   subsets: ["latin"],
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ocp-ai-buying.netlify.app";
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL || "https://ocp-ai-buying.netlify.app";
 
 export const metadata: Metadata = {
   title:
@@ -58,6 +60,18 @@ export default function RootLayout({
       <body
         className={`${ibmPlexSans.variable} antialiased min-h-screen !bg-[#3D393D] text-white font-gteesti-text overflow-x-hidden`}
       >
+        <Script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-ST56FGCHR2"
+        />
+        <Script id="gtag-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-ST56FGCHR2');
+          `}
+        </Script>
         <Header chapters={chapters} />
         <main>{children}</main>
         <Footer />
