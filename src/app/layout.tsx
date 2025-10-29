@@ -10,11 +10,39 @@ const ibmPlexSans = IBM_Plex_Sans({
   subsets: ["latin"],
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ocp-ai-buying.netlify.app";
+
 export const metadata: Metadata = {
   title:
     "Open Contracting Partnership: open, fair & efficient public contracting",
   description:
     "We connect governments, civil society and business to open up and monitor public procurement. Open contracting results in fairer deals and less corruption.",
+  openGraph: {
+    title:
+      "Open Contracting Partnership: open, fair & efficient public contracting",
+    description:
+      "We connect governments, civil society and business to open up and monitor public procurement. Open contracting results in fairer deals and less corruption.",
+    url: siteUrl,
+    siteName: "Open Contracting Partnership",
+    images: [
+      {
+        url: "/images/og-image.png", // Ruta de la imagen OG - coloca tu imagen en public/og-image.png
+        width: 1200,
+        height: 630,
+        alt: "Open Contracting Partnership",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title:
+      "Open Contracting Partnership: open, fair & efficient public contracting",
+    description:
+      "We connect governments, civil society and business to open up and monitor public procurement. Open contracting results in fairer deals and less corruption.",
+    images: ["/images/og-image.png"], // Ruta de la imagen OG - coloca tu imagen en public/og-image.png
+  },
 };
 
 export default function RootLayout({

@@ -36,8 +36,45 @@ export async function generateMetadata({ params }: PageProps) {
     };
   }
 
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || "https://ocp-ai-buying.netlify.app";
+  const chapterUrl = `${siteUrl}/chapter/${slug}`;
+
+  // Extract description from chapter content (first paragraph or first 160 chars)
+  let description = `Read ${chapter.title} - Buying AI guide by Open Contracting Partnership.`;
+  const firstParagraph = chapter.content
+    .split("\n\n")
+    .find((p) => p.trim().length > 50 && !p.trim().startsWith("#"));
+  if (firstParagraph) {
+    description =
+      firstParagraph.trim().replace(/\n/g, " ").substring(0, 160) + "...";
+  }
+
   return {
     title: `${chapter.title} - Buying AI`,
+    description,
+    openGraph: {
+      title: `${chapter.title} - Buying AI`,
+      description,
+      url: chapterUrl,
+      siteName: "Open Contracting Partnership",
+      images: [
+        {
+          url: "/images/og-image.png", // Ruta de la imagen OG - coloca tu imagen en public/og-image.png
+          width: 1200,
+          height: 630,
+          alt: chapter.title,
+        },
+      ],
+      locale: "en_US",
+      type: "article",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${chapter.title} - Buying AI`,
+      description,
+      images: ["/images/og-image.png"], // Ruta de la imagen OG - coloca tu imagen en public/og-image.png
+    },
   };
 }
 
