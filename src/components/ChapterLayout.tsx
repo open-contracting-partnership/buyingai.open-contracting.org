@@ -9,7 +9,6 @@ import {
   getSectionColor,
 } from "@/lib/sections-types";
 import { StickyNavbar } from "./StickyNavbar";
-import { BannerCarousel } from "./BannerCarousel";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import { SectionMarker } from "./SectionMarker";
 interface ChapterLayoutProps {
@@ -38,8 +37,6 @@ export function ChapterLayout({
     }
     return true; // Assume visible during SSR/hydration, will correct on client
   });
-
-  console.log(`${currentSlug}#content`);
 
   const sidebarRef = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLElement>(null);
@@ -82,12 +79,20 @@ export function ChapterLayout({
       setScrolled(true);
       setShowStickyNav(true);
 
-      // Scroll to position after banner with smooth animation
+      // Scroll to content section (accounting for sticky header)
       const scrollToContent = () => {
-        window.scrollTo({
-          top: 700,
-          behavior: "smooth",
-        });
+        const contentElement = document.getElementById("content");
+        if (contentElement) {
+          const headerHeight = 119; // Height of sticky header
+          const elementPosition = contentElement.getBoundingClientRect().top;
+          const offsetPosition =
+            elementPosition + window.pageYOffset - headerHeight;
+
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth",
+          });
+        }
       };
 
       // Small delay to ensure page is rendered before smooth scroll
@@ -96,14 +101,39 @@ export function ChapterLayout({
   }, [currentSlug]);
 
   useEffect(() => {
+    let lastScrollY = window.scrollY;
+    let ticking = false;
+
     const handleScroll = () => {
       const scrollY = window.scrollY;
-      setScrolled(scrollY > 400);
-      // Show sticky nav after scrolling past the banner (header ~88px + hero ~600px)
-      setShowStickyNav(scrollY > 650);
+      // No banner, so scrolled state triggers earlier
+      setScrolled(scrollY > 50);
+
+      // Show/hide navbar based on scroll direction (no banner threshold)
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const scrollDirection = scrollY > lastScrollY ? "down" : "up";
+
+          // Hide on scroll down, show on scroll up (only when scrolled)
+          if (scrollY > 100) {
+            if (scrollDirection === "down") {
+              setShowStickyNav(false);
+            } else {
+              setShowStickyNav(true);
+            }
+          } else {
+            // Hide when near top
+            setShowStickyNav(false);
+          }
+
+          lastScrollY = scrollY > 0 ? scrollY : 0;
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -175,28 +205,6 @@ export function ChapterLayout({
         sidebarVisible={sidebarVisible}
         onToggleSidebar={toggleSidebar}
       />
-
-      {/* Hero Section - Dynamic based on current chapter */}
-      <div className="bg-[#3D393D] text-white">
-        <div className="relative max-w-7xl mx-auto lg:px-20 px-6 py-12 lg:py-24">
-          <div className="flex flex-col lg:flex-row gap-12 items-center">
-            {/* Left: Title - 1/3 of space */}
-            <div className="w-full lg:w-[33.33%]">
-              <h1 className="text-4xl md:text-7xl font-bold bg-gradient-to-r from-[#C8D419] to-[#23B2A7] bg-clip-text text-transparent leading-tight font-gteesti-display">
-                Buying AI
-              </h1>
-              <p className="mt-2 text-base md:text-2xl text-white/90 font-gteesti-pro-display">
-                Tips and tools for the public sector
-              </p>
-            </div>
-
-            {/* Right: Section Cards - 2/3 of space */}
-            <div className="w-full lg:w-[66.66%]">
-              <BannerCarousel structure={structure} currentSlug={currentSlug} />
-            </div>
-          </div>
-        </div>
-      </div>
 
       <div className="flex relative">
         {/* Overlay for mobile when sidebar is open */}
@@ -337,7 +345,8 @@ export function ChapterLayout({
           <SectionMarker sectionId={currentSlug}>
             <div
               id="content"
-              className="px-6 lg:px-12 py-12 transition-all duration-300 w-full lg:max-w-4xl lg:mx-auto"
+              className="px-6 lg:px-12 pt-0 pb-12 transition-all duration-300 w-full lg:max-w-4xl lg:mx-auto"
+              style={{ scrollMarginTop: "119px" }}
             >
               {children}
             </div>
