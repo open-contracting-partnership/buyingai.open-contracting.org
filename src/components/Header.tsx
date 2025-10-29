@@ -127,7 +127,13 @@ export default function Header({ chapters }: HeaderProps) {
         <div className="flex items-center justify-between">
           <div className="shrink-0">
             <Link href="/">
-              <Image src={logo} alt="OCP Logo" width={183.19} height={63} />
+              <Image
+                className="h-[61px]"
+                src={logo}
+                alt="OCP Logo"
+                width={183.19}
+                height={61}
+              />
             </Link>
           </div>
 
