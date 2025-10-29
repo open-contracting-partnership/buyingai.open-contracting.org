@@ -122,7 +122,7 @@ export default function Header({ chapters }: HeaderProps) {
   }, [isSearchOpen]);
 
   return (
-    <header className="py-7 border-b border-white/10 sticky top-0 z-50 bg-[#3D393D]">
+    <header className="py-7 border-b border-white/10 sticky overflow-hidden top-0 z-[999] bg-[#3D393D]">
       <div className="w-11/12 mx-auto max-w-7xl">
         <div className="flex items-center justify-between">
           <div className="shrink-0">

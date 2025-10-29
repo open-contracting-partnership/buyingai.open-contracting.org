@@ -192,9 +192,7 @@ export function BannerCarousel({
                     className="flex items-center justify-end gap-2 text-black mt-4 hover:gap-3 transition-all"
                   >
                     <span className="text-sm font-medium">
-                      {isCurrentSection
-                        ? `Open chapter ${section.number}`
-                        : "Begin here"}
+                      Read chapter {section.number}
                     </span>
                     <div className="transform rotate-180">
                       <svg
