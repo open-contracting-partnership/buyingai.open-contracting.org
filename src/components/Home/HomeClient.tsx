@@ -15,7 +15,7 @@ export default function HomeClient({ chapters, structure }: HomeClientProps) {
   return (
     <>
       {/* Hero Section */}
-      <div className="relative max-w-7xl mx-auto md:px-20 px-6 py-12 md:py-24">
+      <div className="relative w-11/12 mx-auto max-w-7xl py-12 md:py-24">
         <div className="flex flex-col lg:flex-row gap-12 items-center">
           {/* Left: Title - 1/3 of space */}
           <div className="w-full lg:w-[33.33%]">

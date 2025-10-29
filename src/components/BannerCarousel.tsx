@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { SectionsStructure, getSectionColor } from "@/lib/sections-types";
+import { ArrowUpRight } from "lucide-react";
 
 interface BannerCarouselProps {
   structure: SectionsStructure;
@@ -91,7 +92,7 @@ export function BannerCarousel({
             : "-20px"
           : shouldExpand
           ? "-20px"
-          : "-60px";
+          : "-40px";
 
         return (
           <div
@@ -136,7 +137,7 @@ export function BannerCarousel({
                   {/* Chapter list - show fewer chapters on mobile */}
                   {section.chapters.length > 0 && (
                     <div
-                      className={`${isMobile ? "space-y-2 mt-3" : "space-y-2"}`}
+                      className={`border-t border-black/10 pt-2 ${isMobile ? "space-y-2 mt-3" : "space-y-2"}`}
                     >
                       {section.chapters
                         .slice(0, isMobile ? 4 : 6)
@@ -146,7 +147,7 @@ export function BannerCarousel({
                             href={`/chapter/${ch.slug}#content`}
                             scroll={false}
                             onClick={(e) => e.stopPropagation()}
-                            className={`flex items-center gap-2.5 ${
+                            className={`flex items-center gap-2.5 border-b border-black/10 pb-2 ${
                               isMobile ? "text-sm" : "text-sm"
                             } text-black/80 hover:text-black transition-colors group`}
                           >
@@ -163,18 +164,7 @@ export function BannerCarousel({
                               {ch.title}
                             </span>
                             {!isMobile && (
-                              <svg
-                                width="14"
-                                height="14"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                className="opacity-0 group-hover:opacity-100 transition-opacity"
-                              >
-                                <polyline points="7 13 12 18 17 13" />
-                                <polyline points="7 6 12 11 17 6" />
-                              </svg>
+                              <ArrowUpRight className="size-4 opacity-0 group-hover:opacity-100 transition-opacity" />
                             )}
                           </Link>
                         ))}
@@ -191,7 +181,7 @@ export function BannerCarousel({
                     onClick={(e) => e.stopPropagation()}
                     className="flex items-center justify-end gap-2 text-black mt-4 hover:gap-3 transition-all"
                   >
-                    <span className="text-sm font-medium">
+                    <span className="text-base font-medium">
                       Read chapter {section.number}
                     </span>
                     <div className="transform rotate-180">
@@ -216,12 +206,12 @@ export function BannerCarousel({
               // Collapsed card
               <div
                 className={`h-full flex items-start justify-center ${
-                  isMobile ? "pt-5 pl-5" : "pt-8 pl-16"
+                  isMobile ? "pt-5 pl-5" : "pt-8 pl-8"
                 }`}
               >
                 <span
                   className={`${
-                    isMobile ? "text-5xl" : "text-5xl"
+                    isMobile ? "text-3xl" : "text-3xl"
                   } font-bold text-black/50 transition-colors`}
                 >
                   {section.number.toString().padStart(2, "0")}
