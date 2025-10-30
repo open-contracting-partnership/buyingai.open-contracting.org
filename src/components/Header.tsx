@@ -249,18 +249,38 @@ export default function Header({ chapters }: HeaderProps) {
               </Popover.Trigger>
               <Popover.Portal>
                 <Popover.Content
-                  className="rounded-lg bg-[#3D393D] p-4 shadow-2xl w-[200px] z-[999] animate-in fade-in slide-in-from-top-2 duration-200 border border-white/10"
+                  className="rounded-lg bg-[#3D393D] p-4 shadow-2xl z-[999] animate-in fade-in slide-in-from-top-2 duration-200 border border-white/10"
                   sideOffset={8}
                 >
                   <div className="flex flex-col gap-3">
-                    <h3 className="text-xs font-semibold text-white/60 uppercase tracking-wide mb-2">
+                    <h3 className="text-xs font-semibold text-white/60 uppercase tracking-wide">
                       Share
                     </h3>
-                    <div className="flex flex-col gap-2">
-                      <Link
-                        href="https://twitter.com/opencontracting"
-                        target="_blank"
-                        className="flex items-center gap-3 px-3 py-2 hover:bg-white/10 rounded-lg transition-colors"
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const url =
+                            typeof window !== "undefined"
+                              ? window.location.href
+                              : "";
+                          const text =
+                            typeof document !== "undefined"
+                              ? document.title
+                              : "";
+                          const share = new URL(
+                            "https://twitter.com/intent/tweet"
+                          );
+                          share.searchParams.set("url", url);
+                          if (text) share.searchParams.set("text", text);
+                          window.open(
+                            share.toString(),
+                            "_blank",
+                            "noopener,noreferrer"
+                          );
+                        }}
+                        aria-label="Share on Twitter"
+                        className="p-2 hover:bg-white/10 rounded-lg transition-colors"
                       >
                         <Image
                           src={twitterIcon}
@@ -268,12 +288,21 @@ export default function Header({ chapters }: HeaderProps) {
                           width={24}
                           height={24}
                         />
-                        <span className="text-sm text-white">Twitter</span>
-                      </Link>
-                      <Link
-                        href="https://www.linkedin.com/company/open-contracting-partnership"
-                        target="_blank"
-                        className="flex items-center gap-3 px-3 py-2 hover:bg-white/10 rounded-lg transition-colors"
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const url =
+                            typeof window !== "undefined"
+                              ? window.location.href
+                              : "";
+                          const share = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
+                            url
+                          )}`;
+                          window.open(share, "_blank", "noopener,noreferrer");
+                        }}
+                        aria-label="Share on LinkedIn"
+                        className="p-2 hover:bg-white/10 rounded-lg transition-colors"
                       >
                         <Image
                           src={linkedinIcon}
@@ -281,12 +310,21 @@ export default function Header({ chapters }: HeaderProps) {
                           width={24}
                           height={24}
                         />
-                        <span className="text-sm text-white">LinkedIn</span>
-                      </Link>
-                      <Link
-                        href="https://www.facebook.com/OpenContracting"
-                        target="_blank"
-                        className="flex items-center gap-3 px-3 py-2 hover:bg-white/10 rounded-lg transition-colors"
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const url =
+                            typeof window !== "undefined"
+                              ? window.location.href
+                              : "";
+                          const share = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+                            url
+                          )}`;
+                          window.open(share, "_blank", "noopener,noreferrer");
+                        }}
+                        aria-label="Share on Facebook"
+                        className="p-2 hover:bg-white/10 rounded-lg transition-colors"
                       >
                         <Image
                           src={facebookIcon}
@@ -294,8 +332,7 @@ export default function Header({ chapters }: HeaderProps) {
                           width={24}
                           height={24}
                         />
-                        <span className="text-sm text-white">Facebook</span>
-                      </Link>
+                      </button>
                     </div>
                   </div>
                   <Popover.Arrow className="fill-[#3D393D]" />
@@ -347,7 +384,7 @@ export default function Header({ chapters }: HeaderProps) {
                 {/* Search button */}
                 <button
                   onClick={toggleSearch}
-                  className="flex items-center gap-3 px-4 py-3 bg-white/5 hover:bg-white/10 rounded-lg transition-colors text-left w-full"
+                  className="flex items-center gap-3 px-4 py-3 bg-white/5 hover:bg-white/10 rounded-lg transition-colors text-white text-left w-full"
                 >
                   <svg
                     width="20"
@@ -363,50 +400,87 @@ export default function Header({ chapters }: HeaderProps) {
                   <span className="text-white">Search</span>
                 </button>
 
-                {/* Social media links */}
+                {/* Share current page */}
                 <div className="flex flex-col gap-2">
                   <h3 className="px-4 text-xs font-semibold text-white/60 uppercase tracking-wide">
-                    Connect with us
+                    Share
                   </h3>
-                  <Link
-                    href="https://twitter.com/opencontracting"
-                    target="_blank"
-                    className="flex items-center gap-3 px-4 py-3 bg-white/5 hover:bg-white/10 rounded-lg transition-colors text-left"
-                  >
-                    <Image
-                      src={twitterIcon}
-                      alt="Twitter"
-                      width={20}
-                      height={20}
-                    />
-                    <span className="text-white">Twitter</span>
-                  </Link>
-                  <Link
-                    href="https://www.linkedin.com/company/open-contracting-partnership"
-                    target="_blank"
-                    className="flex items-center gap-3 px-4 py-3 bg-white/5 hover:bg-white/10 rounded-lg transition-colors text-left"
-                  >
-                    <Image
-                      src={linkedinIcon}
-                      alt="LinkedIn"
-                      width={20}
-                      height={20}
-                    />
-                    <span className="text-white">LinkedIn</span>
-                  </Link>
-                  <Link
-                    href="https://www.facebook.com/OpenContracting"
-                    target="_blank"
-                    className="flex items-center gap-3 px-4 py-3 bg-white/5 hover:bg-white/10 rounded-lg transition-colors text-left"
-                  >
-                    <Image
-                      src={facebookIcon}
-                      alt="Facebook"
-                      width={20}
-                      height={20}
-                    />
-                    <span className="text-white">Facebook</span>
-                  </Link>
+                  <div className="px-2 flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const url =
+                          typeof window !== "undefined"
+                            ? window.location.href
+                            : "";
+                        const text =
+                          typeof document !== "undefined" ? document.title : "";
+                        const share = new URL(
+                          "https://twitter.com/intent/tweet"
+                        );
+                        share.searchParams.set("url", url);
+                        if (text) share.searchParams.set("text", text);
+                        window.open(
+                          share.toString(),
+                          "_blank",
+                          "noopener,noreferrer"
+                        );
+                      }}
+                      aria-label="Share on Twitter"
+                      className="p-3 bg-white/5 hover:bg-white/10 rounded-lg transition-colors"
+                    >
+                      <Image
+                        src={twitterIcon}
+                        alt="Twitter"
+                        width={20}
+                        height={20}
+                      />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const url =
+                          typeof window !== "undefined"
+                            ? window.location.href
+                            : "";
+                        const share = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
+                          url
+                        )}`;
+                        window.open(share, "_blank", "noopener,noreferrer");
+                      }}
+                      aria-label="Share on LinkedIn"
+                      className="p-3 bg-white/5 hover:bg-white/10 rounded-lg transition-colors"
+                    >
+                      <Image
+                        src={linkedinIcon}
+                        alt="LinkedIn"
+                        width={20}
+                        height={20}
+                      />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const url =
+                          typeof window !== "undefined"
+                            ? window.location.href
+                            : "";
+                        const share = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+                          url
+                        )}`;
+                        window.open(share, "_blank", "noopener,noreferrer");
+                      }}
+                      aria-label="Share on Facebook"
+                      className="p-3 bg-white/5 hover:bg-white/10 rounded-lg transition-colors"
+                    >
+                      <Image
+                        src={facebookIcon}
+                        alt="Facebook"
+                        width={20}
+                        height={20}
+                      />
+                    </button>
+                  </div>
                 </div>
 
                 {/* CTA button */}
@@ -427,7 +501,7 @@ export default function Header({ chapters }: HeaderProps) {
               className="p-2 hover:bg-white/10 rounded cursor-pointer"
               onClick={toggleMenu}
             >
-              <MenuIcon className="size-6" />
+              <MenuIcon className="size-6 text-white" />
             </button>
           </div>
         </div>
