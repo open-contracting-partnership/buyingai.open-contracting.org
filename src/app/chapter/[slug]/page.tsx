@@ -97,6 +97,7 @@ export default async function ChapterPage({ params }: PageProps) {
       chapterOrder={chapter.order}
       totalChapters={allChapters.length}
       structure={structure}
+      chapterTitle={chapter.title}
     >
       <div className="max-w-3xl mx-auto">
         {/* Content Card */}

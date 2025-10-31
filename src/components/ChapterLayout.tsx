@@ -11,6 +11,9 @@ import {
 import { StickyNavbar } from "./StickyNavbar";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import { SectionMarker } from "./SectionMarker";
+import { PrintView } from "./PrintView";
+import { Eye } from "lucide-react";
+
 interface ChapterLayoutProps {
   currentSlug: string;
   allChapters: Chapter[];
@@ -18,6 +21,8 @@ interface ChapterLayoutProps {
   chapterOrder: number;
   totalChapters: number;
   structure: SectionsStructure;
+  chapterTitle?: string;
+  chapterContent?: React.ReactNode;
 }
 
 export function ChapterLayout({
@@ -27,10 +32,13 @@ export function ChapterLayout({
   chapterOrder,
   totalChapters,
   structure,
+  chapterTitle,
+  chapterContent,
 }: ChapterLayoutProps) {
   // Always initialize as false to avoid hydration mismatch
   const [scrolled, setScrolled] = useState(false);
   const [showStickyNav, setShowStickyNav] = useState(false);
+  const [printViewOpen, setPrintViewOpen] = useState(false);
   const [sidebarVisible, setSidebarVisible] = useState(() => {
     if (typeof window !== "undefined") {
       return window.innerWidth >= 768; // Sidebar visible by default only on desktop
@@ -195,6 +203,9 @@ export function ChapterLayout({
     }
   }, [currentSlug]);
 
+  const currentChapter = allChapters.find((ch) => ch.slug === currentSlug);
+  const displayTitle = chapterTitle || currentChapter?.title || "Chapter";
+
   return (
     <div className="min-h-screen bg-[#EFEEEF]">
       {/* Sticky Navbar - appears on scroll */}
@@ -353,6 +364,25 @@ export function ChapterLayout({
           </SectionMarker>
         </main>
       </div>
+
+      {/* Fixed Preview PDF Button */}
+      <button
+        onClick={() => setPrintViewOpen(true)}
+        className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-5 py-3 bg-[#92C36F] text-white rounded-full shadow-lg hover:bg-[#7BA860] transition-all duration-300 hover:shadow-xl no-print"
+        aria-label="Preview PDF"
+      >
+        <Eye className="size-5" />
+        <span className="hidden sm:inline font-medium">Preview PDF</span>
+      </button>
+
+      {/* Print View Modal */}
+      <PrintView
+        title={structure.title}
+        chapterTitle={displayTitle}
+        content={chapterContent || children}
+        isOpen={printViewOpen}
+        onClose={() => setPrintViewOpen(false)}
+      />
     </div>
   );
 }

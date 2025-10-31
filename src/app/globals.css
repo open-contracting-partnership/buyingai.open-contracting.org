@@ -95,3 +95,167 @@ body {
 .scrollbar-hide::-webkit-scrollbar {
   display: none; /* Chrome, Safari, Opera */
 }
+
+/* Print Styles */
+@media print {
+  body {
+    background: white;
+  }
+
+  .print-view-container {
+    max-width: 210mm;
+    margin: 0 auto;
+    padding: 20mm;
+    font-size: 12pt;
+    line-height: 1.6;
+    color: #000;
+  }
+
+  .print-header h1 {
+    font-size: 24pt;
+    margin-bottom: 12pt;
+    color: #000;
+  }
+
+  .print-content {
+    color: #000;
+  }
+
+  .print-content h1,
+  .print-content h2,
+  .print-content h3,
+  .print-content h4,
+  .print-content h5,
+  .print-content h6 {
+    color: #000;
+    page-break-after: avoid;
+    margin-top: 20pt;
+    margin-bottom: 10pt;
+  }
+
+  .print-content p {
+    margin-bottom: 12pt;
+    orphans: 3;
+    widows: 3;
+  }
+
+  .print-content img {
+    max-width: 100%;
+    height: auto;
+    page-break-inside: avoid;
+  }
+
+  .print-content table {
+    page-break-inside: avoid;
+  }
+
+  .print-content ul,
+  .print-content ol {
+    page-break-inside: avoid;
+  }
+
+  .print-content blockquote {
+    page-break-inside: avoid;
+    border-left: 4pt solid #c8d419;
+    padding-left: 12pt;
+    margin: 12pt 0;
+  }
+
+  .print-footer {
+    margin-top: 40pt;
+    padding-top: 12pt;
+    border-top: 1pt solid #ccc;
+  }
+
+  /* Hide navigation and UI elements when printing */
+  nav,
+  aside,
+  button,
+  .no-print {
+    display: none !important;
+  }
+
+  /* Ensure proper page breaks */
+  .print-content h1,
+  .print-content h2 {
+    page-break-after: avoid;
+  }
+
+  .print-content p,
+  .print-content li {
+    orphans: 3;
+    widows: 3;
+  }
+
+  .print-prose {
+    font-size: 12pt;
+    line-height: 1.6;
+  }
+
+  .print-prose h1 {
+    font-size: 24pt;
+    margin-top: 20pt;
+    margin-bottom: 12pt;
+  }
+
+  .print-prose h2 {
+    font-size: 20pt;
+    margin-top: 18pt;
+    margin-bottom: 10pt;
+  }
+
+  .print-prose h3 {
+    font-size: 16pt;
+    margin-top: 16pt;
+    margin-bottom: 8pt;
+  }
+
+  .print-prose p {
+    margin-bottom: 12pt;
+  }
+
+  .print-prose ul,
+  .print-prose ol {
+    margin-bottom: 12pt;
+  }
+
+  .print-prose blockquote {
+    margin: 12pt 0;
+    padding-left: 12pt;
+    border-left: 4pt solid #c8d419;
+  }
+
+  .print-prose table {
+    margin: 12pt 0;
+  }
+
+  .print-content-wrapper article {
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: transparent !important;
+  }
+}
+
+/* Print View Preview Styles (non-print media) */
+.print-view-container {
+  max-width: 210mm;
+  padding: 40px;
+  background: white;
+}
+
+.print-content-wrapper article {
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+}
+
+.print-content-wrapper .prose {
+  color: #000;
+}
+
+@media screen {
+  .print-content-wrapper {
+    color: #000;
+  }
+}
