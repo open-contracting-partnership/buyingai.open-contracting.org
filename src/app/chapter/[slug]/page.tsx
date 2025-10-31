@@ -3,6 +3,9 @@ import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import React from "react";
+import { visit } from "unist-util-visit";
+import type { Root } from "mdast";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import {
   getAllChapters,
   getChapterBySlug,
@@ -78,6 +81,129 @@ export async function generateMetadata({ params }: PageProps) {
   };
 }
 
+// Process markdown to resolve image references
+function processMarkdownImageReferences(content: string): string {
+  // Map to store image references: refId -> imageUrl
+  const imageRefs: Map<string, string> = new Map();
+
+  // First pass: find all image reference definitions using multiline regex
+  // Pattern matches: [ref]: <url> or [ref]: url
+  // Using multiline flag to match start of lines
+  const refPattern = /^\[([^\]]+)\]:\s*(.+)$/gm;
+  let match;
+
+  while ((match = refPattern.exec(content)) !== null) {
+    const refId = match[1].toLowerCase().trim();
+    let imageUrl = match[2].trim();
+
+    // Remove angle brackets if present
+    if (imageUrl.startsWith("<") && imageUrl.endsWith(">")) {
+      imageUrl = imageUrl.slice(1, -1);
+    }
+
+    if (imageUrl) {
+      imageRefs.set(refId, imageUrl);
+    }
+  }
+
+  // Debug: log found references
+  if (imageRefs.size > 0) {
+    console.log(
+      "[Image Processing] Found image references:",
+      Array.from(imageRefs.keys())
+    );
+  } else {
+    console.warn("[Image Processing] No image references found in content");
+  }
+
+  // Second pass: replace image references and remove definitions
+  let processedContent = content;
+
+  imageRefs.forEach((imageUrl, refId) => {
+    // Escape special regex characters in refId
+    const escapedRefId = refId.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    // Match both ![alt][refId] and ![][refId] (case-insensitive)
+    const imageRefPattern = new RegExp(
+      `!\\[(.*?)\\]\\[${escapedRefId}\\]`,
+      "gi"
+    );
+
+    const matches = processedContent.match(imageRefPattern);
+    if (matches) {
+      console.log(
+        `[Image Processing] Replacing ${matches.length} image reference(s) for [${refId}]`
+      );
+    }
+
+    processedContent = processedContent.replace(
+      imageRefPattern,
+      (match, altText) => {
+        const replacement = `![${altText || ""}](${imageUrl})`;
+        console.log(
+          `[Image Processing] Replaced: "${match}" -> "${replacement.substring(
+            0,
+            100
+          )}..."`
+        );
+        return replacement;
+      }
+    );
+
+    // Remove the reference definition line
+    const removePattern = new RegExp(`^\\[${escapedRefId}\\]:\\s*.+$`, "gim");
+    processedContent = processedContent.replace(removePattern, "");
+  });
+
+  return processedContent;
+}
+
+// Custom remark plugin to fix images with data URIs that might have parsing issues
+function remarkFixImageDataUris() {
+  return (tree: Root) => {
+    visit(tree, "image", (node: any) => {
+      // Debug: log image nodes found
+      if (process.env.NODE_ENV === "development") {
+        console.log("[Remark Plugin] Image node found:", {
+          urlLength: node.url?.length || 0,
+          urlPreview: node.url?.substring(0, 50) || "none",
+          alt: node.alt,
+          hasUrl: !!node.url,
+        });
+      }
+
+      // If URL is missing or empty, try to reconstruct it from the raw markdown
+      // This handles cases where ReactMarkdown fails to parse long data URIs
+      if (
+        !node.url ||
+        (typeof node.url === "string" && node.url.trim() === "")
+      ) {
+        console.warn(
+          "[Remark Plugin] Image node has empty URL, attempting to fix:",
+          {
+            alt: node.alt,
+            position: node.position,
+          }
+        );
+        // The URL might be in the raw markdown source
+        // We can't easily access it here, but we'll handle it in the component
+      } else if (
+        node.url &&
+        typeof node.url === "string" &&
+        node.url.startsWith("data:")
+      ) {
+        // Data URI is present, ensure it's preserved
+        if (process.env.NODE_ENV === "development") {
+          console.log("[Remark Plugin] Data URI image preserved:", {
+            length: node.url.length,
+          });
+        }
+        // Ensure the URL is properly set (this might help with parsing issues)
+        node.url = node.url;
+      }
+    });
+  };
+}
+
 export default async function ChapterPage({ params }: PageProps) {
   const { slug } = await params;
   const chapter = getChapterBySlug(slug);
@@ -89,6 +215,64 @@ export default async function ChapterPage({ params }: PageProps) {
   const allChapters = getAllChapters().filter((ch) => ch.slug !== "00-toc");
   const { previous, next } = getAdjacentChapters(slug);
   const structure = getSectionsStructure();
+
+  // Process markdown to resolve image references
+  const processedContent = processMarkdownImageReferences(chapter.content);
+
+  // Split content by images to render them separately
+  // This avoids ReactMarkdown parsing issues with long data URIs
+  const imagePattern = /!\[([^\]]*)\]\((data:[^)]+)\)/g;
+  const contentParts: Array<
+    | { type: "markdown"; content: string }
+    | { type: "image"; url: string; alt: string }
+  > = [];
+  let lastIndex = 0;
+  let match;
+
+  while ((match = imagePattern.exec(processedContent)) !== null) {
+    // Add markdown content before the image
+    if (match.index > lastIndex) {
+      contentParts.push({
+        type: "markdown",
+        content: processedContent.substring(lastIndex, match.index),
+      });
+    }
+
+    // Add the image
+    contentParts.push({
+      type: "image",
+      url: match[2],
+      alt: match[1] || "",
+    });
+
+    lastIndex = match.index + match[0].length;
+  }
+
+  // Add remaining markdown content
+  if (lastIndex < processedContent.length) {
+    contentParts.push({
+      type: "markdown",
+      content: processedContent.substring(lastIndex),
+    });
+  }
+
+  // If no images found, use original content
+  if (contentParts.length === 0) {
+    contentParts.push({
+      type: "markdown",
+      content: processedContent,
+    });
+  }
+
+  // Debug: show processing results
+  if (process.env.NODE_ENV === "development") {
+    const hasImageRefs = chapter.content.includes("![][");
+    console.log("[Content Processing]", {
+      originalHasRefs: hasImageRefs,
+      contentParts: contentParts.length,
+      imagesFound: contentParts.filter((p) => p.type === "image").length,
+    });
+  }
 
   return (
     <ChapterLayout
@@ -125,270 +309,320 @@ export default async function ChapterPage({ params }: PageProps) {
             prose-pre:bg-transparent prose-pre:p-0 prose-pre:m-0 prose-pre:overflow-visible
           "
           >
-            <ReactMarkdown
-              remarkPlugins={[remarkGfm]}
-              components={{
-                img: ({ src, alt, ...props }) => {
-                  // Only render image if src is valid
-                  if (!src) return null;
-                  return <img src={src} alt={alt || ""} {...props} />;
-                },
-                pre: ({ children, ...props }: any) => {
-                  // Get the text content from children
-                  let content = "";
-                  if (typeof children === "string") {
-                    content = children;
-                  } else if (React.isValidElement(children)) {
-                    const childProps = children.props as { children?: string };
-                    if (childProps.children) {
-                      content = String(childProps.children);
-                    }
-                  }
-
-                  content = content.trim();
-                  if (!content) {
-                    return null;
-                  }
-
-                  const lines = content.split("\n");
-
-                  // Check if it's a Who/What box
-                  const whoLine = lines.find((line) =>
-                    line.trim().startsWith("- Who:")
+            {contentParts.length > 0 ? (
+              contentParts.map((part, index) => {
+                if (part.type === "image") {
+                  // Render image directly
+                  return (
+                    <img
+                      key={`image-${index}`}
+                      src={part.url}
+                      alt={part.alt || ""}
+                      className="rounded-lg shadow-md max-w-full h-auto my-4"
+                      loading="lazy"
+                    />
                   );
-                  const whatLine = lines.find((line) =>
-                    line.trim().startsWith("- What:")
-                  );
-
-                  if (whoLine && whatLine) {
-                    const whoContent = whoLine
-                      .replace(/^-\s*Who:\s*/, "")
-                      .trim();
-                    const whatContent = whatLine
-                      .replace(/^-\s*What:\s*/, "")
-                      .trim();
-
-                    return (
-                      <div className="not-prose my-6 px-8 py-5 bg-[#F5F7E6] rounded-2xl">
-                        <table
-                          style={{
-                            width: "100%",
-                            tableLayout: "fixed",
-                            borderCollapse: "collapse",
-                          }}
-                        >
-                          <tbody>
-                            <tr>
-                              <td
-                                style={{
-                                  width: "80px",
-                                  fontWeight: "bold",
-                                  color: "#8B9A2E",
-                                  fontSize: "1.125rem",
-                                  paddingRight: "1.5rem",
-                                  verticalAlign: "top",
-                                  paddingBottom: "0.75rem",
-                                  border: "none",
-                                }}
-                              >
-                                Who
-                              </td>
-                              <td
-                                style={{
-                                  color: "#1f2937",
-                                  fontSize: "1rem",
-                                  paddingBottom: "0.75rem",
-                                  border: "none",
-                                  wordWrap: "break-word",
-                                  overflowWrap: "break-word",
-                                }}
-                              >
-                                {whoContent}
-                              </td>
-                            </tr>
-                            <tr>
-                              <td
-                                style={{
-                                  width: "80px",
-                                  fontWeight: "bold",
-                                  color: "#8B9A2E",
-                                  fontSize: "1.125rem",
-                                  paddingRight: "1.5rem",
-                                  verticalAlign: "top",
-                                  border: "none",
-                                }}
-                              >
-                                What
-                              </td>
-                              <td
-                                style={{
-                                  color: "#1f2937",
-                                  fontSize: "1rem",
-                                  border: "none",
-                                  wordWrap: "break-word",
-                                  overflowWrap: "break-word",
-                                }}
-                              >
-                                {whatContent}
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    );
-                  }
-
-                  // Check if it's a resource/info box
-                  const firstLine = lines[0];
-                  const hasBullets = lines.some((line) =>
-                    line.trim().startsWith("-")
-                  );
-
-                  if (firstLine && hasBullets && !firstLine.startsWith("-")) {
-                    const title = firstLine.trim();
-                    // Keep all content after the title, preserving empty lines
-                    const bulletContent = lines.slice(1).join("\n").trim();
-
-                    return (
-                      <div className="my-8 -mx-12 px-12 py-6 bg-[#F5F7E6]">
-                        <h4 className="font-bold text-gray-900 text-lg mb-4">
-                          {title}
-                        </h4>
-                        <div className="prose prose-sm max-w-none prose-ul:my-2 prose-ul:list-disc prose-ul:pl-5 prose-li:my-1 prose-li:text-gray-700 prose-li:leading-relaxed prose-p:my-2 prose-p:text-gray-700 prose-p:leading-relaxed prose-a:text-[#23B2A7] prose-a:no-underline hover:prose-a:underline">
-                          <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                            {bulletContent}
-                          </ReactMarkdown>
-                        </div>
-                      </div>
-                    );
-                  }
-
-                  // Regular code block - hide it
-                  return null;
-                },
-                code: ({ inline, children, ...props }: any) => {
-                  // Only handle inline code here
-                  if (inline) {
-                    return (
-                      <code
-                        className="bg-gray-100 px-1 py-0.5 rounded text-sm"
-                        {...props}
-                      >
-                        {children}
-                      </code>
-                    );
-                  }
-                  // Block code is handled by pre component
-                  return <code {...props}>{children}</code>;
-                },
-                table: ({ children, ...props }: any) => {
-                  // Check if this is a header-only table by examining the children
-                  const hasOnlyHeaders = React.Children.toArray(children).every(
-                    (child) => {
-                      if (
-                        React.isValidElement(child) &&
-                        child.type === "thead"
-                      ) {
-                        return true;
-                      }
-                      if (
-                        React.isValidElement(child) &&
-                        child.type === "tbody"
-                      ) {
-                        // Check if tbody has any tr children
-                        const childProps = child.props as {
-                          children?: React.ReactNode;
-                        };
-                        const tbodyChildren = React.Children.toArray(
-                          childProps.children
-                        );
-                        return (
-                          tbodyChildren.length === 0 ||
-                          tbodyChildren.every((tr) => {
-                            if (!React.isValidElement(tr) || tr.type !== "tr")
-                              return false;
-                            const trProps = tr.props as {
-                              children?: React.ReactNode;
+                } else {
+                  // Render markdown content
+                  return (
+                    <ReactMarkdown
+                      key={`markdown-${index}`}
+                      remarkPlugins={[remarkGfm]}
+                      components={{
+                        img: ({ src, alt, ...props }) => {
+                          const srcString =
+                            typeof src === "string" ? src : String(src || "");
+                          if (!srcString) return null;
+                          return (
+                            <img
+                              src={srcString}
+                              alt={alt || ""}
+                              {...props}
+                              className="rounded-lg shadow-md max-w-full h-auto"
+                              loading="lazy"
+                            />
+                          );
+                        },
+                        pre: ({ children, ...props }: any) => {
+                          // Get the text content from children
+                          let content = "";
+                          if (typeof children === "string") {
+                            content = children;
+                          } else if (React.isValidElement(children)) {
+                            const childProps = children.props as {
+                              children?: string;
                             };
-                            return React.Children.toArray(
-                              trProps.children
-                            ).every((td) => {
-                              if (!React.isValidElement(td) || td.type !== "td")
-                                return false;
-                              const tdProps = td.props as {
+                            if (childProps.children) {
+                              content = String(childProps.children);
+                            }
+                          }
+
+                          content = content.trim();
+                          if (!content) {
+                            return null;
+                          }
+
+                          const lines = content.split("\n");
+
+                          // Check if it's a Who/What box
+                          const whoLine = lines.find((line) =>
+                            line.trim().startsWith("- Who:")
+                          );
+                          const whatLine = lines.find((line) =>
+                            line.trim().startsWith("- What:")
+                          );
+
+                          if (whoLine && whatLine) {
+                            const whoContent = whoLine
+                              .replace(/^-\s*Who:\s*/, "")
+                              .trim();
+                            const whatContent = whatLine
+                              .replace(/^-\s*What:\s*/, "")
+                              .trim();
+
+                            return (
+                              <div className="not-prose my-6 px-8 py-5 bg-[#F5F7E6] rounded-2xl">
+                                <table
+                                  style={{
+                                    width: "100%",
+                                    tableLayout: "fixed",
+                                    borderCollapse: "collapse",
+                                  }}
+                                >
+                                  <tbody>
+                                    <tr>
+                                      <td
+                                        style={{
+                                          width: "80px",
+                                          fontWeight: "bold",
+                                          color: "#8B9A2E",
+                                          fontSize: "1.125rem",
+                                          paddingRight: "1.5rem",
+                                          verticalAlign: "top",
+                                          paddingBottom: "0.75rem",
+                                          border: "none",
+                                        }}
+                                      >
+                                        Who
+                                      </td>
+                                      <td
+                                        style={{
+                                          color: "#1f2937",
+                                          fontSize: "1rem",
+                                          paddingBottom: "0.75rem",
+                                          border: "none",
+                                          wordWrap: "break-word",
+                                          overflowWrap: "break-word",
+                                        }}
+                                      >
+                                        {whoContent}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td
+                                        style={{
+                                          width: "80px",
+                                          fontWeight: "bold",
+                                          color: "#8B9A2E",
+                                          fontSize: "1.125rem",
+                                          paddingRight: "1.5rem",
+                                          verticalAlign: "top",
+                                          border: "none",
+                                        }}
+                                      >
+                                        What
+                                      </td>
+                                      <td
+                                        style={{
+                                          color: "#1f2937",
+                                          fontSize: "1rem",
+                                          border: "none",
+                                          wordWrap: "break-word",
+                                          overflowWrap: "break-word",
+                                        }}
+                                      >
+                                        {whatContent}
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                            );
+                          }
+
+                          // Check if it's a resource/info box
+                          const firstLine = lines[0];
+                          const hasBullets = lines.some((line) =>
+                            line.trim().startsWith("-")
+                          );
+
+                          if (
+                            firstLine &&
+                            hasBullets &&
+                            !firstLine.startsWith("-")
+                          ) {
+                            const title = firstLine.trim();
+                            // Keep all content after the title, preserving empty lines
+                            const bulletContent = lines
+                              .slice(1)
+                              .join("\n")
+                              .trim();
+
+                            return (
+                              <div className="my-8 -mx-12 px-12 py-6 bg-[#F5F7E6]">
+                                <h4 className="font-bold text-gray-900 text-lg mb-4">
+                                  {title}
+                                </h4>
+                                <div className="prose prose-sm max-w-none prose-ul:my-2 prose-ul:list-disc prose-ul:pl-5 prose-li:my-1 prose-li:text-gray-700 prose-li:leading-relaxed prose-p:my-2 prose-p:text-gray-700 prose-p:leading-relaxed prose-a:text-[#23B2A7] prose-a:no-underline hover:prose-a:underline">
+                                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                    {bulletContent}
+                                  </ReactMarkdown>
+                                </div>
+                              </div>
+                            );
+                          }
+
+                          // Regular code block - hide it
+                          return null;
+                        },
+                        code: ({ inline, children, ...props }: any) => {
+                          // Only handle inline code here
+                          if (inline) {
+                            return (
+                              <code
+                                className="bg-gray-100 px-1 py-0.5 rounded text-sm"
+                                {...props}
+                              >
+                                {children}
+                              </code>
+                            );
+                          }
+                          // Block code is handled by pre component
+                          return <code {...props}>{children}</code>;
+                        },
+                        table: ({ children, ...props }: any) => {
+                          // Check if this is a header-only table by examining the children
+                          const hasOnlyHeaders = React.Children.toArray(
+                            children
+                          ).every((child) => {
+                            if (
+                              React.isValidElement(child) &&
+                              child.type === "thead"
+                            ) {
+                              return true;
+                            }
+                            if (
+                              React.isValidElement(child) &&
+                              child.type === "tbody"
+                            ) {
+                              // Check if tbody has any tr children
+                              const childProps = child.props as {
                                 children?: React.ReactNode;
                               };
-                              return (
-                                !tdProps.children ||
-                                (typeof tdProps.children === "string" &&
-                                  tdProps.children.trim() === "") ||
-                                (Array.isArray(tdProps.children) &&
-                                  tdProps.children.every(
-                                    (c) =>
-                                      typeof c === "string" && c.trim() === ""
-                                  ))
+                              const tbodyChildren = React.Children.toArray(
+                                childProps.children
                               );
-                            });
-                          })
-                        );
-                      }
-                      return false;
-                    }
-                  );
+                              return (
+                                tbodyChildren.length === 0 ||
+                                tbodyChildren.every((tr) => {
+                                  if (
+                                    !React.isValidElement(tr) ||
+                                    tr.type !== "tr"
+                                  )
+                                    return false;
+                                  const trProps = tr.props as {
+                                    children?: React.ReactNode;
+                                  };
+                                  return React.Children.toArray(
+                                    trProps.children
+                                  ).every((td) => {
+                                    if (
+                                      !React.isValidElement(td) ||
+                                      td.type !== "td"
+                                    )
+                                      return false;
+                                    const tdProps = td.props as {
+                                      children?: React.ReactNode;
+                                    };
+                                    return (
+                                      !tdProps.children ||
+                                      (typeof tdProps.children === "string" &&
+                                        tdProps.children.trim() === "") ||
+                                      (Array.isArray(tdProps.children) &&
+                                        tdProps.children.every(
+                                          (c) =>
+                                            typeof c === "string" &&
+                                            c.trim() === ""
+                                        ))
+                                    );
+                                  });
+                                })
+                              );
+                            }
+                            return false;
+                          });
 
-                  if (hasOnlyHeaders) {
-                    return (
-                      <div className="my-6 px-6 py-4 bg-[#F5F7E6] border-l-4 border-[#8B9A2E] rounded-xl">
-                        <table className="w-full" {...props}>
-                          {children}
-                        </table>
-                      </div>
-                    );
-                  }
+                          if (hasOnlyHeaders) {
+                            return (
+                              <div className="my-6 px-6 py-4 bg-[#F5F7E6] border-l-4 border-[#8B9A2E] rounded-xl">
+                                <table className="w-full" {...props}>
+                                  {children}
+                                </table>
+                              </div>
+                            );
+                          }
 
-                  return (
-                    <table
-                      className="w-full border-collapse border border-gray-300"
-                      {...props}
+                          return (
+                            <table
+                              className="w-full border-collapse border border-gray-300"
+                              {...props}
+                            >
+                              {children}
+                            </table>
+                          );
+                        },
+                        thead: ({ children, ...props }) => {
+                          return <thead {...props}>{children}</thead>;
+                        },
+                        th: ({ children, ...props }) => {
+                          return (
+                            <th
+                              className="px-0 py-2 text-left font-semibold text-base text-gray-900 border-0"
+                              {...props}
+                            >
+                              {children}
+                            </th>
+                          );
+                        },
+                        tr: ({ children, ...props }) => {
+                          return (
+                            <tr className="border-0" {...props}>
+                              {children}
+                            </tr>
+                          );
+                        },
+                        td: ({ children, ...props }) => {
+                          return (
+                            <td
+                              className="border border-gray-300 px-4 py-2 text-sm"
+                              {...props}
+                            >
+                              {children}
+                            </td>
+                          );
+                        },
+                      }}
                     >
-                      {children}
-                    </table>
+                      {part.content}
+                    </ReactMarkdown>
                   );
-                },
-                thead: ({ children, ...props }) => {
-                  return <thead {...props}>{children}</thead>;
-                },
-                th: ({ children, ...props }) => {
-                  return (
-                    <th
-                      className="px-0 py-2 text-left font-semibold text-base text-gray-900 border-0"
-                      {...props}
-                    >
-                      {children}
-                    </th>
-                  );
-                },
-                tr: ({ children, ...props }) => {
-                  return (
-                    <tr className="border-0" {...props}>
-                      {children}
-                    </tr>
-                  );
-                },
-                td: ({ children, ...props }) => {
-                  return (
-                    <td
-                      className="border border-gray-300 px-4 py-2 text-sm"
-                      {...props}
-                    >
-                      {children}
-                    </td>
-                  );
-                },
-              }}
-            >
-              {chapter.content}
-            </ReactMarkdown>
+                }
+              })
+            ) : (
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {processedContent}
+              </ReactMarkdown>
+            )}
           </div>
         </article>
 
@@ -401,50 +635,20 @@ export default async function ChapterPage({ params }: PageProps) {
                 scroll={false}
                 className="flex items-center gap-2 text-gray-600 hover:text-black transition-colors group"
               >
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  className="group-hover:-translate-x-1 transition-transform"
-                >
-                  <polyline points="15 18 9 12 15 6" />
-                </svg>
-                <div>
-                  <div className="text-xs text-gray-400 uppercase tracking-wide">
-                    Previous
-                  </div>
-                  <div className="font-medium">{previous.title}</div>
-                </div>
+                <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+                <span className="text-sm">{previous.title}</span>
               </Link>
             )}
           </div>
-          <div className="text-right">
+          <div>
             {next && (
               <Link
                 href={`/chapter/${next.slug}#content`}
                 scroll={false}
                 className="flex items-center gap-2 text-gray-600 hover:text-black transition-colors group"
               >
-                <div>
-                  <div className="text-xs text-gray-400 uppercase tracking-wide">
-                    Next
-                  </div>
-                  <div className="font-medium">{next.title}</div>
-                </div>
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  className="group-hover:translate-x-1 transition-transform"
-                >
-                  <polyline points="9 18 15 12 9 6" />
-                </svg>
+                <span className="text-sm">{next.title}</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
             )}
           </div>
