@@ -139,6 +139,28 @@ export default function Header({ chapters }: HeaderProps) {
 
           {/* desktop */}
           <div className="hidden md:flex items-center gap-4">
+            {!isSearchOpen && (
+              <>
+                <Link
+                  href="https://docs.google.com/spreadsheets/d/1U9YJLAgiqNjHBrCgGl1vHOW9u9eI6hH9N9ckyRtkfzA/edit?gid=0#gid=0"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-4 py-2.5 text-white hover:bg-white/10 rounded transition-colors text-sm font-medium"
+                >
+                  Terms for Glossary
+                </Link>
+
+                <Link
+                  href="https://docs.google.com/spreadsheets/d/1U9YJLAgiqNjHBrCgGl1vHOW9u9eI6hH9N9ckyRtkfzA/edit?gid=438383496#gid=438383496"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-4 py-2.5 text-white hover:bg-white/10 rounded transition-colors text-sm font-medium"
+                >
+                  Terms for automatized
+                </Link>
+              </>
+            )}
+
             {/* Search container with animation */}
             <div className="relative flex items-center">
               <div
@@ -173,24 +195,6 @@ export default function Header({ chapters }: HeaderProps) {
                   <XIcon className="size-4 text-gray-600" />
                 </button>
               </div>
-
-              <Link
-                href="https://docs.google.com/spreadsheets/d/1U9YJLAgiqNjHBrCgGl1vHOW9u9eI6hH9N9ckyRtkfzA/edit?gid=0#gid=0"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-4 py-2.5 text-white hover:bg-white/10 rounded transition-colors text-sm font-medium"
-              >
-                Terms for Glossary
-              </Link>
-
-              <Link
-                href="https://docs.google.com/spreadsheets/d/1U9YJLAgiqNjHBrCgGl1vHOW9u9eI6hH9N9ckyRtkfzA/edit?gid=438383496#gid=438383496"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-4 py-2.5 text-white hover:bg-white/10 rounded transition-colors text-sm font-medium"
-              >
-                Terms for automatized
-              </Link>
 
               {isSearchOpen && (
                 <>
@@ -501,16 +505,28 @@ export default function Header({ chapters }: HeaderProps) {
                   </div>
                 </div>
 
-                {/* Terms for Glossary link */}
-                <Link
-                  href="https://www.open-contracting.org/glossary"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={toggleMenu}
-                  className="px-6 py-3 bg-white/5 hover:bg-white/10 rounded-lg transition-colors text-center text-white font-medium"
-                >
-                  Terms for Glossary
-                </Link>
+                {/* Terms for Glossary and Terms for automatized */}
+                <div className="flex flex-col gap-2">
+                  <Link
+                    href="https://docs.google.com/spreadsheets/d/1U9YJLAgiqNjHBrCgGl1vHOW9u9eI6hH9N9ckyRtkfzA/edit?gid=0#gid=0"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={toggleMenu}
+                    className="px-4 py-2.5 bg-white/5 hover:bg-white/10 rounded-lg transition-colors text-white text-sm font-medium text-left"
+                  >
+                    Terms for Glossary
+                  </Link>
+
+                  <Link
+                    href="https://docs.google.com/spreadsheets/d/1U9YJLAgiqNjHBrCgGl1vHOW9u9eI6hH9N9ckyRtkfzA/edit?gid=438383496#gid=438383496"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={toggleMenu}
+                    className="px-4 py-2.5 bg-white/5 hover:bg-white/10 rounded-lg transition-colors text-white text-sm font-medium text-left"
+                  >
+                    Terms for automatized
+                  </Link>
+                </div>
 
                 {/* CTA button */}
                 <Link

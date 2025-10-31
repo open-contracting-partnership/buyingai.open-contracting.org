@@ -11,7 +11,6 @@ import {
 import { StickyNavbar } from "./StickyNavbar";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import { SectionMarker } from "./SectionMarker";
-import { PrintView } from "./PrintView";
 import { Eye } from "lucide-react";
 
 interface ChapterLayoutProps {
@@ -38,7 +37,6 @@ export function ChapterLayout({
   // Always initialize as false to avoid hydration mismatch
   const [scrolled, setScrolled] = useState(false);
   const [showStickyNav, setShowStickyNav] = useState(false);
-  const [printViewOpen, setPrintViewOpen] = useState(false);
   const [sidebarVisible, setSidebarVisible] = useState(() => {
     if (typeof window !== "undefined") {
       return window.innerWidth >= 768; // Sidebar visible by default only on desktop
@@ -367,22 +365,17 @@ export function ChapterLayout({
 
       {/* Fixed Preview PDF Button */}
       <button
-        onClick={() => setPrintViewOpen(true)}
-        className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-5 py-3 bg-[#92C36F] text-white rounded-full shadow-lg hover:bg-[#7BA860] transition-all duration-300 hover:shadow-xl no-print"
-        aria-label="Preview PDF"
+        onClick={() => {
+          console.log("PDF Preview button clicked");
+          console.log("Chapter:", displayTitle);
+          console.log("Structure:", structure);
+        }}
+        className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-5 py-3 bg-[#92C36F] text-white rounded-full shadow-lg hover:bg-[#7BA860] transition-all duration-300 hover:shadow-xl no-print cursor-pointer"
+        aria-label="Download PDF"
       >
         <Eye className="size-5" />
-        <span className="hidden sm:inline font-medium">Preview PDF</span>
+        <span className="hidden sm:inline font-medium">Download PDF</span>
       </button>
-
-      {/* Print View Modal */}
-      <PrintView
-        title={structure.title}
-        chapterTitle={displayTitle}
-        content={chapterContent || children}
-        isOpen={printViewOpen}
-        onClose={() => setPrintViewOpen(false)}
-      />
     </div>
   );
 }
