@@ -114,8 +114,7 @@ function Tooltip({ term, definition, position }: TooltipState) {
         top: `${adjustedPosition.y}px`,
       }}
     >
-      <div className="font-semibold text-sm mb-2 text-blue-300">{term}</div>
-      <div className="text-sm leading-relaxed text-gray-200">{definition}</div>
+      <div className="text-sm leading-relaxed text-white font-bold">{definition}</div>
       <div className="absolute -top-2 left-4 w-4 h-4 bg-gray-900 transform rotate-45"></div>
     </div>
   );
@@ -202,8 +201,7 @@ function AutoGlossaryWrapper({ children }: { children: React.ReactNode }) {
             // Crear elemento para el término
             const span = document.createElement("span");
             span.className =
-              "glossary-term cursor-help border-b-2 border-dotted text-blue-600 hover:text-blue-700 transition-colors";
-            span.style.borderBottomColor = "#C8D419";
+              "glossary-term cursor-help bg-[#c8d419] rounded-full px-1 py-0.5";
             span.textContent = text.substring(
               match.index,
               match.index + match.length
@@ -391,8 +389,7 @@ function GlossaryWord({
 
   return (
     <span
-      className="glossary-term cursor-help border-b-2 border-dotted text-blue-600 hover:text-blue-700 transition-colors"
-      style={{ borderBottomColor: "#C8D419" }}
+      className="glossary-term cursor-help bg-[#c8d419] rounded-full px-1 py-0.5"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={hideTooltip}
     >
