@@ -71,6 +71,12 @@ export default function HomeClient({ chapters, structure }: HomeClientProps) {
               together!
             </li>
           </ul>
+          <Link
+            href="/chapter/01-introduction#content"
+            className="inline-block mt-8 pt-1 pb-0.5 pl-1 pr-4 bg-[#C8D419] text-black rounded-lg hover:bg-[#B5C115] transition-colors text-xl lg:text-2xl"
+          >
+            Get started
+          </Link>
         </div>
       </div>
     </>
