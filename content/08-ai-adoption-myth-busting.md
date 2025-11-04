@@ -1,11 +1,9 @@
-# AI adoption myth-busting 
+# AI adoption *myth-busting* 
 
 ```
 Who: Procurement, project, and leadership teams
 What: Myths around planning, technical capacity, integration, and governance, and the reality
 ```
-
-## AI adoption myths
 
 As procurement officials play an increasingly critical role in their organizations' AI adoption journeys, it's important to separate fact from fiction. While AI offers transformative potential, successful procurement requires a clear understanding of technical realities, vendor capabilities, and implementation challenges.
 

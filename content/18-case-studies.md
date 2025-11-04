@@ -1,0 +1,40 @@
+# Case studies
+
+![][image1]
+
+## Supporting AI-readiness in Australia 
+
+**Who:** Australian Government’s Digital Transformation Agency (DTA)   
+   
+**What they did:** Develop policies and tools to support effective and safe use of AI technology, including:
+
+* [Policy for the responsible use of AI in government](https://www.digital.gov.au/policy/ai/policy)  
+* [Technical standard for government’s use of artificial intelligence](https://www.digital.gov.au/policy/ai/AI-technical-standard)  
+* [AI model clauses](https://www.buyict.gov.au/sp?id=resources_and_policies&kb=KB0010685#ai-clauses)
+
+   
+**What worked well:** The DTA meets staff where they are by directly embedding their guidance on good procurement practices for AI technology in go-to resources like their Digital Marketplace. Although the DTA also promotes its materials in other ways, such as through blog posts, they’ve seen that the tactic of integrating the guidance in something that agencies use on a regular basis to be a successful way to support adoption. 
+
+DTA also keeps their policy documents live, so that they are able to update them on a regular basis and stay current with the latest policy and technology developments.   
+   
+**What was harder:** DTA encourages bringing in procurement and technical teams as early as possible in the procurement process. However, sometimes DTA sees situations where agencies are still bringing in these stakeholders too late in a rush to get to market, resulting in protracted contract negotiations that could have been avoided with better up-front cross-departmental engagement. 
+
+**Lesson learned:** Applying AI technology in low-risk internal use cases can deliver valuable ROI, while generating useful learning and experience with AI technology. 
+
+![][image1]
+
+## Outcome-driven contracting success in the United States
+
+**Who:** Centers for Medicare and Medicaid Services (CMS) 
+
+**What they bought:** What they bought: AI/ML services to streamline operations, as well as some maintenance of existing legacy tools, from Skyward IT Solutions, LLC; the resulting tools include a chatbot for the CMS' Office of Information Technology team that has reduced the time it takes to draft tickets with a user story from 15-20 minutes down to one minute, as well as a procurement tool for the Office of Acquisition and Grants Management that enables faster labor category analysis, which is now saving the CMS $3 million a month.
+
+**Procurement procedure:** Challenge-based procurement through an open and competitive process 
+
+**What worked well:** The high-level, open-ended, outcome-driven contract focused on problems rather than dictating solutions. Given the rapid pace of AI development, there are now AI capabilities that were not available when the RFP was drafted or the contract was signed. The flexible contract has allowed the vendor to deliver the most cutting-edge solutions possible to CMS.
+
+**What was harder:** Institutions are still learning about AI, how it works, and what is required to get the most from this technology, and sometimes building this awareness falls on the vendor. For example, there is still a lack of understanding of the value of a specialized versus generic AI solutions. Generic models can be useful, but are not a one-size fits all solution. Narrow government use cases can require highly specific knowledge management, and be a better fit for specialized solutions. 
+
+**Lesson learned:** For a contracting approach like this to be successful, the government must be willing to trust their vendor partner.
+
+[image1]: <data:image/png;base64,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>

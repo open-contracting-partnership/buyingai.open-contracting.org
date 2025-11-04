@@ -1,3 +1,5 @@
+# 
+
 # Technical annex: GenAI requirements and evaluation criteria for cloud service providers 
 
 ```
@@ -9,4 +11,4 @@ Our guide aims to help you make your AI procurement a success – without learni
 
 Organizations often rely on Cloud Service Providers (CSPs) when implementing GenAI solutions. This is because CSPs offer unique advantages, including access to the massive computational resources needed for GenAI that would be cost-prohibitive for individual organizations to invest in and maintain on their own. CSPs are also responsible for ensuring that their infrastructure is safe, secure, and up-to-date, which can free up organizations to focus on achieving their core goals, without managing complex infrastructure upgrades. 
 
-Download the full technical annex with sample requirements, evaluation criteria and scoring tables.   
+[Download](https://bit.ly/BuyingAI-annex) the full technical annex with sample requirements, evaluation criteria and scoring tables.   

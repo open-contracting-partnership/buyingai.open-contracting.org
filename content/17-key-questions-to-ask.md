@@ -1,4 +1,4 @@
-# Key questions to ask: Overview
+# *Key questions to ask:* Overview
 
 ```
 Who: Procurement, project, and technology teams, as well as leadership
@@ -12,6 +12,11 @@ Successful AI procurement is a team effort, so as a procurement official, you ar
 The questions have been organized by the team member who may be best positioned to lead the inquiry. As you review these questions, consider your own unique organizational setup and who in your organization might be best equipped to provide insights on each topic. At different moments, you may need to consult IT, legal, data analytics, project management, or business units to get the answers you need, as well as consult outside stakeholders who advocate or represent the end users. 
 
 Not all questions will be relevant for your context. These questions are most relevant for custom or build purchases. For example, if you are buying off-the-shelf AI, procurement will mostly focus on aspects like licensing and access management, while if you are customizing or building software, the procurement team will work more closely with the project leaders and IT to tackle more complex issues relating to the vendor relationship and technical solution. 
+
+* AI readiness: Key questions  
+* Building your procurement strategy: Key questions  
+* Solicitation tips: Key questions  
+* Contract management: Key questions
 
 | AI readiness: Key questions  Procurement and organizational objective: lay the groundwork for overall good AI procurement through policies and practices |  |
 | :---- | :---- |

@@ -1,4 +1,4 @@
-# Your role as a procurement officer 
+# *Your role* as a procurement officer 
 
 ```
 Who: Procurement teams
@@ -9,7 +9,7 @@ What: The role of procurement in supporting AI adoption in the public sector
 
 By focusing on organizational needs rather than technology hype, leveraging existing procurement best practices, and enabling agile implementation, procurement officers can help ensure AI investments deliver real value for their organizations and the public they serve. 
 
-We recognize that many of you are doing your best despite challenging circumstances, and some of the practices we suggest in this guidance might feel wildly impossible given your context. Even so, we encourage you to review the material and think about what you can do, and check out our *Hacks for better AI procurement* section for ideas on how to get started.
+We recognize that many of you are doing your best despite challenging circumstances, and some of the practices we suggest in this guidance might feel wildly impossible given your context. Even so, we encourage you to review the material and think about what you can do, and check out our [Hacks for better AI procurement](https://buyingAI.open-contracting.org/07-hacks-for-better-ai-procurement) section for ideas on how to get started.
 
 You are also not alone. You do not need to know it all or decide it all. Your project team and technology team are there to work alongside you. Here we break down what you ideally have decision-making power around, and what you can influence: 
 
