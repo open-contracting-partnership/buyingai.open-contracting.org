@@ -147,15 +147,15 @@ export function BannerCarousel({
                             href={`/chapter/${ch.slug}#content`}
                             scroll={false}
                             onClick={(e) => e.stopPropagation()}
-                            className={`flex items-center gap-2.5 border-b border-black/10 pb-2 ${
-                              isMobile ? "text-sm" : "text-sm"
+                            className={`flex items-center gap-2.5 border-b border-black/10 pb-2 gont ${
+                              isMobile ? "text-sm" : "text-base"
                             } text-black/80 hover:text-black transition-colors group`}
                           >
                             <span
                               className={`${
                                 isMobile
-                                  ? "font-mono text-xs"
-                                  : "font-mono text-xs"
+                                  ? "font-mono text-sm"
+                                  : "font-mono text-base"
                               }`}
                             >
                               {String.fromCharCode(97 + chIdx)}.

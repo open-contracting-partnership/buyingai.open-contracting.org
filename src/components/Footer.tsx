@@ -20,25 +20,31 @@ export default function Footer() {
             <div className="flex flex-col gap-y-8 md:flex-row md:gap-x-6">
               <div className="md:w-2/3">
                 <div className="border-2 border-[#C8D419] rounded-tl-4xl py-4 px-6 text-white">
-                  <h3 className="text-xl font-bold font-gteesti-display">CONTACT</h3>
-                  <Link
-                    className="inline-block mt-3.5 underline text-xs"
-                    href="mailto:engage@open-contracting.org"
-                  >
-                    engage@open-contracting.org
-                  </Link>
+                  <h3 className="font-bold font-gteesti-display leading-tight">
+                    This is a resource by <br /> Open Contracting Partnership
+                  </h3>
                   <p className="mt-3.5 text-xs">
-                    Open Contracting Partnership, <br />
-                    1100 13th Street NW, Suite 800, 20005 Washington, D.C., USA
+                    We are a global nonprofit organization that supports public
+                    sector organizations to get better results from their
+                    procurements by opening up and leveraging data,
+                    multi-stakeholder collaboration, and goal-driven systems
+                    change.
                   </p>
                   <p className="mt-3.5 text-xs">
-                    Open Contracting Partnership is an independent non-profit
-                    public charity 501(c)(3).
+                    <Link
+                      className="underline"
+                      href="mailto:engage@open-contracting.org"
+                    >
+                      Contact us
+                    </Link>{" "}
+                    to discuss your project. We'd love to help!
                   </p>
                 </div>
               </div>
               <div className="md:w-1/3">
-                <h3 className="font-bold text-white font-gteesti-display">Connect with us:</h3>
+                <h3 className="font-bold text-white font-gteesti-display">
+                  Connect with us:
+                </h3>
                 <div className="mt-5 grid grid-cols-2 gap-4 w-1/2 md:translate-x-4 lg:translate-x-6">
                   <Link
                     href="https://twitter.com/opencontracting"
@@ -113,22 +119,17 @@ export default function Footer() {
         </div>
         <div className="mt-8">
           <p className="text-[11px]">
-            This work by the Open Contracting Partnership, unless otherwise
+            Open Contracting Partnership 2025. This work, unless otherwise
             noted, is licensed under a Creative Commons Attribution 4.0
-            International License.
-          </p>
-          <div className="mt-4 flex items-center gap-x-4">
-            <p className="text-[11px]">
-              Open Contracting Partnership {new Date().getFullYear()}
-            </p>
+            International License.{" "}
             <Link
-              href="https://www.open-contracting.org/terms-of-use"
+              className="underline"
+              href="https://www.open-contracting.org/terms-of-use/"
               target="_blank"
-              className="underline text-[11px]"
             >
               Terms
             </Link>
-          </div>
+          </p>
         </div>
       </div>
     </footer>

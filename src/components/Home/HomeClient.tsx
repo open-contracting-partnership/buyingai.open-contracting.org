@@ -22,7 +22,7 @@ export default function HomeClient({ chapters, structure }: HomeClientProps) {
             <h1 className="text-4xl md:text-7xl font-bold bg-gradient-to-r from-[#C8D419] to-[#23B2A7] bg-clip-text text-transparent leading-tight font-gteesti-display">
               Buying AI
             </h1>
-            <p className="mt-2 text-base lg:text-2xl text-black font-gteesti-pro-display">
+            <p className="mt-2 text-2xl lg:text-3xl xl:text-4xl text-black font-gteesti-pro-display font-bold">
               Tips and tools for public <br /> procurement
             </p>
           </div>
