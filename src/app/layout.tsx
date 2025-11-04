@@ -5,6 +5,8 @@ import Header from "@/components/Header";
 import "./globals.css";
 import Footer from "@/components/Footer";
 import { getAllChapters } from "@/lib/markdown";
+import { GlossaryProvider } from "@/components/GlossaryProvider";
+import glossaryData from "@/app/data/glossary.json";
 
 const ibmPlexSans = IBM_Plex_Sans({
   variable: "--font-ibm-plex-sans",
@@ -60,10 +62,12 @@ export default function RootLayout({
       <body
         className={`${ibmPlexSans.variable} antialiased min-h-screen !bg-[#F2F3F4] text-black font-gteesti-text overflow-x-hidden`}
       >
-        <GoogleAnalytics gaId="G-ST56FGCHR2" />
-        <Header chapters={chapters} />
-        <main>{children}</main>
-        <Footer />
+        <GlossaryProvider glossaryData={glossaryData} autoProcess={true}>
+          <GoogleAnalytics gaId="G-ST56FGCHR2" />
+          <Header chapters={chapters} />
+          <main>{children}</main>
+          <Footer />
+        </GlossaryProvider>
       </body>
     </html>
   );
