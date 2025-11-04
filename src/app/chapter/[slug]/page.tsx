@@ -52,17 +52,18 @@ function wrapItalicWithBackground(node: React.ReactNode): React.ReactNode {
     return node;
   }
 
-  // If it's an <em> or <i> element, wrap it with a span with green background
+  // If it's an <em> or <i> element, replace it with a span with green background (no italic)
   if (React.isValidElement(node)) {
     if (
       node.type === "em" ||
       node.type === "i" ||
       (typeof node.type === "string" && node.type.toLowerCase() === "em")
     ) {
-      // Keep the em element but wrap it with a span that has the green background
+      // Replace the em element with a span that has the green background but no italic style
+      const props = node.props as { children?: React.ReactNode };
       return (
-        <span className="bg-green-200 px-1 py-0.5 rounded">
-          {React.cloneElement(node as React.ReactElement<any>, {})}
+        <span className="bg-green-200 px-1 py-0.5 rounded not-italic">
+          {props?.children}
         </span>
       );
     }

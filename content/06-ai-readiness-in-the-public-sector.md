@@ -5,8 +5,6 @@ Who: Public sector leaders and procurement teams
 What: How to support AI readiness in the public sector
 ```
 
-## AI readiness in the public sector
-
 Responsible and effective use of AI in the public sector isn’t just about buying the “right” product. Before making a purchase, organizations must understand how different types of AI – from traditional machine-learning models for data analysis to generative AI for content creation – all have different use cases, technical requirements, and oversight and governance needs. 
 
 AI readiness means organizations must be equipped to: 
