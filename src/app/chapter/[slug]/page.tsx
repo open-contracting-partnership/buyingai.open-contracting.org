@@ -6,6 +6,87 @@ import React from "react";
 import { visit } from "unist-util-visit";
 import type { Root } from "mdast";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+
+// Helper function to check if a React node contains italic text
+function hasItalic(node: React.ReactNode): boolean {
+  if (!node) return false;
+
+  // If it's a string, check for markdown italic markers
+  if (typeof node === "string") {
+    return /[*_].+?[*_]/.test(node);
+  }
+
+  // If it's a React element, check its type and children
+  if (React.isValidElement(node)) {
+    // Check if it's an <em> or <i> tag
+    if (
+      node.type === "em" ||
+      node.type === "i" ||
+      (typeof node.type === "string" && node.type.toLowerCase() === "em")
+    ) {
+      return true;
+    }
+
+    // Check children recursively
+    const props = node.props as { children?: React.ReactNode };
+    if (props?.children) {
+      const children = React.Children.toArray(props.children);
+      return children.some((child) => hasItalic(child));
+    }
+  }
+
+  // If it's an array, check all items
+  if (Array.isArray(node)) {
+    return node.some((item) => hasItalic(item));
+  }
+
+  return false;
+}
+
+// Helper function to wrap italic elements with green background
+function wrapItalicWithBackground(node: React.ReactNode): React.ReactNode {
+  if (!node) return node;
+
+  // If it's a string, return as is (strings are not italic elements)
+  if (typeof node === "string") {
+    return node;
+  }
+
+  // If it's an <em> or <i> element, wrap it with a span with green background
+  if (React.isValidElement(node)) {
+    if (
+      node.type === "em" ||
+      node.type === "i" ||
+      (typeof node.type === "string" && node.type.toLowerCase() === "em")
+    ) {
+      // Keep the em element but wrap it with a span that has the green background
+      return (
+        <span className="bg-green-200 px-1 py-0.5 rounded">
+          {React.cloneElement(node as React.ReactElement<any>, {})}
+        </span>
+      );
+    }
+
+    // If it has children, process them recursively
+    const props = node.props as { children?: React.ReactNode };
+    if (props?.children) {
+      const children = React.Children.toArray(props.children);
+      const processedChildren = children.map((child) =>
+        wrapItalicWithBackground(child)
+      );
+      return React.cloneElement(node as React.ReactElement<any>, {
+        children: processedChildren,
+      });
+    }
+  }
+
+  // If it's an array, process each item
+  if (Array.isArray(node)) {
+    return node.map((item) => wrapItalicWithBackground(item));
+  }
+
+  return node;
+}
 import {
   getAllChapters,
   getChapterBySlug,
@@ -341,6 +422,60 @@ export default async function ChapterPage({ params }: PageProps) {
                               className="rounded-lg shadow-md max-w-full h-auto"
                               loading="lazy"
                             />
+                          );
+                        },
+                        h1: ({ children, className, ...props }: any) => {
+                          const processedChildren =
+                            wrapItalicWithBackground(children);
+                          return (
+                            <h1 {...props} className={className || ""}>
+                              {processedChildren}
+                            </h1>
+                          );
+                        },
+                        h2: ({ children, className, ...props }: any) => {
+                          const processedChildren =
+                            wrapItalicWithBackground(children);
+                          return (
+                            <h2 {...props} className={className || ""}>
+                              {processedChildren}
+                            </h2>
+                          );
+                        },
+                        h3: ({ children, className, ...props }: any) => {
+                          const processedChildren =
+                            wrapItalicWithBackground(children);
+                          return (
+                            <h3 {...props} className={className || ""}>
+                              {processedChildren}
+                            </h3>
+                          );
+                        },
+                        h4: ({ children, className, ...props }: any) => {
+                          const processedChildren =
+                            wrapItalicWithBackground(children);
+                          return (
+                            <h4 {...props} className={className || ""}>
+                              {processedChildren}
+                            </h4>
+                          );
+                        },
+                        h5: ({ children, className, ...props }: any) => {
+                          const processedChildren =
+                            wrapItalicWithBackground(children);
+                          return (
+                            <h5 {...props} className={className || ""}>
+                              {processedChildren}
+                            </h5>
+                          );
+                        },
+                        h6: ({ children, className, ...props }: any) => {
+                          const processedChildren =
+                            wrapItalicWithBackground(children);
+                          return (
+                            <h6 {...props} className={className || ""}>
+                              {processedChildren}
+                            </h6>
                           );
                         },
                         pre: ({ children, ...props }: any) => {
