@@ -33,29 +33,46 @@ export default function HomeClient({ chapters, structure }: HomeClientProps) {
           </div>
         </div>
       </div>
-
-      {/* Chapter List */}
-      {/* <div className="max-w-7xl mx-auto px-20 py-12">
-        <nav>
-          <ol className="space-y-3">
-            {chapters.map((chapter) => (
-              <li key={chapter.slug}>
-                <Link
-                  href={`/chapter/${chapter.slug}`}
-                  className="block p-4 border border-white/10 rounded hover:bg-white/5 hover:border-white/20 transition-colors"
-                >
-                  <span className="text-sm text-white/60 font-mono">
-                    {chapter.order.toString().padStart(2, "0")}
-                  </span>
-                  <h2 className="text-lg font-medium text-white mt-1">
-                    {chapter.title}
-                  </h2>
-                </Link>
-              </li>
-            ))}
-          </ol>
-        </nav>
-      </div> */}
+      <div className="w-11/12 ml-auto max-w-[1000px]">
+        <div
+          className="
+              rounded-b-[10px]
+              bg-[linear-gradient(91deg,_#FFF_0.16%,_rgba(255,255,255,0.70)_100%)]
+              shadow-[0_10px_40px_0_rgba(0,0,0,0.10)]
+              backdrop-blur-[15px]
+              lg:pt-28
+              lg:pl-20
+              lg:pr-28
+              lg:pb-36
+              p-8
+            "
+        >
+          <h2 className="text-[#353535] text-3xl lg:text-4xl xl:text-5xl font-bold font-gteesti-display">
+            This guidance offers practical and hands-on tips to get the best
+            results from your AI purchases.
+          </h2>
+          <ul className="lg:mt-12 mt-8 space-y-6 lg:space-y-8 text-xl lg:text-2xl">
+            <li>
+              Developed with public sector procurement, project, and technology
+              teams, it builds on the insights of over 50 public sector
+              practitioners and experts.
+            </li>
+            <li>
+              The guidance is designed to help you no matter where you are on
+              your AI procurement journey. Each piece of content can stand
+              alone. You are welcome to review this guidance from top to bottom,
+              or jump around. We provide actionable, plain-language information
+              to help you get started with what’s essential when buying AI.
+            </li>
+            <li>
+              We hope this resource will help you filter out what you really
+              need to know from the noise and provide procurement, project, and
+              technology teams with a shared language and vision for working
+              together!
+            </li>
+          </ul>
+        </div>
+      </div>
     </>
   );
 }
