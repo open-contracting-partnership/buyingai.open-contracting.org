@@ -369,10 +369,10 @@ export function ChapterLayout({
         target="_blank"
         download={`${currentSlug}.pdf`}
         className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-5 py-3 bg-[#92C36F] text-white rounded-full shadow-lg hover:bg-[#7BA860] transition-all duration-300 hover:shadow-xl no-print cursor-pointer"
-        aria-label="Download PDF"
+        aria-label="View as PDF"
       >
         <Eye className="size-5" />
-        <span className="hidden sm:inline font-medium">Download PDF</span>
+        <span className="hidden sm:inline font-medium">View as PDF</span>
       </Link>
     </div>
   );

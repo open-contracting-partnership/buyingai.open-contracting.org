@@ -182,7 +182,7 @@ export function BannerCarousel({
                     className="flex items-center justify-end gap-2 text-black mt-4 hover:gap-3 transition-all"
                   >
                     <span className="text-base font-medium">
-                      Read chapter {section.number}
+                      Read
                     </span>
                     <div className="transform rotate-180">
                       <svg
