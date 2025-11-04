@@ -275,7 +275,7 @@ export default function Header({ chapters }: HeaderProps) {
                   sideOffset={8}
                 >
                   <div className="flex flex-col gap-3">
-                    <h3 className="text-xs font-semibold text-white/60 uppercase tracking-wide">
+                    <h3 className="text-xs font-semibold text-white/60 uppercase tracking-wide font-gteesti-display">
                       Share
                     </h3>
                     <div className="flex items-center gap-2">
@@ -424,7 +424,7 @@ export default function Header({ chapters }: HeaderProps) {
 
                 {/* Share current page */}
                 <div className="flex flex-col gap-2">
-                  <h3 className="px-4 text-xs font-semibold text-white/60 uppercase tracking-wide">
+                  <h3 className="px-4 text-xs font-semibold text-white/60 uppercase tracking-wide font-gteesti-display">
                     Share
                   </h3>
                   <div className="px-2 flex items-center gap-2">

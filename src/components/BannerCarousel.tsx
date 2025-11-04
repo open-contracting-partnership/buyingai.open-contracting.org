@@ -129,7 +129,7 @@ export function BannerCarousel({
                   <h3
                     className={`${
                       isMobile ? "my-2 text-lg" : "my-2 text-2xl"
-                    } font-medium text-black font-gteesti-pro-display`}
+                    } font-medium text-black font-gteesti-display`}
                   >
                     {section.title}
                   </h3>

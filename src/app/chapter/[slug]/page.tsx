@@ -288,7 +288,7 @@ export default async function ChapterPage({ params }: PageProps) {
         <article className="bg-white rounded-lg shadow-sm p-12 mb-8">
           <div
             className="prose prose-slate max-w-none
-            prose-headings:font-bold
+            prose-headings:font-bold prose-headings:font-gteesti-display
             prose-h1:text-4xl prose-h1:mb-6 prose-h1:mt-0
             prose-h2:text-3xl prose-h2:mb-4 prose-h2:mt-8
             prose-h3:text-2xl prose-h3:mb-3 prose-h3:mt-6
@@ -470,10 +470,10 @@ export default async function ChapterPage({ params }: PageProps) {
 
                             return (
                               <div className="my-8 -mx-12 px-12 py-6 bg-[#F5F7E6]">
-                                <h4 className="font-bold text-gray-900 text-lg mb-4">
+                                <h4 className="font-bold text-gray-900 text-lg mb-4 font-gteesti-display">
                                   {title}
                                 </h4>
-                                <div className="prose prose-sm max-w-none prose-ul:my-2 prose-ul:list-disc prose-ul:pl-5 prose-li:my-1 prose-li:text-gray-700 prose-li:leading-relaxed prose-p:my-2 prose-p:text-gray-700 prose-p:leading-relaxed prose-a:text-[#23B2A7] prose-a:no-underline hover:prose-a:underline">
+                                <div className="prose prose-sm max-w-none prose-headings:font-gteesti-display prose-ul:my-2 prose-ul:list-disc prose-ul:pl-5 prose-li:my-1 prose-li:text-gray-700 prose-li:leading-relaxed prose-p:my-2 prose-p:text-gray-700 prose-p:leading-relaxed prose-a:text-[#23B2A7] prose-a:no-underline hover:prose-a:underline">
                                   <ReactMarkdown remarkPlugins={[remarkGfm]}>
                                     {bulletContent}
                                   </ReactMarkdown>
