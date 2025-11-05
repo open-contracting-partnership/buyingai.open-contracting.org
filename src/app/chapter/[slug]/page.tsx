@@ -516,8 +516,20 @@ ${cleanContent}
                       key={`image-${index}`}
                       src={part.url}
                       alt={part.alt || ""}
-                      className="rounded-lg shadow-md max-w-full h-auto my-4"
+                      className="rounded-lg shadow-md my-4"
+                      style={{ 
+                        maxWidth: "100%",
+                        width: "auto",
+                        height: "auto",
+                        display: "block",
+                        marginLeft: "auto",
+                        marginRight: "auto",
+                        imageRendering: "auto",
+                        objectFit: "contain"
+                      }}
                       loading="lazy"
+                      decoding="async"
+                      fetchPriority="high"
                     />
                   );
                 } else {
@@ -547,8 +559,20 @@ ${cleanContent}
                                 src={srcString}
                                 alt={alt || ""}
                                 {...props}
-                                className="rounded-lg shadow-md max-w-full h-auto"
+                                className="rounded-lg shadow-md"
+                                style={{ 
+                                  maxWidth: "100%",
+                                  width: "auto",
+                                  height: "auto",
+                                  display: "block",
+                                  marginLeft: "auto",
+                                  marginRight: "auto",
+                                  imageRendering: "auto",
+                                  objectFit: "contain"
+                                }}
                                 loading="lazy"
+                                decoding="async"
+                                fetchPriority="high"
                               />
                             );
                           },

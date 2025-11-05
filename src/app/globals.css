@@ -87,6 +87,16 @@ body {
   font-family: "GT Eesti Text", Arial, Helvetica, sans-serif;
 }
 
+/* Improve image rendering quality */
+.prose img,
+article img {
+  image-rendering: auto;
+  -webkit-backface-visibility: hidden;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
 /* Hide scrollbar but keep functionality */
 .scrollbar-hide {
   -ms-overflow-style: none; /* IE and Edge */
@@ -111,7 +121,7 @@ body {
   top: 0.5em;
   width: 0.75em;
   height: 0.75em;
-  border: 3px solid #92C36F;
+  border: 3px solid #92c36f;
   border-radius: 50%;
   background: transparent;
 }
