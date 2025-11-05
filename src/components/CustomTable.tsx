@@ -260,6 +260,104 @@ export function CustomTable({ children }: CustomTableProps) {
         return renderRegularTable(theadCells, tbodyRows);
       }
     }
+
+    // Check if this is a table with title in first thead cell and empty cells
+    // This is a special format: title in thead, data rows in tbody (no strong tags needed)
+    const firstTheadCell = theadCells[0];
+    if (React.isValidElement(firstTheadCell)) {
+      const firstCellContent = (firstTheadCell.props as any).children;
+      const firstCellText = typeof firstCellContent === "string" 
+        ? firstCellContent.trim() 
+        : String(firstCellContent || "").trim();
+      
+      // Check if first cell has content and other cells are empty or mostly empty
+      const otherCellsHaveContent = theadCells.slice(1).some((cell) => {
+        if (!React.isValidElement(cell)) return false;
+        const cellProps = (cell.props as any).children;
+        const cellText = typeof cellProps === "string" 
+          ? cellProps.trim() 
+          : String(cellProps || "").trim();
+        return cellText.length > 0;
+      });
+
+      // If first cell has content and others are empty, AND no strong tags in first tbody row
+      // This is a title-style table where all tbody rows are data
+      if (firstCellText.length > 0 && !otherCellsHaveContent && !hasStrongInFirstRow && tbodyRows.length > 0) {
+        // Extract title from first thead cell
+        let title = firstCellText;
+        let subtitle = "";
+
+        // Check if it contains subtitle pattern
+        const subtitlePatterns = [
+          "Procurement and organization objective:",
+          "objective:",
+          "Objective:",
+        ];
+        for (const pattern of subtitlePatterns) {
+          if (firstCellText.includes(pattern)) {
+            const parts = firstCellText.split(pattern);
+            title = parts[0]?.trim() || firstCellText;
+            subtitle = "Objective: " + (parts[1]?.trim() || "");
+            break;
+          }
+        }
+
+        // All tbody rows are data rows (no headers row)
+        // Process all rows as data
+        const processedDataRows = tbodyRows.map((row, rowIdx) => {
+          if (!React.isValidElement(row)) return row;
+          const rowProps = row.props as { children?: React.ReactNode };
+          const cells = React.Children.toArray(rowProps.children);
+
+          const processedCells = cells.map((cell, cellIdx) => {
+            if (!React.isValidElement(cell)) return cell;
+            const cellProps = cell.props as { children?: React.ReactNode };
+            const isLastCell = cellIdx === cells.length - 1;
+
+            return (
+              <td
+                key={cellIdx}
+                className={`!pl-8 !pr-4 !py-6 !text-sm !align-top !bg-white ${
+                  !isLastCell ? "!border-r !border-[#6CBA8C]" : ""
+                }`}
+              >
+                {processContent(cellProps.children)}
+              </td>
+            );
+          });
+
+          return (
+            <tr
+              key={rowIdx}
+              className="!border-b !border-[#6CBA8C] last:!border-b-0"
+            >
+              {processedCells}
+            </tr>
+          );
+        });
+
+        return (
+          <div className="!my-8 !overflow-hidden !rounded-lg !border !border-gray-300">
+            {/* Title section - Green rounded top */}
+            <div className="!bg-[#92C36F] !px-8 !py-6 !rounded-t-lg">
+              <h3 className="!text-2xl !font-bold !text-black !mb-2 !font-gteesti-display">
+                {title}
+              </h3>
+              {subtitle && (
+                <p className="!text-base !text-black !leading-relaxed">{subtitle}</p>
+              )}
+            </div>
+            {/* Table with data rows only (no column headers) */}
+            <table
+              className="!w-full !border-collapse !my-0"
+              style={{ borderSpacing: 0 }}
+            >
+              <tbody className="!bg-white">{processedDataRows}</tbody>
+            </table>
+          </div>
+        );
+      }
+    }
   }
 
   // If no strong tags in first row, this is not our special table format
