@@ -22,6 +22,35 @@ interface HeaderProps {
   chapters: Chapter[];
 }
 
+// Helper function to render markdown in titles (handles italics with green background)
+function renderTitleMarkdown(title: string): React.ReactNode {
+  const parts: React.ReactNode[] = [];
+  const italicRegex = /\*([^*]+)\*/g;
+  let lastIndex = 0;
+  let match;
+
+  while ((match = italicRegex.exec(title)) !== null) {
+    // Add text before the italic
+    if (match.index > lastIndex) {
+      parts.push(title.substring(lastIndex, match.index));
+    }
+    // Add italic text with green background
+    parts.push(
+      <span key={match.index} className="bg-green-200 px-1 py-0.5 rounded not-italic">
+        {match[1]}
+      </span>
+    );
+    lastIndex = match.index + match[0].length;
+  }
+
+  // Add remaining text
+  if (lastIndex < title.length) {
+    parts.push(title.substring(lastIndex));
+  }
+
+  return parts.length > 0 ? <>{parts}</> : title;
+}
+
 export default function Header({ chapters }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -188,7 +217,7 @@ export default function Header({ chapters }: HeaderProps) {
                             className="block px-4 py-3 hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-b-0"
                           >
                             <div className="text-sm font-medium text-gray-900">
-                              {chapter.title}
+                              {renderTitleMarkdown(chapter.title)}
                             </div>
                             <div className="text-xs text-gray-500 mt-1">
                               Chapter{" "}
@@ -555,7 +584,7 @@ export default function Header({ chapters }: HeaderProps) {
                       className="block px-4 py-3 hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-b-0"
                     >
                       <div className="text-sm font-medium text-gray-900">
-                        {chapter.title}
+                        {renderTitleMarkdown(chapter.title)}
                       </div>
                       <div className="text-xs text-gray-500 mt-1">
                         Chapter {chapter.order.toString().padStart(2, "0")}

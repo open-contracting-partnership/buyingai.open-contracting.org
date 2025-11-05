@@ -56,6 +56,7 @@
 body {
   background: var(--background);
   color: var(--foreground);
+  overscroll-behavior: none;
 }
 
 .info-box-table {

@@ -12,10 +12,13 @@ export function CollapsibleInitializer() {
 
       const content = document.getElementById(targetId);
       const icon = header.querySelector('.collapsible-icon');
-      
+
       if (content && icon) {
         const isOpen = content.classList.contains('open');
-        
+
+        // Save current scroll position before toggling
+        const currentScrollY = window.scrollY;
+
         if (isOpen) {
           content.classList.remove('open');
           content.style.display = 'none';
@@ -25,6 +28,12 @@ export function CollapsibleInitializer() {
           content.style.display = 'block';
           icon.classList.add('open');
         }
+
+        // Restore scroll position after DOM update
+        // Use requestAnimationFrame to ensure DOM has updated
+        requestAnimationFrame(() => {
+          window.scrollTo(0, currentScrollY);
+        });
       }
     };
 

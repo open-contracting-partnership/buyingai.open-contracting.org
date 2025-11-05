@@ -256,7 +256,7 @@ export function ChapterLayout({
                 </div>
                 <nav
                   ref={navRef}
-                  className="space-y-0 max-h-[calc(100vh-240px)] overflow-y-auto"
+                  className="space-y-0 max-h-[calc(100vh-240px)] overflow-y-auto overscroll-contain"
                 >
                   {structure.sections.map((section) => {
                     // Check if this section is active based on intersection observer or current chapter
