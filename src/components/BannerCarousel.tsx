@@ -57,9 +57,7 @@ export function BannerCarousel({
 
   return (
     <div
-      className={`flex-1 relative ${
-        isMobile ? "h-[300px]" : "h-[460px]"
-      } flex items-center overflow-x-auto overflow-y-hidden scrollbar-hide`}
+      className={`flex-1 relative h-[500px] flex items-center overflow-x-auto overflow-y-hidden scrollbar-hide p-4`}
     >
       {structure.sections.map((section, idx) => {
         const color = getSectionColor(section.number);
