@@ -2,10 +2,12 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
 import React from "react";
 import { visit } from "unist-util-visit";
 import type { Root } from "mdast";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import { CollapsibleText } from "@/components/CollapsibleText";
 
 // Helper function to check if a React node contains italic text
 function hasItalic(node: React.ReactNode): boolean {
@@ -298,8 +300,18 @@ export default async function ChapterPage({ params }: PageProps) {
   const { previous, next } = getAdjacentChapters(slug);
   const structure = getSectionsStructure();
 
+  // First, process collapsible sections
+  let processedContent = chapter.content;
+  
+  // Convert {.collapsible} syntax to custom markers
+  // Match: **Title {.collapsible}**\n\nContent paragraph
+  const collapsibleRegex = /\*\*(.*?)\s*\{\.collapsible\}\*\*\s*\n\n([^\n]+(?:\n(?!\n)[^\n]+)*)/g;
+  processedContent = processedContent.replace(collapsibleRegex, (match, title, content) => {
+    return `<CollapsibleSection title="${title.trim()}">\n\n${content}\n\n</CollapsibleSection>`;
+  });
+  
   // Process markdown to resolve image references
-  const processedContent = processMarkdownImageReferences(chapter.content);
+  processedContent = processMarkdownImageReferences(processedContent);
 
   // Split content by images to render them separately
   // This avoids ReactMarkdown parsing issues with long data URIs
@@ -410,8 +422,14 @@ export default async function ChapterPage({ params }: PageProps) {
                     <ReactMarkdown
                       key={`markdown-${index}`}
                       remarkPlugins={[remarkGfm]}
+                      rehypePlugins={[rehypeRaw]}
                       components={{
-                        img: ({ src, alt, ...props }) => {
+                          collapsiblesection: ({ title, children }: any) => (
+                            <CollapsibleText title={title}>
+                              {children}
+                            </CollapsibleText>
+                          ),
+                        img: ({ src, alt, ...props }: any) => {
                           const srcString =
                             typeof src === "string" ? src : String(src || "");
                           if (!srcString) return null;
@@ -498,7 +516,32 @@ export default async function ChapterPage({ params }: PageProps) {
                             return null;
                           }
 
-                          const lines = content.split("\n");
+                          let lines = content.split("\n");
+                          
+                          // Parse YAML frontmatter if present
+                          let icon = null;
+                          let background = "green";
+                          
+                          if (lines[0] === "---") {
+                            const endIndex = lines.findIndex((line, i) => i > 0 && line === "---");
+                            if (endIndex > 0) {
+                              // Extract frontmatter
+                              const frontmatter = lines.slice(1, endIndex);
+                              frontmatter.forEach(line => {
+                                const match = line.match(/^(\w+):\s*(.+)$/);
+                                if (match) {
+                                  const [, key, value] = match;
+                                  if (key === "icon") {
+                                    icon = value.trim();
+                                  } else if (key === "background") {
+                                    background = value.trim();
+                                  }
+                                }
+                              });
+                              // Remove frontmatter from content
+                              lines = lines.slice(endIndex + 1);
+                            }
+                          }
 
                           // Check if it's a Who/What box
                           const whoLine = lines.find((line) =>
@@ -587,31 +630,56 @@ export default async function ChapterPage({ params }: PageProps) {
                           }
 
                           // Check if it's a resource/info box
-                          const firstLine = lines[0];
                           const hasBullets = lines.some((line) =>
                             line.trim().startsWith("-")
                           );
 
-                          if (
-                            firstLine &&
-                            hasBullets &&
-                            !firstLine.startsWith("-")
-                          ) {
-                            const title = firstLine.trim();
-                            // Keep all content after the title, preserving empty lines
-                            const bulletContent = lines
-                              .slice(1)
-                              .join("\n")
-                              .trim();
+                          // Find title - ONLY if it's an actual heading (###)
+                          let title = "";
+                          let contentStartIndex = 0;
+                          let hasHeading = false;
+                          
+                          for (let i = 0; i < lines.length; i++) {
+                            const trimmedLine = lines[i].trim();
+                            if (!trimmedLine) continue;
+                            
+                            // Check if it's a heading
+                            const headingMatch = trimmedLine.match(/^#{1,6}\s+(.+)$/);
+                            if (headingMatch) {
+                              title = headingMatch[1];
+                              contentStartIndex = i + 1;
+                              hasHeading = true;
+                              break;
+                            }
+                            
+                            // If we find a non-heading, non-empty line first, no title
+                            break;
+                          }
+
+                          // Render if we have an icon (frontmatter) OR if we have heading + bullets
+                          if ((icon && lines.length > 0) || (hasHeading && hasBullets)) {
+                            // If no heading was found, use all content as markdown
+                            const content = hasHeading 
+                              ? lines.slice(contentStartIndex).join("\n").trim()
+                              : lines.join("\n").trim();
+                            
+                            // Determine background color
+                            const bgColor = background === "grey" || background === "gray" 
+                              ? "#E5E7EB" // gray-200
+                              : "#F5F7E6"; // default green
 
                             return (
-                              <div className="my-8 -mx-12 px-12 py-6 bg-[#F5F7E6]">
-                                <h4 className="font-bold text-gray-900 text-lg mb-4 font-gteesti-display">
-                                  {title}
-                                </h4>
-                                <div className="prose prose-sm max-w-none prose-headings:font-gteesti-display prose-ul:my-2 prose-ul:list-disc prose-ul:pl-5 prose-li:my-1 prose-li:text-gray-700 prose-li:leading-relaxed prose-p:my-2 prose-p:text-gray-700 prose-p:leading-relaxed prose-a:text-[#23B2A7] prose-a:no-underline hover:prose-a:underline">
+                              <div className="my-8 -mx-12 px-12 py-6 relative" style={{ backgroundColor: bgColor }}>
+                                {icon && (
+                                  <img
+                                    src={`/icons/${icon}.png`}
+                                    alt=""
+                                    className="absolute top-6 left-12 w-12 h-12 !shadow-none"
+                                  />
+                                )}
+                                <div className={`prose prose-sm max-w-none prose-headings:font-gteesti-display prose-headings:mb-4 prose-ul:my-2 prose-ul:list-disc prose-ul:pl-5 prose-li:my-1 prose-li:text-gray-700 prose-li:leading-relaxed prose-p:my-2 prose-p:text-gray-700 prose-p:leading-relaxed prose-a:text-[#23B2A7] prose-a:no-underline hover:prose-a:underline ${icon ? 'ml-16' : ''}`}>
                                   <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                    {bulletContent}
+                                    {title ? `### ${title}\n\n${content}` : content}
                                   </ReactMarkdown>
                                 </div>
                               </div>
@@ -717,10 +785,10 @@ export default async function ChapterPage({ params }: PageProps) {
                             </table>
                           );
                         },
-                        thead: ({ children, ...props }) => {
+                        thead: ({ children, ...props }: any) => {
                           return <thead {...props}>{children}</thead>;
                         },
-                        th: ({ children, ...props }) => {
+                        th: ({ children, ...props }: any) => {
                           return (
                             <th
                               className="px-0 py-2 text-left font-semibold text-base text-gray-900 border-0"
@@ -730,14 +798,14 @@ export default async function ChapterPage({ params }: PageProps) {
                             </th>
                           );
                         },
-                        tr: ({ children, ...props }) => {
+                        tr: ({ children, ...props }: any) => {
                           return (
                             <tr className="border-0" {...props}>
                               {children}
                             </tr>
                           );
                         },
-                        td: ({ children, ...props }) => {
+                        td: ({ children, ...props }: any) => {
                           return (
                             <td
                               className="border border-gray-300 px-4 py-2 text-sm"
@@ -747,7 +815,7 @@ export default async function ChapterPage({ params }: PageProps) {
                             </td>
                           );
                         },
-                      }}
+                      } as any}
                     >
                       {part.content}
                     </ReactMarkdown>
@@ -755,9 +823,19 @@ export default async function ChapterPage({ params }: PageProps) {
                 }
               })
             ) : (
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              <ReactMarkdown 
+                remarkPlugins={[remarkGfm]}
+                rehypePlugins={[rehypeRaw]}
+                components={{
+                  collapsiblesection: ({ title, children }: any) => (
+                    <CollapsibleText title={title}>
+                      {children}
+                    </CollapsibleText>
+                  ),
+                } as any}
+              >
                 {processedContent}
-              </ReactMarkdown>
+            </ReactMarkdown>
             )}
           </div>
         </article>

@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 import { BannerCarousel } from "@/components/BannerCarousel";
 import { Chapter } from "@/lib/markdown";
@@ -9,13 +11,26 @@ import { SectionsStructure } from "@/lib/sections-types";
 interface HomeClientProps {
   chapters: Chapter[];
   structure: SectionsStructure;
+  tocContent: string;
 }
 
-export default function HomeClient({ chapters, structure }: HomeClientProps) {
+export default function HomeClient({ chapters, structure, tocContent }: HomeClientProps) {
+  // Parse the TOC content - extract content after the numbered list
+  // Skip everything before the ## heading
+  const contentMatch = tocContent.match(/##\s+(.+?)\n([\s\S]*?)(\[Get started.*?\])/);
+  const heading = contentMatch ? contentMatch[1].trim() : "This guidance offers practical and hands-on tips to get the best results from your AI purchases.";
+  const bodyContent = contentMatch ? contentMatch[2].trim() : "";
+  
+  // Split body content into paragraphs (separated by blank lines)
+  const paragraphs = bodyContent.split(/\n\s*\n/).filter(p => p.trim());
+  
+  // Extract the About section
+  const aboutMatch = tocContent.match(/###\s+About\s*([\s\S]+)/);
+  const aboutContent = aboutMatch ? aboutMatch[1].trim() : "";
   return (
     <>
       {/* Hero Section */}
-      <div className="relative w-11/12 mx-auto max-w-7xl py-12 md:py-24">
+      <div className="relative w-11/12 mx-auto max-w-7xl py-12 md:py-24 z-0">
         <div className="flex flex-col lg:flex-row gap-12 items-center">
           {/* Left: Title - 1/3 of space */}
           <div className="w-full lg:w-[33.33%]">
@@ -48,35 +63,32 @@ export default function HomeClient({ chapters, structure }: HomeClientProps) {
             "
         >
           <h2 className="text-[#353535] text-3xl lg:text-4xl xl:text-5xl font-bold font-gteesti-display">
-            This guidance offers practical and hands-on tips to get the best
-            results from your AI purchases.
+            {heading}
           </h2>
-          <ul className="lg:mt-12 mt-8 space-y-6 lg:space-y-8 text-xl lg:text-2xl">
-            <li>
-              Developed with public sector procurement, project, and technology
-              teams, it builds on the insights of over 50 public sector
-              practitioners and experts.
-            </li>
-            <li>
-              The guidance is designed to help you no matter where you are on
-              your AI procurement journey. Each piece of content can stand
-              alone. You are welcome to review this guidance from top to bottom,
-              or jump around. We provide actionable, plain-language information
-              to help you get started with what’s essential when buying AI.
-            </li>
-            <li>
-              We hope this resource will help you filter out what you really
-              need to know from the noise and provide procurement, project, and
-              technology teams with a shared language and vision for working
-              together!
-            </li>
-          </ul>
+          <div className="lg:mt-12 mt-8 space-y-6 lg:space-y-8 text-xl lg:text-2xl prose prose-xl max-w-none prose-p:my-0">
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              {paragraphs.join('\n\n')}
+            </ReactMarkdown>
+          </div>
           <Link
-            href="/chapter/01-introduction#content"
+            href="/chapter/01-insights-on-ai-adoption#content"
             className="inline-block mt-8 pt-1 pb-0.5 pl-1 pr-4 bg-[#C8D419] text-black rounded-lg hover:bg-[#B5C115] transition-colors text-xl lg:text-2xl"
           >
             Get started
           </Link>
+          
+          {aboutContent && (
+            <div className="mt-12 pt-8 border-t border-gray-300">
+              <h3 className="text-2xl lg:text-3xl font-bold text-[#353535] mb-4 font-gteesti-display">
+                About
+              </h3>
+              <div className="text-lg lg:text-xl prose prose-lg max-w-none prose-p:my-2 prose-a:text-[#23B2A7] prose-a:no-underline hover:prose-a:underline">
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                  {aboutContent}
+                </ReactMarkdown>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </>

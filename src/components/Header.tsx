@@ -122,7 +122,7 @@ export default function Header({ chapters }: HeaderProps) {
   }, [isSearchOpen]);
 
   return (
-    <header className="py-7 border-b border-white/10 sticky overflow-hidden top-0 z-[999] bg-[#3D393D]">
+    <header className="py-7 border-b border-white/10 sticky top-0 z-[9999] bg-[#3D393D]">
       <div className="w-11/12 mx-auto max-w-7xl">
         <div className="flex items-center justify-between">
           <div className="shrink-0">
@@ -178,7 +178,7 @@ export default function Header({ chapters }: HeaderProps) {
                 <>
                   {/* Search results popup - floating dropdown */}
                   {searchQuery && filteredChapters.length > 0 && (
-                    <div className="absolute top-full left-0 mt-2 w-[400px] bg-white rounded-lg shadow-2xl border border-gray-200 overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                    <div className="absolute top-full left-0 mt-2 w-[400px] bg-white rounded-lg shadow-2xl border border-gray-200 overflow-hidden z-[10000] animate-in fade-in slide-in-from-top-2 duration-200">
                       <div className="max-h-[400px] overflow-y-auto">
                         {filteredChapters.map((chapter) => (
                           <Link
@@ -200,7 +200,7 @@ export default function Header({ chapters }: HeaderProps) {
                     </div>
                   )}
                   {searchQuery && filteredChapters.length === 0 && (
-                    <div className="absolute top-full left-0 mt-2 w-[400px] bg-white rounded-lg shadow-2xl border border-gray-200 p-4 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                    <div className="absolute top-full left-0 mt-2 w-[400px] bg-white rounded-lg shadow-2xl border border-gray-200 p-4 z-[10000] animate-in fade-in slide-in-from-top-2 duration-200">
                       <div className="text-sm text-gray-500">
                         No chapters found
                       </div>

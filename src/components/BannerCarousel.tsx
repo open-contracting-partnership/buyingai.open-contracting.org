@@ -158,7 +158,7 @@ export function BannerCarousel({
                                   : "font-mono text-base"
                               }`}
                             >
-                              {String.fromCharCode(97 + chIdx)}.
+                              {chIdx + 1}.
                             </span>
                             <span className="flex-1 line-clamp-2">
                               {ch.title}

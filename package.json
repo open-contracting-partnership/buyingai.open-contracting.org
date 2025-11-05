@@ -3,10 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build --turbopack",
+    "dev": "npm run build:content && next dev --turbopack",
+    "build": "npm run build:content && next build --turbopack",
     "start": "next start",
-    "figma:fetch": "tsx scripts/fetch-figma.ts"
+    "figma:fetch": "tsx scripts/fetch-figma.ts",
+    "build:content": "tsx scripts/build-content.ts"
   },
   "dependencies": {
     "@next/third-parties": "^16.0.1",
@@ -21,6 +22,7 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-markdown": "^10.1.0",
+    "rehype-raw": "^7.0.0",
     "remark-gfm": "^4.0.1",
     "unist-util-visit": "^5.0.0"
   },

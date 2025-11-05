@@ -44,7 +44,7 @@
     "Definition": "A technique combining retrieval-based and generative models, where an AI system first retrieves information from a dataset or knowledge base, then uses this data to generate a response augmented with additional context."
   },
   {
-    "Term": "Training",
+    "Term": "Training Data",
     "Definition": "The process by which a machine learning model learns to perform a specific task by being exposed to a large training dataset and iteratively adjusting its internal parameters to minimize errors in output."
   },
   {

@@ -125,6 +125,7 @@ function AutoGlossaryWrapper({ children }: { children: React.ReactNode }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { terms, showTooltip, hideTooltip } = useGlossary();
   const processedNodesRef = useRef<WeakSet<Node>>(new WeakSet());
+  const highlightedTermsRef = useRef<Set<string>>(new Set());
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -162,10 +163,17 @@ function AutoGlossaryWrapper({ children }: { children: React.ReactNode }) {
         }> = [];
 
         sortedTerms.forEach((term) => {
+          // Skip if this term has already been highlighted
+          const termLowerCase = term.Term.toLowerCase();
+          if (highlightedTermsRef.current.has(termLowerCase)) {
+            return;
+          }
+
           const regex = new RegExp(`\\b${escapeRegex(term.Term)}\\b`, "gi");
           let match;
 
-          while ((match = regex.exec(text)) !== null) {
+          // Only process the first match
+          if ((match = regex.exec(text)) !== null) {
             const overlaps = matches.some(
               (m) =>
                 (match!.index >= m.index &&
@@ -181,6 +189,8 @@ function AutoGlossaryWrapper({ children }: { children: React.ReactNode }) {
                 length: match[0].length,
               });
               hasMatches = true;
+              // Mark this term as highlighted
+              highlightedTermsRef.current.add(termLowerCase);
             }
           }
         });
