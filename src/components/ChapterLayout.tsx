@@ -12,6 +12,14 @@ import { StickyNavbar } from "./StickyNavbar";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import { SectionMarker } from "./SectionMarker";
 
+// Helper function to convert hex color to rgba with opacity
+function hexToRgba(hex: string, opacity: number): string {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+}
+
 interface ChapterLayoutProps {
   currentSlug: string;
   allChapters: Chapter[];
@@ -275,31 +283,47 @@ export function ChapterLayout({
                         {/* Section Header */}
                         <div
                           className={`flex items-center py-3 px-4 ${
-                            isActiveSection ? "bg-green-50" : ""
+                            isActiveSection ? "" : ""
                           }`}
+                          style={
+                            isActiveSection
+                              ? {
+                                  backgroundColor: hexToRgba(color.bg, 0.125),
+                                }
+                              : {}
+                          }
                         >
                           {/* Active Section Indicator Bar */}
                           {isActiveSection && (
-                            <div className="w-1 h-8 bg-green-500 rounded-full mr-3 flex-shrink-0"></div>
+                            <div
+                              className="w-1 h-8 rounded-full mr-3 flex-shrink-0"
+                              style={{ backgroundColor: color.bg }}
+                            ></div>
                           )}
 
                           {/* Section Number and Title */}
                           <div className="flex items-center">
                             <span
                               className={`text-sm font-gteesti-display font-medium mr-2 ${
-                                isActiveSection
-                                  ? "text-green-600"
-                                  : "text-black"
+                                isActiveSection ? "" : "text-black"
                               }`}
+                              style={
+                                isActiveSection
+                                  ? { color: color.bg }
+                                  : undefined
+                              }
                             >
                               {section.number.toString().padStart(2, "0")}
                             </span>
                             <span
                               className={`text-sm font-gteesti-display font-medium ${
-                                isActiveSection
-                                  ? "text-green-600"
-                                  : "text-black"
+                                isActiveSection ? "" : "text-black"
                               }`}
+                              style={
+                                isActiveSection
+                                  ? { color: color.bg }
+                                  : undefined
+                              }
                             >
                               {section.title}
                             </span>
@@ -320,9 +344,20 @@ export function ChapterLayout({
                                 data-chapter-slug={ch.slug}
                                 className={`block px-3 py-2 text-sm transition-colors rounded ${
                                   isActiveChapter
-                                    ? "bg-green-100 text-green-800 font-medium"
+                                    ? "font-medium"
                                     : "text-gray-600 hover:bg-gray-50 hover:text-gray-800"
                                 }`}
+                                style={
+                                  isActiveChapter
+                                    ? {
+                                        backgroundColor: hexToRgba(
+                                          color.bg,
+                                          0.19
+                                        ),
+                                        color: color.bg,
+                                      }
+                                    : undefined
+                                }
                               >
                                 <div className="flex items-center">
                                   <span>{ch.title}</span>

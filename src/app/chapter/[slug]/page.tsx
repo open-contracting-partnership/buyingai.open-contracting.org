@@ -10,6 +10,14 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { CollapsibleText } from "@/components/CollapsibleText";
 import { CustomTable } from "@/components/CustomTable";
 import { CollapsibleInitializer } from "@/components/CollapsibleInitializer";
+import {
+  getAllChapters,
+  getChapterBySlug,
+  getAdjacentChapters,
+} from "@/lib/markdown";
+import { getSectionsStructure } from "@/lib/sections";
+import { ChapterLayout } from "@/components/ChapterLayout";
+import { getChapterInSection, getSectionColor } from "@/lib/sections-types";
 
 // Helper function to check if a React node contains italic text
 function hasItalic(node: React.ReactNode): boolean {
@@ -80,8 +88,11 @@ function renderTitleMarkdown(title: string): React.ReactNode {
   return parts.length > 0 ? <>{parts}</> : title;
 }
 
-// Helper function to wrap italic elements with green background
-function wrapItalicWithBackground(node: React.ReactNode): React.ReactNode {
+// Helper function to wrap italic elements with section background color
+function wrapItalicWithBackground(
+  node: React.ReactNode,
+  backgroundColor: string
+): React.ReactNode {
   if (!node) return node;
 
   // If it's a string, return as is (strings are not italic elements)
@@ -89,17 +100,20 @@ function wrapItalicWithBackground(node: React.ReactNode): React.ReactNode {
     return node;
   }
 
-  // If it's an <em> or <i> element, replace it with a span with green background (no italic)
+  // If it's an <em> or <i> element, replace it with a span with section background color (no italic)
   if (React.isValidElement(node)) {
     if (
       node.type === "em" ||
       node.type === "i" ||
       (typeof node.type === "string" && node.type.toLowerCase() === "em")
     ) {
-      // Replace the em element with a span that has the green background but no italic style
+      // Replace the em element with a span that has the section background color but no italic style
       const props = node.props as { children?: React.ReactNode };
       return (
-        <span className="bg-green-200 px-1 py-0.5 rounded not-italic">
+        <span
+          className="px-1 py-0.5 rounded not-italic"
+          style={{ backgroundColor }}
+        >
           {props?.children}
         </span>
       );
@@ -110,7 +124,7 @@ function wrapItalicWithBackground(node: React.ReactNode): React.ReactNode {
     if (props?.children) {
       const children = React.Children.toArray(props.children);
       const processedChildren = children.map((child, index) =>
-        wrapItalicWithBackground(child)
+        wrapItalicWithBackground(child, backgroundColor)
       );
       return React.cloneElement(node as React.ReactElement<any>, {
         children: processedChildren,
@@ -121,7 +135,7 @@ function wrapItalicWithBackground(node: React.ReactNode): React.ReactNode {
   // If it's an array, process each item
   if (Array.isArray(node)) {
     return node.map((item, index) => {
-      const processed = wrapItalicWithBackground(item);
+      const processed = wrapItalicWithBackground(item, backgroundColor);
       // If the processed item is a React element, add a key
       if (React.isValidElement(processed)) {
         return React.cloneElement(processed, { key: `italic-${index}` });
@@ -132,13 +146,6 @@ function wrapItalicWithBackground(node: React.ReactNode): React.ReactNode {
 
   return node;
 }
-import {
-  getAllChapters,
-  getChapterBySlug,
-  getAdjacentChapters,
-} from "@/lib/markdown";
-import { getSectionsStructure } from "@/lib/sections";
-import { ChapterLayout } from "@/components/ChapterLayout";
 
 interface PageProps {
   params: Promise<{
@@ -341,6 +348,13 @@ export default async function ChapterPage({ params }: PageProps) {
   const allChapters = getAllChapters().filter((ch) => ch.slug !== "00-toc");
   const { previous, next } = getAdjacentChapters(slug);
   const structure = getSectionsStructure();
+
+  // Get section color for italic text background
+  const currentChapterInfo = getChapterInSection(structure, slug);
+  const currentSection = currentChapterInfo?.section;
+  const sectionColor = currentSection
+    ? getSectionColor(currentSection.number)
+    : getSectionColor(1);
 
   // First, process collapsible sections
   let processedContent = chapter.content;
@@ -578,7 +592,10 @@ ${cleanContent}
                           },
                           h1: ({ children, className, ...props }: any) => {
                             const processedChildren =
-                              wrapItalicWithBackground(children);
+                              wrapItalicWithBackground(
+                                children,
+                                sectionColor.bg
+                              );
                             return (
                               <h1
                                 {...props}
@@ -592,7 +609,10 @@ ${cleanContent}
                           },
                           h2: ({ children, className, ...props }: any) => {
                             const processedChildren =
-                              wrapItalicWithBackground(children);
+                              wrapItalicWithBackground(
+                                children,
+                                sectionColor.bg
+                              );
                             return (
                               <h2
                                 {...props}
@@ -606,7 +626,10 @@ ${cleanContent}
                           },
                           h3: ({ children, className, ...props }: any) => {
                             const processedChildren =
-                              wrapItalicWithBackground(children);
+                              wrapItalicWithBackground(
+                                children,
+                                sectionColor.bg
+                              );
                             return (
                               <h3
                                 {...props}
@@ -620,7 +643,10 @@ ${cleanContent}
                           },
                           h4: ({ children, className, ...props }: any) => {
                             const processedChildren =
-                              wrapItalicWithBackground(children);
+                              wrapItalicWithBackground(
+                                children,
+                                sectionColor.bg
+                              );
                             return (
                               <h4
                                 {...props}
@@ -634,7 +660,10 @@ ${cleanContent}
                           },
                           h5: ({ children, className, ...props }: any) => {
                             const processedChildren =
-                              wrapItalicWithBackground(children);
+                              wrapItalicWithBackground(
+                                children,
+                                sectionColor.bg
+                              );
                             return (
                               <h5
                                 {...props}
@@ -648,7 +677,10 @@ ${cleanContent}
                           },
                           h6: ({ children, className, ...props }: any) => {
                             const processedChildren =
-                              wrapItalicWithBackground(children);
+                              wrapItalicWithBackground(
+                                children,
+                                sectionColor.bg
+                              );
                             return (
                               <h6
                                 {...props}
