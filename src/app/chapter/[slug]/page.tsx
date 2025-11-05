@@ -62,7 +62,10 @@ function renderTitleMarkdown(title: string): React.ReactNode {
     }
     // Add italic text with green background
     parts.push(
-      <span key={match.index} className="bg-green-200 px-1 py-0.5 rounded not-italic">
+      <span
+        key={match.index}
+        className="bg-green-200 px-1 py-0.5 rounded not-italic"
+      >
         {match[1]}
       </span>
     );
@@ -341,19 +344,22 @@ export default async function ChapterPage({ params }: PageProps) {
 
   // First, process collapsible sections
   let processedContent = chapter.content;
-  
+
   // Process collapsible sections - two patterns:
   // 1. h4 headings: #### **Title {.collapsible}**
   // 2. Bullet points: * **Title: {.collapsible}**
-  
+
   // Pattern 1: h4 headings with {.collapsible}
   // Stop at next h1-h4 heading OR multiple blank lines (3+ newlines)
-  const h4CollapsibleRegex = /^####\s+\*\*(.*?)\s*\{\.collapsible\}\*\*\s*\n\n((?:(?!^#{1,4}\s|\n\n\n)[\s\S])*)/gm;
-  
-  processedContent = processedContent.replace(h4CollapsibleRegex, (match, title, content) => {
-    const id = `collapsible-${Math.random().toString(36).substr(2, 9)}`;
-    
-    return `<div class="collapsible-wrapper" data-collapsible="true">
+  const h4CollapsibleRegex =
+    /^####\s+\*\*(.*?)\s*\{\.collapsible\}\*\*\s*\n\n((?:(?!^#{1,4}\s|\n\n\n)[\s\S])*)/gm;
+
+  processedContent = processedContent.replace(
+    h4CollapsibleRegex,
+    (match, title, content) => {
+      const id = `collapsible-${Math.random().toString(36).substr(2, 9)}`;
+
+      return `<div class="collapsible-wrapper" data-collapsible="true">
   <div class="collapsible-header" data-target="${id}">
     <svg class="collapsible-icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
       <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
@@ -368,19 +374,23 @@ ${content.trim()}
 </div>
 
 `;
-  });
-  
+    }
+  );
+
   // Pattern 2: Bullet points with {.collapsible}
   // Match: * **Title: {.collapsible}**\n  Content (all indented content until next bullet or end)
   // Capture all lines that are either indented with 2 spaces, blank lines, or until we hit the next bullet
-  const bulletCollapsibleRegex = /^\*\s+\*\*(.*?)\s*\{\.collapsible\}\*\*\s*\n((?:(?:  .+|\s*)\n)*(?:  .+)?)/gm;
-  
-  processedContent = processedContent.replace(bulletCollapsibleRegex, (match, title, content) => {
-    const id = `collapsible-${Math.random().toString(36).substr(2, 9)}`;
-    // Remove the 2-space indentation from content
-    const cleanContent = content.replace(/^  /gm, '').trim();
-    
-    return `<div class="collapsible-wrapper-bullet" data-collapsible="true">
+  const bulletCollapsibleRegex =
+    /^\*\s+\*\*(.*?)\s*\{\.collapsible\}\*\*\s*\n((?:(?:  .+|\s*)\n)*(?:  .+)?)/gm;
+
+  processedContent = processedContent.replace(
+    bulletCollapsibleRegex,
+    (match, title, content) => {
+      const id = `collapsible-${Math.random().toString(36).substr(2, 9)}`;
+      // Remove the 2-space indentation from content
+      const cleanContent = content.replace(/^  /gm, "").trim();
+
+      return `<div class="collapsible-wrapper-bullet" data-collapsible="true">
   <div class="collapsible-header" data-target="${id}">
     <svg class="collapsible-icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
       <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
@@ -395,8 +405,9 @@ ${cleanContent}
 </div>
 
 `;
-  });
-  
+    }
+  );
+
   // Process markdown to resolve image references
   processedContent = processMarkdownImageReferences(processedContent);
 
@@ -512,465 +523,547 @@ ${cleanContent}
                 } else {
                   // Render markdown content
                   return (
-            <ReactMarkdown
+                    <ReactMarkdown
                       key={`markdown-${index}`}
-              remarkPlugins={[remarkGfm]}
+                      remarkPlugins={[remarkGfm]}
                       rehypePlugins={[rehypeRaw]}
-              components={{
-                          collapsiblesection: ({ title, heading, children }: any) => (
+                      components={
+                        {
+                          collapsiblesection: ({
+                            title,
+                            heading,
+                            children,
+                          }: any) => (
                             <CollapsibleText title={title} heading={heading}>
                               {children}
                             </CollapsibleText>
                           ),
-                        img: ({ src, alt, ...props }: any) => {
-                          const srcString =
-                            typeof src === "string" ? src : String(src || "");
-                          if (!srcString) return null;
-                          return (
-                            <img
-                              src={srcString}
-                              alt={alt || ""}
-                              {...props}
-                              className="rounded-lg shadow-md max-w-full h-auto"
-                              loading="lazy"
-                            />
-                          );
-                        },
-                        h1: ({ children, className, ...props }: any) => {
-                          const processedChildren =
-                            wrapItalicWithBackground(children);
-                          return (
-                            <h1 {...props} className={className || ""}>
-                              {processedChildren}
-                            </h1>
-                          );
-                        },
-                        h2: ({ children, className, ...props }: any) => {
-                          const processedChildren =
-                            wrapItalicWithBackground(children);
-                          return (
-                            <h2 {...props} className={className || ""}>
-                              {processedChildren}
-                            </h2>
-                          );
-                        },
-                        h3: ({ children, className, ...props }: any) => {
-                          const processedChildren =
-                            wrapItalicWithBackground(children);
-                          return (
-                            <h3 {...props} className={className || ""}>
-                              {processedChildren}
-                            </h3>
-                          );
-                        },
-                        h4: ({ children, className, ...props }: any) => {
-                          const processedChildren =
-                            wrapItalicWithBackground(children);
-                          return (
-                            <h4 {...props} className={className || ""}>
-                              {processedChildren}
-                            </h4>
-                          );
-                        },
-                        h5: ({ children, className, ...props }: any) => {
-                          const processedChildren =
-                            wrapItalicWithBackground(children);
-                          return (
-                            <h5 {...props} className={className || ""}>
-                              {processedChildren}
-                            </h5>
-                          );
-                        },
-                        h6: ({ children, className, ...props }: any) => {
-                          const processedChildren =
-                            wrapItalicWithBackground(children);
-                          return (
-                            <h6 {...props} className={className || ""}>
-                              {processedChildren}
-                            </h6>
-                          );
-                        },
-                        pre: ({ children, ...props }: any) => {
-                          // Get the text content from children
-                          let content = "";
-                          if (typeof children === "string") {
-                            content = children;
-                          } else if (React.isValidElement(children)) {
-                            const childProps = children.props as {
-                              children?: string;
-                            };
-                            if (childProps.children) {
-                              content = String(childProps.children);
-                            }
-                          }
-
-                          content = content.trim();
-                          if (!content) {
-                            return null;
-                          }
-
-                          let lines = content.split("\n");
-                          
-                          // Parse YAML frontmatter if present
-                          let icon = null;
-                          let background = "green";
-                          
-                          if (lines[0] === "---") {
-                            const endIndex = lines.findIndex((line, i) => i > 0 && line === "---");
-                            if (endIndex > 0) {
-                              // Extract frontmatter
-                              const frontmatter = lines.slice(1, endIndex);
-                              frontmatter.forEach(line => {
-                                const match = line.match(/^(\w+):\s*(.+)$/);
-                                if (match) {
-                                  const [, key, value] = match;
-                                  if (key === "icon") {
-                                    icon = value.trim();
-                                  } else if (key === "background") {
-                                    background = value.trim();
-                                  }
-                                }
-                              });
-                              // Remove frontmatter from content
-                              lines = lines.slice(endIndex + 1);
-                            }
-                          }
-
-                          // Check if it's a Who/What box
-                          const whoLine = lines.find((line) =>
-                            line.trim().startsWith("- Who:")
-                          );
-                          const whatLine = lines.find((line) =>
-                            line.trim().startsWith("- What:")
-                          );
-
-                          if (whoLine && whatLine) {
-                            const whoContent = whoLine
-                              .replace(/^-\s*Who:\s*/, "")
-                              .trim();
-                            const whatContent = whatLine
-                              .replace(/^-\s*What:\s*/, "")
-                              .trim();
-
+                          img: ({ src, alt, ...props }: any) => {
+                            const srcString =
+                              typeof src === "string" ? src : String(src || "");
+                            if (!srcString) return null;
                             return (
-                              <div className="not-prose my-6 px-8 py-5 bg-[#F5F7E6] rounded-2xl">
-                                <table
-                                  style={{
-                                    width: "100%",
-                                    tableLayout: "fixed",
-                                    borderCollapse: "collapse",
-                                  }}
-                                >
-                                  <tbody>
-                                    <tr>
-                                      <td
-                                        style={{
-                                          width: "80px",
-                                          fontWeight: "bold",
-                                          color: "#8B9A2E",
-                                          fontSize: "1.125rem",
-                                          paddingRight: "1.5rem",
-                                          verticalAlign: "top",
-                                          paddingBottom: "0.75rem",
-                                          border: "none",
-                                        }}
-                                      >
-                                        Who
-                                      </td>
-                                      <td
-                                        style={{
-                                          color: "#1f2937",
-                                          fontSize: "1rem",
-                                          paddingBottom: "0.75rem",
-                                          border: "none",
-                                          wordWrap: "break-word",
-                                          overflowWrap: "break-word",
-                                        }}
-                                      >
-                                        {whoContent}
-                                      </td>
-                                    </tr>
-                                    <tr>
-                                      <td
-                                        style={{
-                                          width: "80px",
-                                          fontWeight: "bold",
-                                          color: "#8B9A2E",
-                                          fontSize: "1.125rem",
-                                          paddingRight: "1.5rem",
-                                          verticalAlign: "top",
-                                          border: "none",
-                                        }}
-                                      >
-                                        What
-                                      </td>
-                                      <td
-                                        style={{
-                                          color: "#1f2937",
-                                          fontSize: "1rem",
-                                          border: "none",
-                                          wordWrap: "break-word",
-                                          overflowWrap: "break-word",
-                                        }}
-                                      >
-                                        {whatContent}
-                                      </td>
-                                    </tr>
-                                  </tbody>
-                                </table>
-                              </div>
+                              <img
+                                src={srcString}
+                                alt={alt || ""}
+                                {...props}
+                                className="rounded-lg shadow-md max-w-full h-auto"
+                                loading="lazy"
+                              />
                             );
-                          }
+                          },
+                          h1: ({ children, className, ...props }: any) => {
+                            const processedChildren =
+                              wrapItalicWithBackground(children);
+                            return (
+                              <h1
+                                {...props}
+                                className={`${
+                                  className || ""
+                                } font-gteesti-display`}
+                              >
+                                {processedChildren}
+                              </h1>
+                            );
+                          },
+                          h2: ({ children, className, ...props }: any) => {
+                            const processedChildren =
+                              wrapItalicWithBackground(children);
+                            return (
+                              <h2
+                                {...props}
+                                className={`${
+                                  className || ""
+                                } font-gteesti-display`}
+                              >
+                                {processedChildren}
+                              </h2>
+                            );
+                          },
+                          h3: ({ children, className, ...props }: any) => {
+                            const processedChildren =
+                              wrapItalicWithBackground(children);
+                            return (
+                              <h3
+                                {...props}
+                                className={`${
+                                  className || ""
+                                } font-gteesti-display`}
+                              >
+                                {processedChildren}
+                              </h3>
+                            );
+                          },
+                          h4: ({ children, className, ...props }: any) => {
+                            const processedChildren =
+                              wrapItalicWithBackground(children);
+                            return (
+                              <h4
+                                {...props}
+                                className={`${
+                                  className || ""
+                                } font-gteesti-display`}
+                              >
+                                {processedChildren}
+                              </h4>
+                            );
+                          },
+                          h5: ({ children, className, ...props }: any) => {
+                            const processedChildren =
+                              wrapItalicWithBackground(children);
+                            return (
+                              <h5
+                                {...props}
+                                className={`${
+                                  className || ""
+                                } font-gteesti-display`}
+                              >
+                                {processedChildren}
+                              </h5>
+                            );
+                          },
+                          h6: ({ children, className, ...props }: any) => {
+                            const processedChildren =
+                              wrapItalicWithBackground(children);
+                            return (
+                              <h6
+                                {...props}
+                                className={`${
+                                  className || ""
+                                } font-gteesti-display`}
+                              >
+                                {processedChildren}
+                              </h6>
+                            );
+                          },
+                          pre: ({ children, ...props }: any) => {
+                            // Get the text content from children
+                            let content = "";
+                            if (typeof children === "string") {
+                              content = children;
+                            } else if (React.isValidElement(children)) {
+                              const childProps = children.props as {
+                                children?: string;
+                              };
+                              if (childProps.children) {
+                                content = String(childProps.children);
+                              }
+                            }
 
-                          // Check if it's a resource/info box
-                          const hasBullets = lines.some((line) =>
-                            line.trim().startsWith("-")
-                          );
+                            content = content.trim();
+                            if (!content) {
+                              return null;
+                            }
 
-                          // Find title - ONLY if it's an actual heading (###)
-                          let title = "";
-                          let contentStartIndex = 0;
-                          let hasHeading = false;
-                          
-                          for (let i = 0; i < lines.length; i++) {
-                            const trimmedLine = lines[i].trim();
-                            if (!trimmedLine) continue;
-                            
-                            // Check if it's a heading
-                            const headingMatch = trimmedLine.match(/^#{1,6}\s+(.+)$/);
-                            if (headingMatch) {
-                              title = headingMatch[1];
-                              contentStartIndex = i + 1;
-                              hasHeading = true;
+                            let lines = content.split("\n");
+
+                            // Parse YAML frontmatter if present
+                            let icon = null;
+                            let background = "green";
+
+                            if (lines[0] === "---") {
+                              const endIndex = lines.findIndex(
+                                (line, i) => i > 0 && line === "---"
+                              );
+                              if (endIndex > 0) {
+                                // Extract frontmatter
+                                const frontmatter = lines.slice(1, endIndex);
+                                frontmatter.forEach((line) => {
+                                  const match = line.match(/^(\w+):\s*(.+)$/);
+                                  if (match) {
+                                    const [, key, value] = match;
+                                    if (key === "icon") {
+                                      icon = value.trim();
+                                    } else if (key === "background") {
+                                      background = value.trim();
+                                    }
+                                  }
+                                });
+                                // Remove frontmatter from content
+                                lines = lines.slice(endIndex + 1);
+                              }
+                            }
+
+                            // Check if it's a Who/What box
+                            const whoLine = lines.find((line) =>
+                              line.trim().startsWith("- Who:")
+                            );
+                            const whatLine = lines.find((line) =>
+                              line.trim().startsWith("- What:")
+                            );
+
+                            if (whoLine && whatLine) {
+                              const whoContent = whoLine
+                                .replace(/^-\s*Who:\s*/, "")
+                                .trim();
+                              const whatContent = whatLine
+                                .replace(/^-\s*What:\s*/, "")
+                                .trim();
+
+                              return (
+                                <div className="not-prose my-6 px-8 py-5 bg-[#F5F7E6] rounded-2xl">
+                                  <table
+                                    style={{
+                                      width: "100%",
+                                      tableLayout: "fixed",
+                                      borderCollapse: "collapse",
+                                    }}
+                                  >
+                                    <tbody>
+                                      <tr>
+                                        <td
+                                          style={{
+                                            width: "80px",
+                                            fontWeight: "bold",
+                                            color: "#8B9A2E",
+                                            fontSize: "1.125rem",
+                                            paddingRight: "1.5rem",
+                                            verticalAlign: "top",
+                                            paddingBottom: "0.75rem",
+                                            border: "none",
+                                          }}
+                                        >
+                                          Who
+                                        </td>
+                                        <td
+                                          style={{
+                                            color: "#1f2937",
+                                            fontSize: "1rem",
+                                            paddingBottom: "0.75rem",
+                                            border: "none",
+                                            wordWrap: "break-word",
+                                            overflowWrap: "break-word",
+                                          }}
+                                        >
+                                          {whoContent}
+                                        </td>
+                                      </tr>
+                                      <tr>
+                                        <td
+                                          style={{
+                                            width: "80px",
+                                            fontWeight: "bold",
+                                            color: "#8B9A2E",
+                                            fontSize: "1.125rem",
+                                            paddingRight: "1.5rem",
+                                            verticalAlign: "top",
+                                            border: "none",
+                                          }}
+                                        >
+                                          What
+                                        </td>
+                                        <td
+                                          style={{
+                                            color: "#1f2937",
+                                            fontSize: "1rem",
+                                            border: "none",
+                                            wordWrap: "break-word",
+                                            overflowWrap: "break-word",
+                                          }}
+                                        >
+                                          {whatContent}
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+                              );
+                            }
+
+                            // Check if it's a resource/info box
+                            const hasBullets = lines.some((line) =>
+                              line.trim().startsWith("-")
+                            );
+
+                            // Find title - ONLY if it's an actual heading (###)
+                            let title = "";
+                            let contentStartIndex = 0;
+                            let hasHeading = false;
+
+                            for (let i = 0; i < lines.length; i++) {
+                              const trimmedLine = lines[i].trim();
+                              if (!trimmedLine) continue;
+
+                              // Check if it's a heading
+                              const headingMatch =
+                                trimmedLine.match(/^#{1,6}\s+(.+)$/);
+                              if (headingMatch) {
+                                title = headingMatch[1];
+                                contentStartIndex = i + 1;
+                                hasHeading = true;
+                                break;
+                              }
+
+                              // If we find a non-heading, non-empty line first, no title
                               break;
                             }
-                            
-                            // If we find a non-heading, non-empty line first, no title
-                            break;
-                          }
 
-                          // Render if we have an icon (frontmatter) OR if we have heading + bullets
-                          if ((icon && lines.length > 0) || (hasHeading && hasBullets)) {
-                            // If no heading was found, use all content as markdown
-                            const content = hasHeading 
-                              ? lines.slice(contentStartIndex).join("\n").trim()
-                              : lines.join("\n").trim();
-                            
-                            // Determine background color
-                            const bgColor = background === "grey" || background === "gray" 
-                              ? "#E5E7EB" // gray-200
-                              : "#F5F7E6"; // default green
-
-                            return (
-                              <div className="my-8 -mx-12 px-12 py-6 relative" style={{ backgroundColor: bgColor }}>
-                                {icon && (
-                                  <img
-                                    src={`/icons/${icon}.png`}
-                                    alt=""
-                                    className="absolute top-6 left-12 w-12 h-12 !shadow-none"
-                                  />
-                                )}
-                                <div className={`prose prose-sm max-w-none prose-headings:font-gteesti-display prose-headings:mb-4 prose-ul:my-2 prose-ul:list-disc prose-ul:pl-5 prose-li:my-1 prose-li:text-gray-700 prose-li:leading-relaxed prose-p:my-2 prose-p:text-gray-700 prose-p:leading-relaxed prose-a:text-[#23B2A7] prose-a:no-underline hover:prose-a:underline ${icon ? 'ml-16' : ''}`}>
-                                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                    {title ? `### ${title}\n\n${content}` : content}
-                                  </ReactMarkdown>
-                                </div>
-                              </div>
-                            );
-                          }
-
-                          // Regular code block - hide it
-                          return null;
-                        },
-                        code: ({ inline, children, ...props }: any) => {
-                          // Only handle inline code here
-                          if (inline) {
-                            return (
-                              <code
-                                className="bg-gray-100 px-1 py-0.5 rounded text-sm"
-                                {...props}
-                              >
-                                {children}
-                              </code>
-                            );
-                          }
-                          // Block code is handled by pre component
-                          return <code {...props}>{children}</code>;
-                        },
-                        table: ({ children, ...props }: any) => {
-                          // Try custom table rendering first
-                          // CustomTable handles detection internally and returns null if not special format
-                          const customTable = CustomTable({ children });
-                          if (customTable !== null) {
-                            return customTable;
-                          }
-
-                          // Check if this is a header-only table
-                          const hasOnlyHeaders = React.Children.toArray(
-                            children
-                          ).every((child) => {
+                            // Render if we have an icon (frontmatter) OR if we have heading + bullets
                             if (
-                              React.isValidElement(child) &&
-                              child.type === "thead"
+                              (icon && lines.length > 0) ||
+                              (hasHeading && hasBullets)
                             ) {
-                              return true;
-                            }
-                            if (
-                              React.isValidElement(child) &&
-                              child.type === "tbody"
-                            ) {
-                              const childProps = child.props as {
-                                children?: React.ReactNode;
-                              };
-                              const tbodyChildren = React.Children.toArray(
-                                childProps.children
-                              );
+                              // If no heading was found, use all content as markdown
+                              const content = hasHeading
+                                ? lines
+                                    .slice(contentStartIndex)
+                                    .join("\n")
+                                    .trim()
+                                : lines.join("\n").trim();
+
+                              // Determine background color
+                              const bgColor =
+                                background === "grey" || background === "gray"
+                                  ? "#E5E7EB" // gray-200
+                                  : "#F5F7E6"; // default green
+
                               return (
-                                tbodyChildren.length === 0 ||
-                                tbodyChildren.every((tr) => {
-                                  if (
-                                    !React.isValidElement(tr) ||
-                                    tr.type !== "tr"
-                                  )
-                                    return false;
-                                  const trProps = tr.props as {
-                                    children?: React.ReactNode;
-                                  };
-                                  return React.Children.toArray(
-                                    trProps.children
-                                  ).every((td) => {
+                                <div
+                                  className="my-8 -mx-12 px-12 py-6 relative"
+                                  style={{ backgroundColor: bgColor }}
+                                >
+                                  {icon && (
+                                    <img
+                                      src={`/icons/${icon}.png`}
+                                      alt=""
+                                      className="absolute top-6 left-12 w-12 h-12 !shadow-none"
+                                    />
+                                  )}
+                                  <div
+                                    className={`prose prose-sm max-w-none prose-headings:font-gteesti-display prose-headings:mb-4 prose-ul:my-2 prose-ul:list-disc prose-ul:pl-5 prose-li:my-1 prose-li:text-gray-700 prose-li:leading-relaxed prose-p:my-2 prose-p:text-gray-700 prose-p:leading-relaxed prose-a:text-[#23B2A7] prose-a:no-underline hover:prose-a:underline ${
+                                      icon ? "ml-16" : ""
+                                    }`}
+                                  >
+                                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                      {title
+                                        ? `### ${title}\n\n${content}`
+                                        : content}
+                                    </ReactMarkdown>
+                                  </div>
+                                </div>
+                              );
+                            }
+
+                            // Regular code block - hide it
+                            return null;
+                          },
+                          code: ({ inline, children, ...props }: any) => {
+                            // Only handle inline code here
+                            if (inline) {
+                              return (
+                                <code
+                                  className="bg-gray-100 px-1 py-0.5 rounded text-sm"
+                                  {...props}
+                                >
+                                  {children}
+                                </code>
+                              );
+                            }
+                            // Block code is handled by pre component
+                            return <code {...props}>{children}</code>;
+                          },
+                          table: ({ children, ...props }: any) => {
+                            // Try custom table rendering first
+                            // CustomTable handles detection internally and returns null if not special format
+                            const customTable = CustomTable({ children });
+                            if (customTable !== null) {
+                              return customTable;
+                            }
+
+                            // Check if this is a header-only table
+                            const hasOnlyHeaders = React.Children.toArray(
+                              children
+                            ).every((child) => {
+                              if (
+                                React.isValidElement(child) &&
+                                child.type === "thead"
+                              ) {
+                                return true;
+                              }
+                              if (
+                                React.isValidElement(child) &&
+                                child.type === "tbody"
+                              ) {
+                                const childProps = child.props as {
+                                  children?: React.ReactNode;
+                                };
+                                const tbodyChildren = React.Children.toArray(
+                                  childProps.children
+                                );
+                                return (
+                                  tbodyChildren.length === 0 ||
+                                  tbodyChildren.every((tr) => {
                                     if (
-                                      !React.isValidElement(td) ||
-                                      td.type !== "td"
+                                      !React.isValidElement(tr) ||
+                                      tr.type !== "tr"
                                     )
                                       return false;
-                                    const tdProps = td.props as {
+                                    const trProps = tr.props as {
                                       children?: React.ReactNode;
                                     };
-                                    return (
-                                      !tdProps.children ||
-                                      (typeof tdProps.children === "string" &&
-                                        tdProps.children.trim() === "") ||
-                                      (Array.isArray(tdProps.children) &&
-                                        tdProps.children.every(
-                                          (c) =>
-                                            typeof c === "string" &&
-                                            c.trim() === ""
-                                        ))
-                                    );
-                                  });
-                                })
+                                    return React.Children.toArray(
+                                      trProps.children
+                                    ).every((td) => {
+                                      if (
+                                        !React.isValidElement(td) ||
+                                        td.type !== "td"
+                                      )
+                                        return false;
+                                      const tdProps = td.props as {
+                                        children?: React.ReactNode;
+                                      };
+                                      return (
+                                        !tdProps.children ||
+                                        (typeof tdProps.children === "string" &&
+                                          tdProps.children.trim() === "") ||
+                                        (Array.isArray(tdProps.children) &&
+                                          tdProps.children.every(
+                                            (c) =>
+                                              typeof c === "string" &&
+                                              c.trim() === ""
+                                          ))
+                                      );
+                                    });
+                                  })
+                                );
+                              }
+                              return false;
+                            });
+
+                            if (hasOnlyHeaders) {
+                              return (
+                                <div className="my-6 px-6 py-4 bg-[#F5F7E6] border-l-4 border-[#8B9A2E] rounded-xl">
+                                  <table className="w-full" {...props}>
+                                    {children}
+                                  </table>
+                                </div>
                               );
                             }
-                            return false;
-                          });
 
-                          if (hasOnlyHeaders) {
+                            // Default table rendering
                             return (
-                              <div className="my-6 px-6 py-4 bg-[#F5F7E6] border-l-4 border-[#8B9A2E] rounded-xl">
-                                <table className="w-full" {...props}>
+                              <div className="my-8 overflow-hidden rounded-lg border border-gray-300">
+                                <table
+                                  className="w-full border-collapse"
+                                  {...props}
+                                >
                                   {children}
                                 </table>
                               </div>
                             );
-                          }
-
-                          // Default table rendering
-                          return (
-                            <div className="my-8 overflow-hidden rounded-lg border border-gray-300">
-                              <table
-                                className="w-full border-collapse"
+                          },
+                          thead: ({ children, ...props }: any) => {
+                            return (
+                              <thead className="bg-[#92C36F]" {...props}>
+                                {children}
+                              </thead>
+                            );
+                          },
+                          th: ({ children, ...props }: any) => {
+                            return (
+                              <th
+                                className="px-6 py-4 text-left font-semibold text-base text-black border-b border-gray-300"
                                 {...props}
                               >
                                 {children}
-                              </table>
-                            </div>
-                          );
-                        },
-                        thead: ({ children, ...props }: any) => {
-                          return (
-                            <thead className="bg-[#92C36F]" {...props}>
-                              {children}
-                            </thead>
-                          );
-                        },
-                        th: ({ children, ...props }: any) => {
-                          return (
-                            <th
-                              className="px-6 py-4 text-left font-semibold text-base text-black border-b border-gray-300"
-                              {...props}
-                            >
-                              {children}
-                            </th>
-                          );
-                        },
-                        tr: ({ children, ...props }: any) => {
-                          return (
-                            <tr className="border-b border-gray-300 last:border-b-0" {...props}>
-                              {children}
-                            </tr>
-                          );
-                        },
-                        td: ({ children, ...props }: any) => {
-                          // Check if children contains bullet points
-                          const processContent = (content: React.ReactNode): React.ReactNode => {
-                            // Extract text content from children (could be string or React elements)
-                            let textContent = '';
-                            if (typeof content === 'string') {
-                              textContent = content;
-                            } else if (React.isValidElement(content)) {
-                              const contentProps = content.props as { children?: any };
-                              if (typeof contentProps.children === 'string') {
-                                textContent = contentProps.children;
-                              }
-                            } else if (Array.isArray(content)) {
-                              textContent = content.map(c => {
-                                if (typeof c === 'string') return c;
-                                if (React.isValidElement(c)) {
-                                  const cProps = c.props as { children?: any };
-                                  return typeof cProps.children === 'string' ? cProps.children : '';
+                              </th>
+                            );
+                          },
+                          tr: ({ children, ...props }: any) => {
+                            return (
+                              <tr
+                                className="border-b border-gray-300 last:border-b-0"
+                                {...props}
+                              >
+                                {children}
+                              </tr>
+                            );
+                          },
+                          td: ({ children, ...props }: any) => {
+                            // Check if children contains bullet points
+                            const processContent = (
+                              content: React.ReactNode
+                            ): React.ReactNode => {
+                              // Extract text content from children (could be string or React elements)
+                              let textContent = "";
+                              if (typeof content === "string") {
+                                textContent = content;
+                              } else if (React.isValidElement(content)) {
+                                const contentProps = content.props as {
+                                  children?: any;
+                                };
+                                if (typeof contentProps.children === "string") {
+                                  textContent = contentProps.children;
                                 }
-                                return '';
-                              }).join('');
-                            }
-
-                            if (textContent) {
-                              // Check for bullet pattern: "- " or "\- "
-                              const bulletPattern = /(?:^|\s)[-−–—]\s+/m;
-                              const hasBullets = bulletPattern.test(textContent);
-
-                              if (hasBullets) {
-                                // Split by various bullet markers
-                                const parts = textContent.split(/\s*[-−–—]\s+/).filter(Boolean);
-
-                                return (
-                                  <ul className="list-disc pl-5 space-y-2">
-                                    {parts.map((part, idx) => {
-                                      // Check if this part contains **text** pattern (bold headers like "Procurement risks")
-                                      const boldMatch = part.match(/\*\*([^*]+)\*\*/);
-                                      if (boldMatch && part.trim() === boldMatch[0]) {
-                                        return <p key={idx} className="font-semibold mt-3 mb-1 text-black">{boldMatch[1]}</p>;
-                                      }
-                                      return <li key={idx}>{part.trim()}</li>;
-                                    })}
-                                  </ul>
-                                );
+                              } else if (Array.isArray(content)) {
+                                textContent = content
+                                  .map((c) => {
+                                    if (typeof c === "string") return c;
+                                    if (React.isValidElement(c)) {
+                                      const cProps = c.props as {
+                                        children?: any;
+                                      };
+                                      return typeof cProps.children === "string"
+                                        ? cProps.children
+                                        : "";
+                                    }
+                                    return "";
+                                  })
+                                  .join("");
                               }
-                            }
 
-                            return content;
-                          };
+                              if (textContent) {
+                                // Check for bullet pattern: "- " or "\- "
+                                const bulletPattern = /(?:^|\s)[-−–—]\s+/m;
+                                const hasBullets =
+                                  bulletPattern.test(textContent);
 
-                          return (
-                            <td
-                              className="pl-8 pr-4 py-4 text-sm align-top bg-white"
-                              {...props}
-                            >
-                              {processContent(children)}
-                            </td>
-                          );
-                        },
-                      } as any}
+                                if (hasBullets) {
+                                  // Split by various bullet markers
+                                  const parts = textContent
+                                    .split(/\s*[-−–—]\s+/)
+                                    .filter(Boolean);
+
+                                  return (
+                                    <ul className="list-disc pl-5 space-y-2">
+                                      {parts.map((part, idx) => {
+                                        // Check if this part contains **text** pattern (bold headers like "Procurement risks")
+                                        const boldMatch =
+                                          part.match(/\*\*([^*]+)\*\*/);
+                                        if (
+                                          boldMatch &&
+                                          part.trim() === boldMatch[0]
+                                        ) {
+                                          return (
+                                            <p
+                                              key={idx}
+                                              className="font-semibold mt-3 mb-1 text-black"
+                                            >
+                                              {boldMatch[1]}
+                                            </p>
+                                          );
+                                        }
+                                        return <li key={idx}>{part.trim()}</li>;
+                                      })}
+                                    </ul>
+                                  );
+                                }
+                              }
+
+                              return content;
+                            };
+
+                            return (
+                              <td
+                                className="pl-8 pr-4 py-4 text-sm align-top bg-white"
+                                {...props}
+                              >
+                                {processContent(children)}
+                              </td>
+                            );
+                          },
+                        } as any
+                      }
                     >
                       {part.content}
                     </ReactMarkdown>
@@ -978,19 +1071,21 @@ ${cleanContent}
                 }
               })
             ) : (
-              <ReactMarkdown 
+              <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 rehypePlugins={[rehypeRaw]}
-                components={{
-                  collapsiblesection: ({ title, children }: any) => (
-                    <CollapsibleText title={title}>
-                      {children}
-                    </CollapsibleText>
-                  ),
-                } as any}
+                components={
+                  {
+                    collapsiblesection: ({ title, children }: any) => (
+                      <CollapsibleText title={title}>
+                        {children}
+                      </CollapsibleText>
+                    ),
+                  } as any
+                }
               >
                 {processedContent}
-            </ReactMarkdown>
+              </ReactMarkdown>
             )}
           </div>
         </article>
@@ -1007,7 +1102,9 @@ ${cleanContent}
                 className="flex items-center gap-2 text-gray-600 hover:text-black transition-colors group"
               >
                 <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-                <span className="text-sm">{renderTitleMarkdown(previous.title)}</span>
+                <span className="text-sm">
+                  {renderTitleMarkdown(previous.title)}
+                </span>
               </Link>
             )}
           </div>
@@ -1018,7 +1115,9 @@ ${cleanContent}
                 scroll={false}
                 className="flex items-center gap-2 text-gray-600 hover:text-black transition-colors group"
               >
-                <span className="text-sm">{renderTitleMarkdown(next.title)}</span>
+                <span className="text-sm">
+                  {renderTitleMarkdown(next.title)}
+                </span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
             )}

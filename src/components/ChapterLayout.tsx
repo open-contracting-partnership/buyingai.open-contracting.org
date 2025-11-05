@@ -11,7 +11,6 @@ import {
 import { StickyNavbar } from "./StickyNavbar";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import { SectionMarker } from "./SectionMarker";
-import { Eye } from "lucide-react";
 
 interface ChapterLayoutProps {
   currentSlug: string;
