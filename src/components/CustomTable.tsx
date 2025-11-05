@@ -213,7 +213,7 @@ export function CustomTable({ children }: CustomTableProps) {
         className="!my-8 !overflow-hidden !border !border-gray-300 !rounded-[12px]"
       >
         <table
-          className="!w-full"
+          className="!w-full !my-0"
           style={{ borderCollapse: "collapse", borderSpacing: 0 }}
         >
           <thead className="!bg-[#EDEBED]/50">
@@ -380,7 +380,7 @@ export function CustomTable({ children }: CustomTableProps) {
       </div>
       {/* Table with actual headers and data */}
       <table
-        className="!my-0 mb-0.5 !w-full"
+        className="!my-0 !w-full"
         style={{ borderCollapse: "collapse", borderSpacing: 0 }}
       >
         <thead className="!bg-[#EDEBED]">
