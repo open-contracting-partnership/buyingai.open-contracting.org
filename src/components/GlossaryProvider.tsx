@@ -126,12 +126,23 @@ function AutoGlossaryWrapper({ children }: { children: React.ReactNode }) {
   const { terms, showTooltip, hideTooltip } = useGlossary();
   const processedNodesRef = useRef<WeakSet<Node>>(new WeakSet());
   const highlightedTermsRef = useRef<Set<string>>(new Set());
+  const childrenKeyRef = useRef<string>("");
 
   useEffect(() => {
     if (!containerRef.current) return;
 
-    // Reset highlighted terms on page navigation (when children change)
-    highlightedTermsRef.current.clear();
+    // Generate a key from children to detect actual content changes (not just re-renders)
+    const currentChildrenKey = JSON.stringify(children);
+    const isNewContent = currentChildrenKey !== childrenKeyRef.current;
+
+    if (isNewContent) {
+      // Reset highlighted terms only on actual page navigation (when children change)
+      highlightedTermsRef.current.clear();
+      childrenKeyRef.current = currentChildrenKey;
+    } else {
+      // Content hasn't changed, skip processing to avoid re-highlighting
+      return;
+    }
 
     const processTextNodes = (node: Node) => {
       // Si ya procesamos este nodo, saltar

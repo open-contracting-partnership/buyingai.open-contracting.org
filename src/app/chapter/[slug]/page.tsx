@@ -8,6 +8,7 @@ import { visit } from "unist-util-visit";
 import type { Root } from "mdast";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { CollapsibleText } from "@/components/CollapsibleText";
+import { CustomTable } from "@/components/CustomTable";
 
 // Helper function to check if a React node contains italic text
 function hasItalic(node: React.ReactNode): boolean {
@@ -311,10 +312,22 @@ export default async function ChapterPage({ params }: PageProps) {
   let processedContent = chapter.content;
   
   // Convert {.collapsible} syntax to custom markers
-  // Match: **Title {.collapsible}**\n\nContent paragraph
-  const collapsibleRegex = /\*\*(.*?)\s*\{\.collapsible\}\*\*\s*\n\n([^\n]+(?:\n(?!\n)[^\n]+)*)/g;
-  processedContent = processedContent.replace(collapsibleRegex, (match, title, content) => {
-    return `<CollapsibleSection title="${title.trim()}">\n\n${content}\n\n</CollapsibleSection>`;
+  // Match both:
+  // 1. #### **Title {.collapsible}**\n\nContent (with heading)
+  // 2. **Title {.collapsible}**\n\nContent (without heading)
+  const collapsibleWithHeadingRegex = /^(#{1,6})\s+\*\*(.*?)\s*\{\.collapsible\}\*\*\s*\n\n([\s\S]*?)(?=\n\n#{1,6}\s|\n\n\*\*.*?\{\.collapsible\}|\n\n```|\n\n##|$)/gm;
+  const collapsibleWithoutHeadingRegex = /^\*\*(.*?)\s*\{\.collapsible\}\*\*\s*\n\n([^\n]+(?:\n(?!\n)[^\n]+)*)/gm;
+  
+  // First, process headings with collapsible (e.g., #### **Title {.collapsible}**)
+  processedContent = processedContent.replace(collapsibleWithHeadingRegex, (match, headingLevel, title, content) => {
+    // Use lowercase tag name for rehype-raw to process correctly
+    return `<collapsiblesection title="${title.trim()}">\n\n${content.trim()}\n\n</collapsiblesection>`;
+  });
+  
+  // Then, process standalone bold collapsibles (e.g., **Title {.collapsible}**)
+  processedContent = processedContent.replace(collapsibleWithoutHeadingRegex, (match, title, content) => {
+    // Use lowercase tag name for rehype-raw to process correctly
+    return `<collapsiblesection title="${title.trim()}">\n\n${content}\n\n</collapsiblesection>`;
   });
   
   // Process markdown to resolve image references
@@ -368,11 +381,17 @@ export default async function ChapterPage({ params }: PageProps) {
   // Debug: show processing results
   if (process.env.NODE_ENV === "development") {
     const hasImageRefs = chapter.content.includes("![][");
+    const hasTable = processedContent.includes("|");
     console.log("[Content Processing]", {
+      slug,
       originalHasRefs: hasImageRefs,
+      hasTable,
       contentParts: contentParts.length,
       imagesFound: contentParts.filter((p) => p.type === "image").length,
     });
+    if (hasTable) {
+      console.log("[Content Processing] Table detected in processed content");
+    }
   }
 
   return (
@@ -712,7 +731,14 @@ export default async function ChapterPage({ params }: PageProps) {
                           return <code {...props}>{children}</code>;
                         },
                         table: ({ children, ...props }: any) => {
-                          // Check if this is a header-only table by examining the children
+                          // Try custom table rendering first
+                          // CustomTable handles detection internally and returns null if not special format
+                          const customTable = CustomTable({ children });
+                          if (customTable !== null) {
+                            return customTable;
+                          }
+
+                          // Check if this is a header-only table
                           const hasOnlyHeaders = React.Children.toArray(
                             children
                           ).every((child) => {
@@ -726,7 +752,6 @@ export default async function ChapterPage({ params }: PageProps) {
                               React.isValidElement(child) &&
                               child.type === "tbody"
                             ) {
-                              // Check if tbody has any tr children
                               const childProps = child.props as {
                                 children?: React.ReactNode;
                               };
@@ -783,22 +808,29 @@ export default async function ChapterPage({ params }: PageProps) {
                             );
                           }
 
+                          // Default table rendering
                           return (
-                            <table
-                              className="w-full border-collapse border border-gray-300"
-                              {...props}
-                            >
-                              {children}
-                            </table>
+                            <div className="my-8 overflow-hidden rounded-lg border border-gray-300">
+                              <table
+                                className="w-full border-collapse"
+                                {...props}
+                              >
+                                {children}
+                              </table>
+                            </div>
                           );
                         },
                         thead: ({ children, ...props }: any) => {
-                          return <thead {...props}>{children}</thead>;
+                          return (
+                            <thead className="bg-[#92C36F]" {...props}>
+                              {children}
+                            </thead>
+                          );
                         },
                         th: ({ children, ...props }: any) => {
                           return (
                             <th
-                              className="px-0 py-2 text-left font-semibold text-base text-gray-900 border-0"
+                              className="px-6 py-4 text-left font-semibold text-base text-black border-b border-gray-300"
                               {...props}
                             >
                               {children}
@@ -807,18 +839,67 @@ export default async function ChapterPage({ params }: PageProps) {
                         },
                         tr: ({ children, ...props }: any) => {
                           return (
-                            <tr className="border-0" {...props}>
+                            <tr className="border-b border-gray-300 last:border-b-0" {...props}>
                               {children}
                             </tr>
                           );
                         },
                         td: ({ children, ...props }: any) => {
+                          // Check if children contains bullet points
+                          const processContent = (content: React.ReactNode): React.ReactNode => {
+                            // Extract text content from children (could be string or React elements)
+                            let textContent = '';
+                            if (typeof content === 'string') {
+                              textContent = content;
+                            } else if (React.isValidElement(content)) {
+                              const contentProps = content.props as { children?: any };
+                              if (typeof contentProps.children === 'string') {
+                                textContent = contentProps.children;
+                              }
+                            } else if (Array.isArray(content)) {
+                              textContent = content.map(c => {
+                                if (typeof c === 'string') return c;
+                                if (React.isValidElement(c)) {
+                                  const cProps = c.props as { children?: any };
+                                  return typeof cProps.children === 'string' ? cProps.children : '';
+                                }
+                                return '';
+                              }).join('');
+                            }
+
+                            if (textContent) {
+                              // Check for bullet pattern: "- " or "\- "
+                              const bulletPattern = /(?:^|\s)[-−–—]\s+/m;
+                              const hasBullets = bulletPattern.test(textContent);
+
+                              if (hasBullets) {
+                                // Split by various bullet markers
+                                const parts = textContent.split(/\s*[-−–—]\s+/).filter(Boolean);
+
+                                return (
+                                  <ul className="list-disc pl-5 space-y-2">
+                                    {parts.map((part, idx) => {
+                                      // Check if this part contains **text** pattern (bold headers like "Procurement risks")
+                                      const boldMatch = part.match(/\*\*([^*]+)\*\*/);
+                                      if (boldMatch && part.trim() === boldMatch[0]) {
+                                        return <p key={idx} className="font-semibold mt-3 mb-1 text-black">{boldMatch[1]}</p>;
+                                      }
+                                      return <li key={idx}>{part.trim()}</li>;
+                                    })}
+                                  </ul>
+                                );
+                              }
+                            }
+
+                            return content;
+                          };
+
                           return (
                             <td
-                              className="border border-gray-300 px-4 py-2 text-sm"
+                              className="pl-8 pr-4 py-4 text-sm align-top bg-white"
                               {...props}
                             >
-                              {children}
+                              {processContent(children)}
                             </td>
                           );
                         },
