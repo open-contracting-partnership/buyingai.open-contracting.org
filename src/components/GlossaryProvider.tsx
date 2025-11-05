@@ -125,7 +125,6 @@ function AutoGlossaryWrapper({ children }: { children: React.ReactNode }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { terms, showTooltip, hideTooltip } = useGlossary();
   const processedNodesRef = useRef<WeakSet<Node>>(new WeakSet());
-  const highlightedTermsRef = useRef<Set<string>>(new Set());
   const childrenKeyRef = useRef<string>("");
 
   useEffect(() => {
@@ -136,8 +135,8 @@ function AutoGlossaryWrapper({ children }: { children: React.ReactNode }) {
     const isNewContent = currentChildrenKey !== childrenKeyRef.current;
 
     if (isNewContent) {
-      // Reset highlighted terms only on actual page navigation (when children change)
-      highlightedTermsRef.current.clear();
+      // Reset processed nodes when content changes
+      processedNodesRef.current = new WeakSet();
       childrenKeyRef.current = currentChildrenKey;
     } else {
       // Content hasn't changed, skip processing to avoid re-highlighting
@@ -177,17 +176,17 @@ function AutoGlossaryWrapper({ children }: { children: React.ReactNode }) {
         }> = [];
 
         sortedTerms.forEach((term) => {
-          // Skip if this term has already been highlighted globally
-          const termLowerCase = term.Term.toLowerCase();
-          if (highlightedTermsRef.current.has(termLowerCase)) {
-            return;
-          }
-
-          const regex = new RegExp(`\\b${escapeRegex(term.Term)}\\b`, "gi");
+          // Escape special regex characters and create case-insensitive pattern
+          // The "gi" flag makes it case-insensitive (matches "Bias", "bias", "BIAS", etc.)
+          const escapedTerm = escapeRegex(term.Term);
+          const pattern = `\\b${escapedTerm}\\b`;
+          const regex = new RegExp(pattern, "gi");
           let match;
 
-          // Only process the first match in this text node
-          if ((match = regex.exec(text)) !== null) {
+          // Find all matches in this text node
+          // Reset lastIndex to avoid regex state issues between iterations
+          regex.lastIndex = 0;
+          while ((match = regex.exec(text)) !== null) {
             const overlaps = matches.some(
               (m) =>
                 (match!.index >= m.index &&
@@ -203,8 +202,11 @@ function AutoGlossaryWrapper({ children }: { children: React.ReactNode }) {
                 length: match[0].length,
               });
               hasMatches = true;
-              // Mark immediately when we find a match
-              highlightedTermsRef.current.add(termLowerCase);
+            }
+            
+            // Prevent infinite loops with zero-length matches
+            if (match[0].length === 0) {
+              regex.lastIndex++;
             }
           }
         });
