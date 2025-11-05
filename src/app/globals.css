@@ -115,6 +115,53 @@ body {
   background: transparent;
 }
 
+/* Collapsible sections */
+.collapsible-wrapper {
+  margin: 1.5rem 0;
+}
+
+.collapsible-wrapper-bullet {
+  margin: 0.75rem 0;
+  margin-left: 1.5rem;
+}
+
+.collapsible-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1f2937;
+  cursor: pointer;
+  padding: 0.5rem 0;
+  transition: color 0.2s;
+  font-family: "GT Eesti Display", Arial, Helvetica, sans-serif;
+}
+
+.collapsible-header:hover {
+  color: #4b5563;
+}
+
+.collapsible-icon {
+  flex-shrink: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+  transition: transform 0.2s;
+}
+
+.collapsible-icon.open {
+  transform: rotate(90deg);
+}
+
+.collapsible-content {
+  margin-left: 1.75rem;
+  margin-top: 0.5rem;
+}
+
+.collapsible-content.open {
+  display: block !important;
+}
+
 /* Print Styles */
 @media print {
   body {

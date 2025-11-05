@@ -9,6 +9,7 @@ import type { Root } from "mdast";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { CollapsibleText } from "@/components/CollapsibleText";
 import { CustomTable } from "@/components/CustomTable";
+import { CollapsibleInitializer } from "@/components/CollapsibleInitializer";
 
 // Helper function to check if a React node contains italic text
 function hasItalic(node: React.ReactNode): boolean {
@@ -311,23 +312,57 @@ export default async function ChapterPage({ params }: PageProps) {
   // First, process collapsible sections
   let processedContent = chapter.content;
   
-  // Convert {.collapsible} syntax to custom markers
-  // Match both:
-  // 1. #### **Title {.collapsible}**\n\nContent (with heading)
-  // 2. **Title {.collapsible}**\n\nContent (without heading)
-  const collapsibleWithHeadingRegex = /^(#{1,6})\s+\*\*(.*?)\s*\{\.collapsible\}\*\*\s*\n\n([\s\S]*?)(?=\n\n#{1,6}\s|\n\n\*\*.*?\{\.collapsible\}|\n\n```|\n\n##|$)/gm;
-  const collapsibleWithoutHeadingRegex = /^\*\*(.*?)\s*\{\.collapsible\}\*\*\s*\n\n([^\n]+(?:\n(?!\n)[^\n]+)*)/gm;
+  // Process collapsible sections - two patterns:
+  // 1. h4 headings: #### **Title {.collapsible}**
+  // 2. Bullet points: * **Title: {.collapsible}**
   
-  // First, process headings with collapsible (e.g., #### **Title {.collapsible}**)
-  processedContent = processedContent.replace(collapsibleWithHeadingRegex, (match, headingLevel, title, content) => {
-    // Use lowercase tag name for rehype-raw to process correctly
-    return `<collapsiblesection title="${title.trim()}">\n\n${content.trim()}\n\n</collapsiblesection>`;
+  // Pattern 1: h4 headings with {.collapsible}
+  const h4CollapsibleRegex = /^####\s+\*\*(.*?)\s*\{\.collapsible\}\*\*\s*\n\n((?:(?!^#{1,4}\s)[\s\S])*)/gm;
+  
+  processedContent = processedContent.replace(h4CollapsibleRegex, (match, title, content) => {
+    const id = `collapsible-${Math.random().toString(36).substr(2, 9)}`;
+    
+    return `<div class="collapsible-wrapper" data-collapsible="true">
+  <div class="collapsible-header" data-target="${id}">
+    <svg class="collapsible-icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+      <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+    </svg>
+    <strong>${title.trim()}</strong>
+  </div>
+  <div class="collapsible-content" id="${id}" style="display: none;">
+
+${content.trim()}
+
+  </div>
+</div>
+
+`;
   });
   
-  // Then, process standalone bold collapsibles (e.g., **Title {.collapsible}**)
-  processedContent = processedContent.replace(collapsibleWithoutHeadingRegex, (match, title, content) => {
-    // Use lowercase tag name for rehype-raw to process correctly
-    return `<collapsiblesection title="${title.trim()}">\n\n${content}\n\n</collapsiblesection>`;
+  // Pattern 2: Bullet points with {.collapsible}
+  // Match: * **Title: {.collapsible}**\n  Content (indented with 2 spaces)
+  const bulletCollapsibleRegex = /^\*\s+\*\*(.*?)\s*\{\.collapsible\}\*\*\s*\n((?:  .+\n?)*)/gm;
+  
+  processedContent = processedContent.replace(bulletCollapsibleRegex, (match, title, content) => {
+    const id = `collapsible-${Math.random().toString(36).substr(2, 9)}`;
+    // Remove the 2-space indentation from content
+    const cleanContent = content.replace(/^  /gm, '').trim();
+    
+    return `<div class="collapsible-wrapper-bullet" data-collapsible="true">
+  <div class="collapsible-header" data-target="${id}">
+    <svg class="collapsible-icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+      <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+    </svg>
+    <strong>${title.trim()}</strong>
+  </div>
+  <div class="collapsible-content" id="${id}" style="display: none;">
+
+${cleanContent}
+
+  </div>
+</div>
+
+`;
   });
   
   // Process markdown to resolve image references
@@ -445,13 +480,13 @@ export default async function ChapterPage({ params }: PageProps) {
                 } else {
                   // Render markdown content
                   return (
-                    <ReactMarkdown
+            <ReactMarkdown
                       key={`markdown-${index}`}
-                      remarkPlugins={[remarkGfm]}
+              remarkPlugins={[remarkGfm]}
                       rehypePlugins={[rehypeRaw]}
-                      components={{
-                          collapsiblesection: ({ title, children }: any) => (
-                            <CollapsibleText title={title}>
+              components={{
+                          collapsiblesection: ({ title, heading, children }: any) => (
+                            <CollapsibleText title={title} heading={heading}>
                               {children}
                             </CollapsibleText>
                           ),
@@ -927,6 +962,8 @@ export default async function ChapterPage({ params }: PageProps) {
             )}
           </div>
         </article>
+
+        <CollapsibleInitializer />
 
         {/* Navigation */}
         <div className="flex justify-between items-center">
