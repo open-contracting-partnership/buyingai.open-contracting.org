@@ -74,7 +74,7 @@ function wrapItalicWithBackground(node: React.ReactNode): React.ReactNode {
     const props = node.props as { children?: React.ReactNode };
     if (props?.children) {
       const children = React.Children.toArray(props.children);
-      const processedChildren = children.map((child) =>
+      const processedChildren = children.map((child, index) =>
         wrapItalicWithBackground(child)
       );
       return React.cloneElement(node as React.ReactElement<any>, {
@@ -85,7 +85,14 @@ function wrapItalicWithBackground(node: React.ReactNode): React.ReactNode {
 
   // If it's an array, process each item
   if (Array.isArray(node)) {
-    return node.map((item) => wrapItalicWithBackground(item));
+    return node.map((item, index) => {
+      const processed = wrapItalicWithBackground(item);
+      // If the processed item is a React element, add a key
+      if (React.isValidElement(processed)) {
+        return React.cloneElement(processed, { key: `italic-${index}` });
+      }
+      return processed;
+    });
   }
 
   return node;

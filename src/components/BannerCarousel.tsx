@@ -141,10 +141,16 @@ export function BannerCarousel({
                     >
                       {section.chapters
                         .slice(0, isMobile ? 4 : 6)
-                        .map((ch, chIdx) => (
+                        .map((ch, chIdx) => {
+                          // For Introduction section (section 1), always go to first chapter
+                          const linkHref = section.number === 1 
+                            ? `/chapter/${firstChapterSlug}#content`
+                            : `/chapter/${ch.slug}#content`;
+                          
+                          return (
                           <Link
                             key={ch.slug}
-                            href={`/chapter/${ch.slug}#content`}
+                            href={linkHref}
                             scroll={false}
                             onClick={(e) => e.stopPropagation()}
                             className={`flex items-center gap-2.5 border-b border-black/10 pb-2 gont ${
@@ -167,7 +173,8 @@ export function BannerCarousel({
                               <ArrowUpRight className="size-4 opacity-0 group-hover:opacity-100 transition-opacity" />
                             )}
                           </Link>
-                        ))}
+                          );
+                        })}
                     </div>
                   )}
                 </div>

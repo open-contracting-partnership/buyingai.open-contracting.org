@@ -43,7 +43,7 @@ export function StickyNavbar({
         visible ? "opacity-100" : "opacity-0 pointer-events-none"
       }`}
       style={{
-        top: "119px", // Position below the main header
+        top: "117px", // Position below the main header (py-7 = 28px*2 + 61px logo = 117px)
       }}
     >
       {/* Chapter Indicator Bar */}
@@ -56,12 +56,11 @@ export function StickyNavbar({
         {/* Show Sidebar Button - Only when sidebar is hidden */}
         {!sidebarVisible && (
           <button
-            className="flex items-center px-2 md:px-4 bg-white rounded-tr-[8px] rounded-br-[8px] cursor-pointer flex-shrink-0"
-            style={{ boxShadow: "4px 4px 4px 0 rgba(0, 0, 0, 0.15)" }}
+            className="flex items-center px-2 md:px-4 bg-transparent cursor-pointer flex-shrink-0 border-none outline-none focus:outline-none"
             onClick={onToggleSidebar}
           >
             <div
-              className="size-6 md:size-8 grid place-items-center text-[#92C36F]"
+              className="size-6 md:size-8 grid place-items-center text-black"
               aria-label="Show sidebar"
             >
               <svg

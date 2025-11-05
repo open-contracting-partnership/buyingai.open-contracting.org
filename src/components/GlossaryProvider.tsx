@@ -130,6 +130,9 @@ function AutoGlossaryWrapper({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (!containerRef.current) return;
 
+    // Reset highlighted terms on page navigation (when children change)
+    highlightedTermsRef.current.clear();
+
     const processTextNodes = (node: Node) => {
       // Si ya procesamos este nodo, saltar
       if (processedNodesRef.current.has(node)) return;
@@ -163,7 +166,7 @@ function AutoGlossaryWrapper({ children }: { children: React.ReactNode }) {
         }> = [];
 
         sortedTerms.forEach((term) => {
-          // Skip if this term has already been highlighted
+          // Skip if this term has already been highlighted globally
           const termLowerCase = term.Term.toLowerCase();
           if (highlightedTermsRef.current.has(termLowerCase)) {
             return;
@@ -172,7 +175,7 @@ function AutoGlossaryWrapper({ children }: { children: React.ReactNode }) {
           const regex = new RegExp(`\\b${escapeRegex(term.Term)}\\b`, "gi");
           let match;
 
-          // Only process the first match
+          // Only process the first match in this text node
           if ((match = regex.exec(text)) !== null) {
             const overlaps = matches.some(
               (m) =>
@@ -189,7 +192,7 @@ function AutoGlossaryWrapper({ children }: { children: React.ReactNode }) {
                 length: match[0].length,
               });
               hasMatches = true;
-              // Mark this term as highlighted
+              // Mark immediately when we find a match
               highlightedTermsRef.current.add(termLowerCase);
             }
           }
@@ -276,24 +279,12 @@ function AutoGlossaryWrapper({ children }: { children: React.ReactNode }) {
     // Procesar el contenido inicial
     processTextNodes(containerRef.current);
 
-    // Observar cambios en el DOM
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        mutation.addedNodes.forEach((node) => {
-          processTextNodes(node);
-        });
-      });
-    });
-
-    observer.observe(containerRef.current, {
-      childList: true,
-      subtree: true,
-    });
-
+    // No observer needed - we process all content on initial load and when children prop changes
+    // The observer was causing re-processing on hover which highlighted all occurrences
     return () => {
-      observer.disconnect();
+      // Cleanup if needed
     };
-  }, [terms, showTooltip, hideTooltip]);
+  }, [terms, showTooltip, hideTooltip, children]);
 
   return <div ref={containerRef}>{children}</div>;
 }

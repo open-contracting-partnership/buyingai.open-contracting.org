@@ -36,7 +36,8 @@ export function ChapterLayout({
 }: ChapterLayoutProps) {
   // Always initialize as false to avoid hydration mismatch
   const [scrolled, setScrolled] = useState(false);
-  const [showStickyNav, setShowStickyNav] = useState(false);
+  // Always show sticky nav on chapter pages (start with true)
+  const [showStickyNav, setShowStickyNav] = useState(true);
   const [sidebarVisible, setSidebarVisible] = useState(() => {
     if (typeof window !== "undefined") {
       return window.innerWidth >= 768; // Sidebar visible by default only on desktop
@@ -120,17 +121,8 @@ export function ChapterLayout({
         window.requestAnimationFrame(() => {
           const scrollDirection = scrollY > lastScrollY ? "down" : "up";
 
-          // Hide on scroll down, show on scroll up (only when scrolled)
-          if (scrollY > 100) {
-            if (scrollDirection === "down") {
-              setShowStickyNav(false);
-            } else {
-              setShowStickyNav(true);
-            }
-          } else {
-            // Hide when near top
-            setShowStickyNav(false);
-          }
+          // Always keep sticky nav visible on chapter pages
+          setShowStickyNav(true);
 
           lastScrollY = scrollY > 0 ? scrollY : 0;
           ticking = false;
@@ -230,8 +222,8 @@ export function ChapterLayout({
           ref={sidebarRef}
           className={`bg-white border-r border-gray-200 transition-all duration-300 h-screen z-50 ${
             sidebarVisible
-              ? "w-[366px] fixed top-[119px] translate-x-0 lg:sticky"
-              : "fixed top-[119px] w-full -translate-x-full overflow-hidden lg:sticky lg:w-0 lg:translate-x-0"
+              ? "w-[366px] fixed top-[117px] translate-x-0 lg:sticky"
+              : "fixed top-[117px] w-full -translate-x-full overflow-hidden lg:sticky lg:w-0 lg:translate-x-0"
           }`}
         >
           <div className="">
@@ -354,8 +346,8 @@ export function ChapterLayout({
           <SectionMarker sectionId={currentSlug}>
             <div
               id="content"
-              className="px-6 lg:px-12 pt-0 pb-12 transition-all duration-300 w-full lg:max-w-4xl lg:mx-auto"
-              style={{ scrollMarginTop: "119px" }}
+              className="px-6 lg:px-12 pt-8 pb-12 transition-all duration-300 w-full lg:max-w-4xl lg:mx-auto"
+              style={{ scrollMarginTop: "200px" }}
             >
               {children}
             </div>
@@ -364,7 +356,8 @@ export function ChapterLayout({
       </div>
 
       {/* Fixed Preview PDF Button */}
-      <Link
+      {/* Temporarily hidden - View as PDF button */}
+      {/* <Link
         href={`/pdfs/${currentSlug}.pdf`}
         target="_blank"
         download={`${currentSlug}.pdf`}
@@ -373,7 +366,7 @@ export function ChapterLayout({
       >
         <Eye className="size-5" />
         <span className="hidden sm:inline font-medium">View as PDF</span>
-      </Link>
+      </Link> */}
     </div>
   );
 }

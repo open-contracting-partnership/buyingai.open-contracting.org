@@ -96,6 +96,25 @@ body {
   display: none; /* Chrome, Safari, Opera */
 }
 
+/* Custom bullet points with green donuts */
+.prose ul > li {
+  position: relative;
+  padding-left: 0;
+  list-style: none;
+}
+
+.prose ul > li::before {
+  content: "";
+  position: absolute;
+  left: -1.5em;
+  top: 0.5em;
+  width: 0.75em;
+  height: 0.75em;
+  border: 3px solid #92C36F;
+  border-radius: 50%;
+  background: transparent;
+}
+
 /* Print Styles */
 @media print {
   body {
