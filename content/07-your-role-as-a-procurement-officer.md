@@ -1,8 +1,11 @@
 # *Your role* as a procurement officer 
 
+
+
 ```
- - Who: Procurement teams
- - What: The role of procurement in supporting AI adoption in the public sector
+- Who: Procurement teams
+- What: The role of procurement in supporting AI adoption in the public sector
+
 ```
 
 **Procurement officials often play a key role in supporting AI adoption.** You help define the use case, your decisions shape how AI systems are evaluated and implemented and what safeguards and monitoring are put in place, and you help ensure oversight over vendors. You play a critical role in enabling teams to move quickly on promising opportunities, test solutions before major investments, scale successful implementations, and adjust direction based on learning. 
@@ -13,7 +16,7 @@ We recognize that many of you are doing your best despite challenging circumstan
 
 You are also not alone. You do not need to know it all or decide it all. Your project team and technology team are there to work alongside you. Here we break down what you ideally have decision-making power around, and what you can influence: 
 
-**As a procurement official, you have decision-making power around: {.collapsible}** 
+#### **As a procurement official, you have decision-making power around: {.collapsible}** 
 
 * **The procurement method and procedure:** You can translate business requirements into effective purchasing strategies and flexible procedures that support innovation, and help experimental projects achieve better outcomes through flexible, iterative, agile approaches and pilots.   
 * **Timeline:** Establishing procurement timelines and milestones that encourage strong and diverse vendor participation.   
@@ -22,7 +25,7 @@ You are also not alone. You do not need to know it all or decide it all. Your pr
 * **Engaging the market and the public:** You can recommend or decide to deploy strategies, such as user research with beneficiaries/end users and vendor engagement through request for information. These approaches are key to making outcome-driven projects that engage responsible vendors and deliver benefits to the public.  
 * **Transparency:** Sharing information and crucial documents such as requests for information, requests for proposal, awards, and contracts, with the public can not only help vendors prepare better responses but also build trust with the public. Depending on your legal context, you can decide to proactively share more information through your existing public procurement and open data portals, but you can also create project specific public websites for more complex public facing projects.
 
-**You can also often influence: {.collapsible}** 
+#### **You can also often influence: {.collapsible}** 
 
 * **A coherent and cohesive organizational AI technology strategy.** In collaboration with the technology team, you can help build alignment around what technologies are purchased to avoid technology and vendor fragmentation, as well as avoid duplicate purchases across different departments or agencies.   
 * **Articulating the use case and what success looks like:** A strong use case grounded in real needs is critical for determining what type of solution your team should pursue. You can also help support return-on-investment (ROI) calculations, and define vendor performance metrics.   

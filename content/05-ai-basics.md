@@ -1,7 +1,7 @@
 # *AI basics*
 
 ```
-- Who: Procurement teams
+- Who: Procurement teams
 - What: Overview of GenAI and agentic AI technologies, common use cases, and limitations and risks 
 ```
 
@@ -11,9 +11,12 @@ Artificial intelligence, or AI, is a term that describes computer systems design
 
 An overview of different forms of AI include: 
 
-* **Machine learning,** which maps input data (often structured or numeric) to outputs such as predictions or classifications.  
-* **Deep learning**, a branch of machine learning, uses multilayer neural networks to learn from complex, unstructured inputs like images, text, or video, and can produce outputs ranging from simple labels to complex generated content.  
-* **Generative AI** (GenAI) uses deep learning models to generate new content, such as text, images, audio, or code, by predicting what is most probable based on patterns learned from training data. Large language learning models (LLMs) are a form of GenAI.   
+* **Machine learning,** which maps input data (often structured or numeric) to outputs such as predictions or classifications.
+
+* **Deep learning**, a branch of machine learning, uses multilayer neural networks to learn from complex, unstructured inputs like images, text, or video, and can produce outputs ranging from simple labels to complex generated content.
+
+* **Generative AI** (GenAI) uses deep learning models to generate new content, such as text, images, audio, or code, by predicting what is most probable based on patterns learned from training data. Large language learning models (LLMs) are a form of GenAI. 
+
 * **Agentic AI** builds on GenAI technology like LLMs, as well as connections with other databases and tools through forms of robotic process automation (RPA), to independently perform complex tasks based on new and evolving inputs. For example, summarizing email text and then proactively scheduling calls. 
 
 This guidance is focused on the latest evolutions of AI: GenAI and Agentic.
@@ -84,30 +87,37 @@ If GenAI is like an intern, agentic AI is more like a junior colleague to whom y
 **Consider using GenAI and agentic AI for:**
 
 * Repetitive tasks, such as low-risk administrative activities  
-* Creating an initial synthesis of a lot of different types of data   
+* Creating an initial synthesis of a lot of different types of data 
+
 * Generating first drafts or options for human review  
 * IT modernization and development
 
 **Avoid using GenAI and agentic AI for:**
 
 * Higher-stakes decision-making  
-* Decisions that require transparency and explainability  
+* Decisions that require transparency and explainability
+
 * Low-quality data 
 
 ## GenAI and agentic agent use cases
 
 GenAI and agentic AI are new technologies, and the public and private sectors are learning where this AI adds value for their organizations, and how to make the most of it. This is especially true for agentic AI. 
 
-Five use cases for the public sector include: 
+Five use cases for the public sector include:  
+ 
 
 * **Document intelligence: {.collapsible}**   
-  GenAI can be programmed to automatically read, summarize, and extract key information from thousands of pages in minutes – work that could take staff weeks to complete. This means that GenAI has the potential to transform how agencies handle documents, from complex regulations to registration forms. Ultimately, this may result in faster service delivery, better compliance, and significant operational savings. For example, document intelligence for the procurement function could look like having a “super-paralegal” who instantly flips through thousands of contracts, regulations, or vendor proposals and highlights the exact clauses you need.  
+  GenAI can be programmed to automatically read, summarize, and extract key information from thousands of pages in minutes – work that could take staff weeks to complete. This means that GenAI has the potential to transform how agencies handle documents, from complex regulations to registration forms. Ultimately, this may result in faster service delivery, better compliance, and significant operational savings. For example, document intelligence for the procurement function could look like having a “super-paralegal” who instantly flips through thousands of contracts, regulations, or vendor proposals and highlights the exact clauses you need.
+
 * **Supporting service delivery: {.collapsible}**   
-  GenAI powers intelligent assistants, such as chatbots for internal or external use, which can handle thousands of inquiries simultaneously, providing information and processing routine requests automatically. These systems can integrate with existing service channels, while potentially reducing wait times and freeing up staff for complex cases. The technology can support consistent service levels in some domain areas while scaling automatically to meet demand peaks, with the potential for improving satisfaction while reducing operational costs. Imagine you’re running a call center during the scheduled enrollment period for a public health insurance program. Normally, you’d need to bring in dozens of temporary staff to handle the flood of calls. GenAI is like having an infinitely scalable team of front-desk clerks who answer routine questions and process simple requests automatically. Agentic AI has the potential to build on these capabilities by developing more effective strategies to assist customers. For example, an AI agent may, after several attempts to solve a resident’s issue, proceed to contact a human support agent and assign them to the case.   
+  GenAI powers intelligent assistants, such as chatbots for internal or external use, which can handle thousands of inquiries simultaneously, providing information and processing routine requests automatically. These systems can integrate with existing service channels, while potentially reducing wait times and freeing up staff for complex cases. The technology can support consistent service levels in some domain areas while scaling automatically to meet demand peaks, with the potential for improving satisfaction while reducing operational costs. Imagine you’re running a call center during the scheduled enrollment period for a public health insurance program. Normally, you’d need to bring in dozens of temporary staff to handle the flood of calls. GenAI is like having an infinitely scalable team of front-desk clerks who answer routine questions and process simple requests automatically. Agentic AI has the potential to build on these capabilities by developing more effective strategies to assist customers. For example, an AI agent may, after several attempts to solve a resident’s issue, proceed to contact a human support agent and assign them to the case. 
+
 * **Transcription and translation: {.collapsible}**   
-  GenAI can create real-time text documentation of meetings or calls, as well as provide rapid translations. This functionality can help improve internal efficiency. For example, social workers can spend less time taking notes and more time on working directly with their clients, and public-facing documents can be quickly translated into different languages. Live simultaneous translation can also enable more community members to better participate in public meetings.      
+  GenAI can create real-time text documentation of meetings or calls, as well as provide rapid translations. This functionality can help improve internal efficiency. For example, social workers can spend less time taking notes and more time on working directly with their clients, and public-facing documents can be quickly translated into different languages. Live simultaneous translation can also enable more community members to better participate in public meetings.    
+
 * **IT modernization and development: {.collapsible}**   
-  GenAI can assist developers by automating routine coding tasks, suggesting improvements, and helping modernize legacy systems. As part of this, GenAI can help technology ensure compliance with security requirements while accelerating digital transformation initiatives. Likewise, agentic AI can help with code modernization by leveraging machine learning, neural networks, LLMs, and automated reasoning, as well as potentially help with faster responses when technology breaks by expediting the incident response process. For example, agentic AI could automate the entire incident response pathway, rolling back issues, creating incident reports, and notifying any team members who need to stay informed.  
+  GenAI can assist developers by automating routine coding tasks, suggesting improvements, and helping modernize legacy systems. As part of this, GenAI can help technology ensure compliance with security requirements while accelerating digital transformation initiatives. Likewise, agentic AI can help with code modernization by leveraging machine learning, neural networks, LLMs, and automated reasoning, as well as potentially help with faster responses when technology breaks by expediting the incident response process. For example, agentic AI could automate the entire incident response pathway, rolling back issues, creating incident reports, and notifying any team members who need to stay informed.
+
 * **Data analysis and insights: {.collapsible}**   
   Multi-modal GenAI can process and analyze vast amounts of information from multiple sources – including reports, sensors, and operational data – to identify patterns and generate actionable insights that improve service delivery. These capabilities can help agencies make data-driven decisions, optimize resource allocation, and proactively address emerging challenges. This can reduce the manual effort required for complex analysis while enabling more responsive and effective public sector services. For example, [transportation agencies use multi-modal GenAI](https://tetcoalition.org/wp-content/uploads/2025/04/TETC_AI_SCOOP_Final.pdf) to analyze traffic data and optimize signal timing, [reducing commute times for schoolchildren](https://www.boston25news.com/news/local/boston-testing-ai-manage-traffic-lights-get-buses-school-time/WFJIUM6IZFENPHPXCSNTXHO62A/) and improving road safety for residents. Picture a highway patrol team trying to monitor every camera, road sensor, and traffic report manually – it would be impossible to catch everything. GenAI is like an always-on traffic controller that watches all feeds at once, spots patterns, and alerts you before a crash or bottleneck happens.
 
@@ -131,23 +141,31 @@ GenAI and agentic AI holds strong potential to improve organizational efficiency
 
 Common limitations include:
 
-* **GenAI and agentic AI lack a genuine understanding of the world,** **and hallucinate. {.collapsible}** While AI models can generate sentences, these are simply outputs – the LLM doesn’t have a true human-like understanding of what the sentence means. Relatedly, GenAI and agentic AI hallucinate, in other words, give you inaccurate results or information that sounds authoritative but is false. Hallucination rates vary by model, [but no model is hallucination-free](https://www.nytimes.com/2025/05/05/technology/ai-hallucinations-chatgpt-google.html). Examples of hallucinations will be different depending on your use case, but could look like generating a realistic-sounding policy citation that doesn't actually exist, providing inaccurate or illegal advice to business owners through a chatbot, or wrongly denying access to benefits. AI’s tendency to hallucinate makes it essential to have a human-in-the-loop to review and think critically about the results, especially for decision-making that directly impacts service delivery. 
+* **GenAI and agentic AI lack a genuine understanding of the world, and hallucinate. {.collapsible}**   
+  While AI models can generate sentences, these are simply outputs – the LLM doesn’t have a true human-like understanding of what the sentence means. Relatedly, GenAI and agentic AI hallucinate, in other words, give you inaccurate results or information that sounds authoritative but is false. Hallucination rates vary by model, [but no model is hallucination-free](https://www.nytimes.com/2025/05/05/technology/ai-hallucinations-chatgpt-google.html). Examples of hallucinations will be different depending on your use case, but could look like generating a realistic-sounding policy citation that doesn't actually exist, providing inaccurate or illegal advice to business owners through a chatbot, or wrongly denying access to benefits. AI’s tendency to hallucinate makes it essential to have a human-in-the-loop to review and think critically about the results, especially for decision-making that directly impacts service delivery. 
 
   Agentic AI hallucinations can be particularly worrisome since they have the potential to impact workflows. For example, if the model generates false information and then relays it to the rest of the AI agents, incorrect data can rapidly spread, escalating errors in the final output. 
 
   For the public sector, both GenAI and agentic AI hallucinations could have severe real-world implications. Organizations must be confident in their use case and solution before using it extensively.
 
-* **GenAI and agentic AI results depend on their training data. {.collapsible}**   
+* **GenAI and agentic AI results depend on their training data. {.collapsible}** 
+
   GenAI models are only as good as the data they are trained on. For example, if your model is only trained on data up to October 2024, it would be unable to tell you current regulations. This is why understanding the training data sources matters a lot, as well as understanding your own data quality if you will be using it to further refine the model.   
+  
   Given their reliance on training data, GenAI and agentic AI may pose data security and privacy risks. When you input data into AI systems, that information may be stored, processed, or even used to train future models unless specific protections are in place. This is particularly important for government data that includes personally identifiable information or sensitive operational details. Organizations should ensure their AI solutions include appropriate data-handling safeguards and comply with relevant privacy regulations.
 
-* **GenAI and agentic AI have a limited ability to explain its results.** **{.collapsible}** GenAI solutions cannot explain in perfect detail how they arrived at their conclusions. This lack of explainability can be fine in some situations, but not ok in others where explainability is critical and a matter of legal risk. For example, an AI chatbot that provides assistance with navigating an unemployment application can be ok, while using an AI system to make decisions around qualifying for public benefits could expose governments to legal concerns given an individual’s right to due process.  
+* **GenAI and agentic AI have a limited ability to explain its results. {.collapsible}** 
+
+  GenAI solutions cannot explain in perfect detail how they arrived at their conclusions. This lack of explainability can be fine in some situations, but not ok in others where explainability is critical and a matter of legal risk. For example, an AI chatbot that provides assistance with navigating an unemployment application can be ok, while using an AI system to make decisions around qualifying for public benefits could expose governments to legal concerns given an individual’s right to due process.  
+  
   Likewise, agentic AI produces results that can be hard to trace or reproduce. Since agentic AI works independently and with minimal human intervention, this can make testing, debugging, and determining where an AI model has gone wrong a challenge. 
 
-* **Agentic AI requires very strong system design**. **{.collapsible}**   
+* **Agentic AI requires very strong system design. {.collapsible}** 
+
   The process of building a multi-agent architecture that effectively coordinates with other models, has specific information of how to carry out certain tasks, and can achieve high-level complex directives is a challenge. Moreover, agentic AI is a new area of technology that relies on successful deployment of other AI strategies. Given this complexity, public sector organizations may struggle to use agentic AI effectively even in low-risk situations where agentic AI could be a strong fit.
 
   For more information on limitations and how to mitigate GenAI and agentic risks during your procurement process, check out our sections on *Myth-busting* and *Key questions to ask.* 
 
-* **GenAI and agentic AI requires ongoing support, which has cost implications.** **{.collapsible}**   
+* **GenAI and agentic AI requires ongoing support, which has cost implications. {.collapsible}** 
+
   When implemented thoughtfully, investments in AI can deliver strong returns through improved efficiency and service quality. However, the limitations we explore here have real cost implications for implementation. The need for human oversight, data quality improvements, and ongoing monitoring means AI adoption involves more than just technology costs. Organizations should budget for additional staff time to review AI outputs, potential data preparation work, and ongoing performance monitoring. 

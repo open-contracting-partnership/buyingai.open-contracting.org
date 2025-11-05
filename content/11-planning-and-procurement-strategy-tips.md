@@ -1,8 +1,8 @@
 # *Planning* and procurement strategy tips
 
 ```
-Who: Procurement teams
-What: How to develop a procurement strategy, who to consult, and what to include
+- Who: Procurement teams
+- What: How to develop a procurement strategy, who to consult, and what to include
 ```
 
 Two types of planning are required for successfully adopting and purchasing an AI solution: project planning, to figure out the broad technology strategy, which is usually led by the agency/department project team or sometimes IT, and procurement planning, to determine which products/services/licenses have to be purchased as part of this project, which is led by procurement. 
@@ -15,11 +15,17 @@ A procurement strategy should articulate the problem you are trying to address i
 
 Early on you’ll need to decide whether to pursue off-the-shelf AI, or customize or build your AI solution. You may also consider reusing existing open-source components as a delivery approach, or in combination with other methods. Your strategy should clearly justify this choice.
 
-**If recommending off-the-shelf,** explain how existing enterprise platforms or applications can meet your needs through standard features and configurations. Consider how you might benefit from continuous vendor improvements, proven security frameworks, and experience from implementations in other organizations, as well as the vendor’s AI services and integration capabilities. Depending on your specific use case, specialized AI applications might be a better fit.
+#### **If recommending off-the-shelf, {.collapsible}** 
 
-**If recommending customized** solutions, explain why the underlying platform capabilities are strong, but standard configurations aren't enough to meet your needs. This might involve custom integrations, specialized workflows, or agency-specific data processing requirements that can be built on enterprise foundations.
+Explain how existing enterprise platforms or applications can meet your needs through standard features and configurations. Consider how you might benefit from continuous vendor improvements, proven security frameworks, and experience from implementations in other organizations, as well as the vendor’s AI services and integration capabilities. Depending on your specific use case, specialized AI applications might be a better fit.
 
-**If recommending building** custom solutions, articulate why neither off-the-shelf products nor platform customization are enough to meet your needs. This typically involves unique regulatory requirements, new or unique use cases, or complex integration needs that exceed what existing platforms typically can do. Consider whether these requirements justify the additional development time, cost, and ongoing maintenance responsibilities.
+#### **If recommending customized solutions, {.collapsible}** 
+
+Explain why the underlying platform capabilities are strong, but standard configurations aren't enough to meet your needs. This might involve custom integrations, specialized workflows, or agency-specific data processing requirements that can be built on enterprise foundations.
+
+#### **If recommending building custom solutions, {.collapsible}**
+
+Articulate why neither off-the-shelf products nor platform customization are enough to meet your needs. This typically involves unique regulatory requirements, new or unique use cases, or complex integration needs that exceed what existing platforms typically can do. Consider whether these requirements justify the additional development time, cost, and ongoing maintenance responsibilities.
 
 ## Who and how to engage 
 

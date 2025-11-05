@@ -1,8 +1,8 @@
 # Tips for *evaluating AI proposals*
 
 ```
-Who: Procurement teams
-What: Best practices for evaluation 
+- Who: Procurement teams
+- What: Best practices for evaluation 
 ```
 
 Your evaluation methods will vary depending on what and how you are buying. As you evaluate proposals, keep your end user and/or beneficiary in mind based on your organization’s user research. Make sure that your evaluation criteria and selection process speak to their needs. Here are some tips to consider. 
@@ -50,20 +50,20 @@ Your evaluation methods will vary depending on what and how you are buying. As y
 
 As you create your evaluation criteria, [align around your metrics, what the terms really mean, and the implications](https://developers.google.com/machine-learning/crash-course/classification/accuracy-precision-recall#precision). For example, “accuracy” often comes up during evaluation. But other metrics matter as well, such as precision (which is also sometimes confused with accuracy by non-experts) and recall. In some use cases, precision and recall are trade-offs as parts of the overall accuracy of the solution. Speak to technical experts to understand the implications of these metrics in terms of false positives/negatives, and discuss relevant operational and legal implications.  
 
-![][image1]
-
 ```
+---
+icon: checkbox
+background: green
+---
+
 Your evaluation criteria will be case-dependent. Some evaluation criteria for open solicitations you may consider include:
-- Problem fit, including demonstrating a strong understanding of your need and the appropriateness of the solution. 
-- AI approach and explainability, such as model algorithm and training data, model transparency, algorithmic clarity, audit readiness.
-- Environmental impact, such as energy use and source.
-- Data governance and bias handling, including strategies for fairness, data quality, and addressing known model limitations.
-- Integration, training and operations, such as fit with existing infrastructure, plans for training and upskilling internal staff, and ongoing support services.
-- Risk and accountability, like liability mechanisms, governance structures, and human-in-the-loop system design. 
-Financial value, such as cost over the lifecycle and real ROI expectations.
-Vendor experience, including relevant experience with similar AI solutions.  
+- **Problem fit**, including demonstrating a strong understanding of your need and the appropriateness of the solution. 
+- **AI approach and explainability**, such as model algorithm and training data, model transparency, algorithmic clarity, audit readiness.
+- **Environmental impact**, such as energy use and source.
+- **Data governance and bias handling**, including strategies for fairness, data quality, and addressing known model limitations.
+- **Integration, training and operations**, such as fit with existing infrastructure, plans for training and upskilling internal staff, and ongoing support services.
+- **Risk and accountability**, like liability mechanisms, governance structures, and human-in-the-loop system design. 
+- **Financial value**, such as cost over the lifecycle and real ROI expectations.
+- **Vendor experience**, including relevant experience with similar AI solutions.  
 ```
 
-* 
-
-[image1]: <data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAEiUlEQVR4Xu2ZW0sbQRTHjVZrofTNt36PfohS2hd9MBQ0BXtJobFQKySCD4KKlwTxUkVN1JiYaOIleCOCb16qiC/Sgoiin6HFJNXt+Y8zy7pJTdy66yo5cNjN7syZ85szM2cmW1BwnyQYDEp3WfMgZtM8iNn0SpBAIJCcmJiQQqGQNDY2lpP6/f40xfPJyUlNOjU1xXyBHfgBn9R+ZgVBRY/H421oaKiIxWLV0WjUFolE3kDpne3g4MB2dHQk6/HxsW13d9e2sbEh69raGnvndrttfX1911bU6+rqslFnVHR0dAyiY9V+ZgUheml8fLxcLnTL4vP5niMyaj+zghAEYKrxXpIki1zYYBFtz83NvdYEgrE9OztrUxrLRVBWreoyWmR1ddVqGIga4CZBaK4ZB6Kn7O/vmxfkOpEzO0gh6QN+X3RVO2YHYRBbW1tN/Pc/YUwHohhGRfjtcrkmpqenJUp86/w9g1OLWUGYs+R8eGFhATnrdzgcluLx+Hc8Ly8vZ5BKMSMIg6AEF0Ab1FaCEu8ZwSSxLWppadngRS/BmAZEGQnaN4WxBaJ2UmiL7s8J5Jyu7HdbW9sPUUfUNwUIhyjGPTkZnpmZybSTZSDUJuaLS9QTNowAKVTcM2fVIiIxPz8fQiQAQRH4w6PCNqh0TeLa3t7+CWX39vZKlDZ0BZEu8oCltbX1aU9Pj58/KxHPeT021gcGBkJ8TjCHBUTwIhLJ4eFhaXBw8APK1tTUpHUIHRsqef00lQupX2QD4U6yNd9qtT5ZXFxMYKI2NTX14f3h4WEpL8MiQU6GMGTI4YSqnXPSlNfrlfr7+99z22kQEEREDxDW42VlZY+Xl5dPR0dHzynsCVqJsOp842VKcd3Z2QnQe9jE6gTHmX0ekQQiQXPiI69TjA5StiVELxBLY2MjIFJUDs4xB7GE4trb2zuMcnS6DPPjqjyx+bA6o/tEd3e3tLm5+RZlMw0npegCQgnr0crKikQ9ncrQy6eoS8PlJ46mFKlTpV2CBURqaGgIEO9gLxsERBcQSH19fSOyMpZMUUdMYvQ4h8LKdAkU8wQQNCfssENXDKc0+2rRBURMSI/H83VkZCRTTlCqDEIRStDKhGix4UTD89ISe5XoBWIhww9xT4650MNBxTzIoGx1ikQi+IuHDSeykTMERDcQrswZKu/Cpk9MdqWK1QnJzOl0itWJ5RqlzWyiC4hSxDDr7Oz8gu04OYyEhyQHha0kVqf19XUWCcyJyxZyEyNA5Mg4HA5nNBplkeEgKUSCDk4MYnt7WxMERHcQISIybrfbubS0hPq/EKG6ujoHnmuNhBDDQCAiMna7/TOyOWVttu3IJU9kE6NBLGLXSjvdZ/zZf0NADAfhyvZL4noTYiiInpIHUYKYQTSDYP2ns3W1wtatysnJiTYQnPiam5tN86EnHo+/xAZV7WdOID6fr7+qquoFvk1QorPSuVyT0pZfs9bW1lbGYrFXtFvo4FueNL0SRGzNccJDTwAM91pU/ZHzOor6SK78C5r6zJ8d5C5pHsRsmgcxm8og90H+AkU1fA5aPTJGAAAAAElFTkSuQmCC>

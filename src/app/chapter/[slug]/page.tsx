@@ -47,6 +47,36 @@ function hasItalic(node: React.ReactNode): boolean {
   return false;
 }
 
+// Helper function to render markdown in navigation titles (handles italics)
+function renderTitleMarkdown(title: string): React.ReactNode {
+  // Split by italic markers (* or _)
+  const parts: React.ReactNode[] = [];
+  const italicRegex = /\*([^*]+)\*/g;
+  let lastIndex = 0;
+  let match;
+
+  while ((match = italicRegex.exec(title)) !== null) {
+    // Add text before the italic
+    if (match.index > lastIndex) {
+      parts.push(title.substring(lastIndex, match.index));
+    }
+    // Add italic text with green background
+    parts.push(
+      <span key={match.index} className="bg-green-200 px-1 py-0.5 rounded not-italic">
+        {match[1]}
+      </span>
+    );
+    lastIndex = match.index + match[0].length;
+  }
+
+  // Add remaining text
+  if (lastIndex < title.length) {
+    parts.push(title.substring(lastIndex));
+  }
+
+  return parts.length > 0 ? <>{parts}</> : title;
+}
+
 // Helper function to wrap italic elements with green background
 function wrapItalicWithBackground(node: React.ReactNode): React.ReactNode {
   if (!node) return node;
@@ -317,7 +347,8 @@ export default async function ChapterPage({ params }: PageProps) {
   // 2. Bullet points: * **Title: {.collapsible}**
   
   // Pattern 1: h4 headings with {.collapsible}
-  const h4CollapsibleRegex = /^####\s+\*\*(.*?)\s*\{\.collapsible\}\*\*\s*\n\n((?:(?!^#{1,4}\s)[\s\S])*)/gm;
+  // Stop at next h1-h4 heading OR multiple blank lines (3+ newlines)
+  const h4CollapsibleRegex = /^####\s+\*\*(.*?)\s*\{\.collapsible\}\*\*\s*\n\n((?:(?!^#{1,4}\s|\n\n\n)[\s\S])*)/gm;
   
   processedContent = processedContent.replace(h4CollapsibleRegex, (match, title, content) => {
     const id = `collapsible-${Math.random().toString(36).substr(2, 9)}`;
@@ -340,8 +371,9 @@ ${content.trim()}
   });
   
   // Pattern 2: Bullet points with {.collapsible}
-  // Match: * **Title: {.collapsible}**\n  Content (indented with 2 spaces)
-  const bulletCollapsibleRegex = /^\*\s+\*\*(.*?)\s*\{\.collapsible\}\*\*\s*\n((?:  .+\n?)*)/gm;
+  // Match: * **Title: {.collapsible}**\n  Content (all indented content until next bullet or end)
+  // Capture all lines that are either indented with 2 spaces, blank lines, or until we hit the next bullet
+  const bulletCollapsibleRegex = /^\*\s+\*\*(.*?)\s*\{\.collapsible\}\*\*\s*\n((?:(?:  .+|\s*)\n)*(?:  .+)?)/gm;
   
   processedContent = processedContent.replace(bulletCollapsibleRegex, (match, title, content) => {
     const id = `collapsible-${Math.random().toString(36).substr(2, 9)}`;
@@ -975,7 +1007,7 @@ ${cleanContent}
                 className="flex items-center gap-2 text-gray-600 hover:text-black transition-colors group"
               >
                 <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-                <span className="text-sm">{previous.title}</span>
+                <span className="text-sm">{renderTitleMarkdown(previous.title)}</span>
               </Link>
             )}
           </div>
@@ -986,7 +1018,7 @@ ${cleanContent}
                 scroll={false}
                 className="flex items-center gap-2 text-gray-600 hover:text-black transition-colors group"
               >
-                <span className="text-sm">{next.title}</span>
+                <span className="text-sm">{renderTitleMarkdown(next.title)}</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
             )}

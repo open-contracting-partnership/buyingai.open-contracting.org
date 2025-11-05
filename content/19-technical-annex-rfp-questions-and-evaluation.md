@@ -1,10 +1,8 @@
-# 
-
 # Technical annex: GenAI requirements and evaluation criteria for cloud service providers 
 
 ```
-Who: Procurement teams
-What: Best practices for solicitations 
+- Who: Procurement teams
+- What: Best practices for solicitations 
 ```
 
 Our guide aims to help you make your AI procurement a success – without learning every technical detail. But, if you’re ready for the deep end, or if you have a colleague with IT expertise, this technical annex provides sample requirements, evaluation criteria and scoring tables to reuse or adapt for a more detailed and technical procurement.

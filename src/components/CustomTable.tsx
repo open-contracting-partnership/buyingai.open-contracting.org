@@ -85,14 +85,157 @@ export function CustomTable({ children }: CustomTableProps) {
     }
   });
 
+  // Process cell content to handle bullet points
+  const processContent = (content: React.ReactNode): React.ReactNode => {
+    // Extract text content from children
+    let textContent = '';
+    if (typeof content === 'string') {
+      textContent = content;
+    } else if (React.isValidElement(content)) {
+      const contentProps = content.props as { children?: any };
+      if (typeof contentProps.children === 'string') {
+        textContent = contentProps.children;
+      }
+    } else if (Array.isArray(content)) {
+      textContent = content.map(c => {
+        if (typeof c === 'string') return c;
+        if (React.isValidElement(c)) {
+          const cProps = c.props as { children?: any };
+          return typeof cProps.children === 'string' ? cProps.children : '';
+        }
+        return '';
+      }).join('');
+    }
+
+    if (textContent) {
+      // Check for bullet pattern: "- " or "\- "
+      const bulletPattern = /(?:^|\s)[-−–—]\s+/m;
+      const hasBullets = bulletPattern.test(textContent);
+
+      if (hasBullets) {
+        // Split by various bullet markers
+        const parts = textContent.split(/\s*[-−–—]\s+/).filter(Boolean);
+
+        return (
+          <ul className="list-disc pl-5 space-y-2">
+            {parts.map((part, idx) => {
+              // Check if this part contains **text** pattern (bold headers like "Procurement risks")
+              const boldMatch = part.match(/\*\*([^*]+)\*\*/);
+              if (boldMatch && part.trim() === boldMatch[0]) {
+                return <p key={idx} className="font-semibold mt-3 mb-1 text-black">{boldMatch[1]}</p>;
+              }
+              return <li key={idx}>{part.trim()}</li>;
+            })}
+          </ul>
+        );
+      }
+    }
+
+    return content;
+  };
+
+  // Helper function to render regular tables with multiple column headers
+  const renderRegularTable = (headerCells: React.ReactNode[], bodyRows: React.ReactNode[]) => {
+    // Extract header text from cells
+    const headers = headerCells.map((cell) => {
+      if (!React.isValidElement(cell)) return '';
+      const cellProps = (cell.props as any).children;
+
+      // Handle different types of children content
+      if (typeof cellProps === 'string') {
+        return cellProps;
+      }
+      if (Array.isArray(cellProps)) {
+        return cellProps.map(c => typeof c === 'string' ? c : '').join('');
+      }
+      if (React.isValidElement(cellProps)) {
+        const nestedProps = (cellProps.props as any).children;
+        return String(nestedProps || '');
+      }
+
+      return String(cellProps || '');
+    });
+
+    // Process body rows with proper cell styling
+    const processedRows = bodyRows.map((row, rowIdx) => {
+      if (!React.isValidElement(row)) return row;
+
+      const rowProps = row.props as { children?: React.ReactNode };
+      const cells = React.Children.toArray(rowProps.children);
+
+      const processedCells = cells.map((cell, cellIdx) => {
+        if (!React.isValidElement(cell)) return cell;
+
+        const cellProps = cell.props as { children?: React.ReactNode };
+
+        return (
+          <td
+            key={cellIdx}
+            className="pl-8 pr-4 py-4 text-sm align-top bg-white"
+          >
+            {processContent(cellProps.children)}
+          </td>
+        );
+      });
+
+      return (
+        <tr key={rowIdx} className="border-b border-gray-300 last:border-b-0">
+          {processedCells}
+        </tr>
+      );
+    });
+
+    return (
+      <div className="my-8 overflow-hidden border border-[#92C36F]" style={{ borderRadius: '24px 48px 24px 24px' }}>
+        <table className="w-full" style={{ borderCollapse: 'collapse', borderSpacing: 0 }}>
+          <thead className="bg-[#92C36F]">
+            <tr>
+              {headers.map((header, idx) => (
+                <th key={idx} className="pl-8 pr-4 py-4 text-left font-semibold text-base text-white">
+                  {header || `Header ${idx + 1}`}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className="bg-white">
+            {processedRows}
+          </tbody>
+        </table>
+      </div>
+    );
+  };
+
+  // Check if this is a regular table with thead headers (not the special merged format)
+  // Regular table: thead has actual column headers (not title/subtitle)
+  const theadRows = React.Children.toArray(theadProps.children);
+  const theadRow = theadRows[0];
+
+  if (React.isValidElement(theadRow)) {
+    const theadCells = React.Children.toArray((theadRow.props as any).children);
+
+    // Check if thead has 2+ cells with content (regular table with column headers)
+    if (theadCells.length >= 2) {
+      const hasMultipleHeaders = theadCells.filter((cell) => {
+        if (!React.isValidElement(cell)) return false;
+        const cellProps = (cell.props as any).children;
+        return cellProps && String(cellProps).trim().length > 0;
+      }).length >= 2;
+
+      // If thead has multiple actual column headers (2+), this is a regular table
+      // In this case, ALL tbody rows are data (not headers)
+      if (hasMultipleHeaders) {
+        // This is a regular table with proper thead headers
+        return renderRegularTable(theadCells, tbodyRows);
+      }
+    }
+  }
+
   // If no strong tags in first row, this is not our special table format
   if (!hasStrongInFirstRow) {
     return null;
   }
 
   // Extract title and subtitle from thead
-  const theadRows = React.Children.toArray(theadProps.children);
-  const theadRow = theadRows[0];
   let title = '';
   let subtitle = '';
 
@@ -155,55 +298,6 @@ export function CustomTable({ children }: CustomTableProps) {
 
   // Get remaining data rows (skip first row which was headers)
   const dataRows = tbodyRows.slice(1);
-
-  // Process cell content to handle bullet points
-  const processContent = (content: React.ReactNode): React.ReactNode => {
-    // Extract text content from children
-    let textContent = '';
-    if (typeof content === 'string') {
-      textContent = content;
-    } else if (React.isValidElement(content)) {
-      const contentProps = content.props as { children?: any };
-      if (typeof contentProps.children === 'string') {
-        textContent = contentProps.children;
-      }
-    } else if (Array.isArray(content)) {
-      textContent = content.map(c => {
-        if (typeof c === 'string') return c;
-        if (React.isValidElement(c)) {
-          const cProps = c.props as { children?: any };
-          return typeof cProps.children === 'string' ? cProps.children : '';
-        }
-        return '';
-      }).join('');
-    }
-
-    if (textContent) {
-      // Check for bullet pattern: "- " or "\- "
-      const bulletPattern = /(?:^|\s)[-−–—]\s+/m;
-      const hasBullets = bulletPattern.test(textContent);
-
-      if (hasBullets) {
-        // Split by various bullet markers
-        const parts = textContent.split(/\s*[-−–—]\s+/).filter(Boolean);
-
-        return (
-          <ul className="list-disc pl-5 space-y-2">
-            {parts.map((part, idx) => {
-              // Check if this part contains **text** pattern (bold headers like "Procurement risks")
-              const boldMatch = part.match(/\*\*([^*]+)\*\*/);
-              if (boldMatch && part.trim() === boldMatch[0]) {
-                return <p key={idx} className="font-semibold mt-3 mb-1 text-black">{boldMatch[1]}</p>;
-              }
-              return <li key={idx}>{part.trim()}</li>;
-            })}
-          </ul>
-        );
-      }
-    }
-
-    return content;
-  };
 
   // Process data rows to apply proper styling
   const processedDataRows = dataRows.map((row, rowIdx) => {
