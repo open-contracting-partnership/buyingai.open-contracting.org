@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface CustomTableProps {
   children: React.ReactNode;
@@ -26,10 +26,10 @@ export function CustomTable({ children }: CustomTableProps) {
 
       // Check multiple ways to identify thead/tbody
       // ReactMarkdown may use custom components with 'node' prop
-      const isTheadByType = child.type === 'thead';
-      const isTheadByNode = props?.node?.tagName === 'thead';
-      const isTbodyByType = child.type === 'tbody';
-      const isTbodyByNode = props?.node?.tagName === 'tbody';
+      const isTheadByType = child.type === "thead";
+      const isTheadByNode = props?.node?.tagName === "thead";
+      const isTbodyByType = child.type === "tbody";
+      const isTbodyByNode = props?.node?.tagName === "tbody";
 
       if (isTheadByType || isTheadByNode) {
         theadElement = child as React.ReactElement;
@@ -48,8 +48,12 @@ export function CustomTable({ children }: CustomTableProps) {
     return null;
   }
 
-  const theadProps = (theadElement as React.ReactElement).props as { children?: React.ReactNode };
-  const tbodyProps = (tbodyElement as React.ReactElement).props as { children?: React.ReactNode };
+  const theadProps = (theadElement as React.ReactElement).props as {
+    children?: React.ReactNode;
+  };
+  const tbodyProps = (tbodyElement as React.ReactElement).props as {
+    children?: React.ReactNode;
+  };
   const tbodyRows = React.Children.toArray(tbodyProps.children);
 
   // Check if first tbody row has <strong> tags (indicating it's actually headers)
@@ -65,7 +69,7 @@ export function CustomTable({ children }: CustomTableProps) {
   const hasStrong = (node: React.ReactNode): boolean => {
     if (!node) return false;
     if (React.isValidElement(node)) {
-      if (node.type === 'strong') return true;
+      if (node.type === "strong") return true;
       const nodeProps = node.props as { children?: React.ReactNode };
       if (nodeProps?.children) {
         return React.Children.toArray(nodeProps.children).some(hasStrong);
@@ -88,23 +92,25 @@ export function CustomTable({ children }: CustomTableProps) {
   // Process cell content to handle bullet points
   const processContent = (content: React.ReactNode): React.ReactNode => {
     // Extract text content from children
-    let textContent = '';
-    if (typeof content === 'string') {
+    let textContent = "";
+    if (typeof content === "string") {
       textContent = content;
     } else if (React.isValidElement(content)) {
       const contentProps = content.props as { children?: any };
-      if (typeof contentProps.children === 'string') {
+      if (typeof contentProps.children === "string") {
         textContent = contentProps.children;
       }
     } else if (Array.isArray(content)) {
-      textContent = content.map(c => {
-        if (typeof c === 'string') return c;
-        if (React.isValidElement(c)) {
-          const cProps = c.props as { children?: any };
-          return typeof cProps.children === 'string' ? cProps.children : '';
-        }
-        return '';
-      }).join('');
+      textContent = content
+        .map((c) => {
+          if (typeof c === "string") return c;
+          if (React.isValidElement(c)) {
+            const cProps = c.props as { children?: any };
+            return typeof cProps.children === "string" ? cProps.children : "";
+          }
+          return "";
+        })
+        .join("");
     }
 
     if (textContent) {
@@ -117,14 +123,25 @@ export function CustomTable({ children }: CustomTableProps) {
         const parts = textContent.split(/\s*[-−–—]\s+/).filter(Boolean);
 
         return (
-          <ul className="list-disc pl-5 space-y-2">
+          <ul className="!list-disc !pl-5 !space-y-3">
             {parts.map((part, idx) => {
               // Check if this part contains **text** pattern (bold headers like "Procurement risks")
               const boldMatch = part.match(/\*\*([^*]+)\*\*/);
               if (boldMatch && part.trim() === boldMatch[0]) {
-                return <p key={idx} className="font-semibold mt-3 mb-1 text-black">{boldMatch[1]}</p>;
+                return (
+                  <p
+                    key={idx}
+                    className="!font-semibold !mt-4 !mb-2 !text-black"
+                  >
+                    {boldMatch[1]}
+                  </p>
+                );
               }
-              return <li key={idx}>{part.trim()}</li>;
+              return (
+                <li key={idx} className="!leading-relaxed">
+                  {part.trim()}
+                </li>
+              );
             })}
           </ul>
         );
@@ -135,25 +152,28 @@ export function CustomTable({ children }: CustomTableProps) {
   };
 
   // Helper function to render regular tables with multiple column headers
-  const renderRegularTable = (headerCells: React.ReactNode[], bodyRows: React.ReactNode[]) => {
+  const renderRegularTable = (
+    headerCells: React.ReactNode[],
+    bodyRows: React.ReactNode[]
+  ) => {
     // Extract header text from cells
     const headers = headerCells.map((cell) => {
-      if (!React.isValidElement(cell)) return '';
+      if (!React.isValidElement(cell)) return "";
       const cellProps = (cell.props as any).children;
 
       // Handle different types of children content
-      if (typeof cellProps === 'string') {
+      if (typeof cellProps === "string") {
         return cellProps;
       }
       if (Array.isArray(cellProps)) {
-        return cellProps.map(c => typeof c === 'string' ? c : '').join('');
+        return cellProps.map((c) => (typeof c === "string" ? c : "")).join("");
       }
       if (React.isValidElement(cellProps)) {
         const nestedProps = (cellProps.props as any).children;
-        return String(nestedProps || '');
+        return String(nestedProps || "");
       }
 
-      return String(cellProps || '');
+      return String(cellProps || "");
     });
 
     // Process body rows with proper cell styling
@@ -171,7 +191,7 @@ export function CustomTable({ children }: CustomTableProps) {
         return (
           <td
             key={cellIdx}
-            className="pl-8 pr-4 py-4 text-sm align-top bg-white"
+            className={`!pl-8 !pr-4 !py-6 !text-sm !align-top !bg-white !border !border-[#6CBA8C]`}
           >
             {processContent(cellProps.children)}
           </td>
@@ -179,27 +199,38 @@ export function CustomTable({ children }: CustomTableProps) {
       });
 
       return (
-        <tr key={rowIdx} className="border-b border-gray-300 last:border-b-0">
+        <tr
+          key={rowIdx}
+          className="!border !border-[#6CBA8C]"
+        >
           {processedCells}
         </tr>
       );
     });
 
     return (
-      <div className="my-8 overflow-hidden border border-[#92C36F]" style={{ borderRadius: '24px 48px 24px 24px' }}>
-        <table className="w-full" style={{ borderCollapse: 'collapse', borderSpacing: 0 }}>
-          <thead className="bg-[#92C36F]">
+      <div
+        className="!my-8 !overflow-hidden !border !border-gray-300 !rounded-[12px]"
+      >
+        <table
+          className="!w-full"
+          style={{ borderCollapse: "collapse", borderSpacing: 0 }}
+        >
+          <thead className="!bg-[#EDEBED]/50">
             <tr>
               {headers.map((header, idx) => (
-                <th key={idx} className="pl-8 pr-4 py-4 text-left font-semibold text-base text-white">
+                <th
+                  key={idx}
+                  className={`!pl-8 !pr-4 !py-5 !bg-[#EDEBED]/50 !text-left !font-semibold !text-base !text-black !border-b !border-gray-300 ${
+                    idx < headers.length - 1 ? "!border-r !border-gray-300" : ""
+                  }`}
+                >
                   {header || `Header ${idx + 1}`}
                 </th>
               ))}
             </tr>
           </thead>
-          <tbody className="bg-white">
-            {processedRows}
-          </tbody>
+          <tbody className="!bg-white">{processedRows}</tbody>
         </table>
       </div>
     );
@@ -215,11 +246,12 @@ export function CustomTable({ children }: CustomTableProps) {
 
     // Check if thead has 2+ cells with content (regular table with column headers)
     if (theadCells.length >= 2) {
-      const hasMultipleHeaders = theadCells.filter((cell) => {
-        if (!React.isValidElement(cell)) return false;
-        const cellProps = (cell.props as any).children;
-        return cellProps && String(cellProps).trim().length > 0;
-      }).length >= 2;
+      const hasMultipleHeaders =
+        theadCells.filter((cell) => {
+          if (!React.isValidElement(cell)) return false;
+          const cellProps = (cell.props as any).children;
+          return cellProps && String(cellProps).trim().length > 0;
+        }).length >= 2;
 
       // If thead has multiple actual column headers (2+), this is a regular table
       // In this case, ALL tbody rows are data (not headers)
@@ -236,26 +268,26 @@ export function CustomTable({ children }: CustomTableProps) {
   }
 
   // Extract title and subtitle from thead
-  let title = '';
-  let subtitle = '';
+  let title = "";
+  let subtitle = "";
 
   if (React.isValidElement(theadRow)) {
     const theadCells = React.Children.toArray((theadRow.props as any).children);
     if (theadCells.length > 0 && React.isValidElement(theadCells[0])) {
       const cellContent = (theadCells[0].props as any).children;
-      if (typeof cellContent === 'string') {
+      if (typeof cellContent === "string") {
         // Split on common patterns for objective/subtitle
         const patterns = [
-          'Procurement and organization objective:',
-          'objective:',
-          'Objective:'
+          "Procurement and organization objective:",
+          "objective:",
+          "Objective:",
         ];
         let matched = false;
         for (const pattern of patterns) {
           if (cellContent.includes(pattern)) {
             const parts = cellContent.split(pattern);
             title = parts[0]?.trim() || cellContent;
-            subtitle = 'Objective: ' + (parts[1]?.trim() || '');
+            subtitle = "Objective: " + (parts[1]?.trim() || "");
             matched = true;
             break;
           }
@@ -269,12 +301,12 @@ export function CustomTable({ children }: CustomTableProps) {
 
   // Extract actual column headers from first tbody row
   const extractStrongText = (node: React.ReactNode): string => {
-    if (!node) return '';
-    if (typeof node === 'string') return '';
+    if (!node) return "";
+    if (typeof node === "string") return "";
     if (React.isValidElement(node)) {
-      if (node.type === 'strong') {
+      if (node.type === "strong") {
         const strongProps = node.props as { children?: React.ReactNode };
-        return String(strongProps.children || '');
+        return String(strongProps.children || "");
       }
       const nodeProps = node.props as { children?: React.ReactNode };
       if (nodeProps?.children) {
@@ -291,7 +323,7 @@ export function CustomTable({ children }: CustomTableProps) {
         if (text) return text;
       }
     }
-    return '';
+    return "";
   };
 
   const headerCells = firstRowCells.map((cell) => extractStrongText(cell));
@@ -314,7 +346,7 @@ export function CustomTable({ children }: CustomTableProps) {
       return (
         <td
           key={cellIdx}
-          className="pl-8 pr-4 py-4 text-sm align-top bg-white"
+          className={`!pl-8 !pr-4 !py-6 !text-sm !align-top !bg-white !border !border-[#6CBA8C]`}
         >
           {processContent(cellProps.children)}
         </td>
@@ -322,33 +354,48 @@ export function CustomTable({ children }: CustomTableProps) {
     });
 
     return (
-      <tr key={rowIdx} className="border-b border-gray-300 last:border-b-0">
+      <tr
+        key={rowIdx}
+        className="!border !border-[#6CBA8C]"
+      >
         {processedCells}
       </tr>
     );
   });
 
   return (
-    <div className="my-8 overflow-hidden border border-[#92C36F]" style={{ borderRadius: '24px 48px 24px 24px' }}>
+    <div
+      className="!my-8 !overflow-hidden !border !border-gray-300 !rounded-[12px]"
+    >
       {/* Title section - Green rounded top */}
-      <div className="bg-[#92C36F] px-8 py-6" style={{ borderRadius: '24px 48px 0 0' }}>
-        <h3 className="text-2xl font-bold text-black mb-2 font-gteesti-display">{title}</h3>
-        {subtitle && <p className="text-base text-black">{subtitle}</p>}
+      <div
+        className="!bg-[#92C36F] !px-6 !py-5 !rounded-t-[12px]"
+      >
+        <h3 className="!text-2xl !font-bold !text-black !mb-2 !font-gteesti-display">
+          {title}
+        </h3>
+        {subtitle && (
+          <p className="!text-base !text-black !leading-relaxed">{subtitle}</p>
+        )}
       </div>
       {/* Table with actual headers and data */}
-      <table className="w-full" style={{ borderCollapse: 'collapse', borderSpacing: 0 }}>
-        <thead className="bg-[#E5E5E5]">
+      <table
+        className="!my-0 mb-0.5 !w-full"
+        style={{ borderCollapse: "collapse", borderSpacing: 0 }}
+      >
+        <thead className="!bg-[#EDEBED]">
           <tr>
             {headerCells.map((header, idx) => (
-              <th key={idx} className="pl-8 pr-4 py-4 text-left font-semibold text-base text-black">
+              <th
+                key={idx}
+                className={`!pl-5 !py-2 !bg-[#EDEBED]/50 !text-left !font-semibold !text-base !text-black !border !border-gray-300 !border-b-0`}
+              >
                 {header}
               </th>
             ))}
           </tr>
         </thead>
-        <tbody className="bg-white">
-          {processedDataRows}
-        </tbody>
+        <tbody className="!bg-white">{processedDataRows}</tbody>
       </table>
     </div>
   );
