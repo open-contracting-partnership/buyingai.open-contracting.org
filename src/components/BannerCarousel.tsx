@@ -97,15 +97,16 @@ export function BannerCarousel({
         return (
           <div
             key={section.number}
-            className={`h-full transition-all duration-300 overflow-visible relative rounded-tl-[8px] rounded-tr-[36px] rounded-bl-[36px] rounded-br-[8px] cursor-pointer ${
-              shouldExpand ? "shadow-lg" : ""
-            }`}
+            className="h-full transition-all duration-300 overflow-visible relative rounded-tl-[8px] rounded-tr-[36px] rounded-bl-[36px] rounded-br-[8px] cursor-pointer"
             style={{
               backgroundColor: color.bg,
               width: `${baseWidth}px`,
               minWidth: `${baseWidth}px`,
               marginLeft: idx > 0 ? overlap : "0",
               zIndex: shouldExpand ? 10 : 5 - idx,
+              boxShadow: shouldExpand
+                ? "0 4px 15px 0 #000"
+                : "0 4px 10px 0 rgba(0, 0, 0, 0.50)",
             }}
             onClick={() => handleCardClick(section.number)}
             onMouseEnter={() => !isMobile && setHoveredSection(section.number)}
@@ -137,42 +138,45 @@ export function BannerCarousel({
                   {/* Chapter list - show fewer chapters on mobile */}
                   {section.chapters.length > 0 && (
                     <div
-                      className={`border-t border-black/10 pt-2 ${isMobile ? "space-y-2 mt-3" : "space-y-2"}`}
+                      className={`border-t border-black/10 pt-2 ${
+                        isMobile ? "space-y-2 mt-3" : "space-y-2"
+                      }`}
                     >
                       {section.chapters
                         .slice(0, isMobile ? 4 : 6)
                         .map((ch, chIdx) => {
                           // For Introduction section (section 1), always go to first chapter
-                          const linkHref = section.number === 1 
-                            ? `/chapter/${firstChapterSlug}#content`
-                            : `/chapter/${ch.slug}#content`;
-                          
+                          const linkHref =
+                            section.number === 1
+                              ? `/chapter/${firstChapterSlug}#content`
+                              : `/chapter/${ch.slug}#content`;
+
                           return (
-                          <Link
-                            key={ch.slug}
-                            href={linkHref}
-                            scroll={false}
-                            onClick={(e) => e.stopPropagation()}
-                            className={`flex items-center gap-2.5 border-b border-black/10 pb-2 gont ${
-                              isMobile ? "text-sm" : "text-base"
-                            } text-black/80 hover:text-black transition-colors group`}
-                          >
-                            <span
-                              className={`${
-                                isMobile
-                                  ? "font-mono text-sm"
-                                  : "font-mono text-base"
-                              }`}
+                            <Link
+                              key={ch.slug}
+                              href={linkHref}
+                              scroll={false}
+                              onClick={(e) => e.stopPropagation()}
+                              className={`flex items-center gap-2.5 border-b border-black/10 pb-2 gont ${
+                                isMobile ? "text-sm" : "text-base"
+                              } text-black/80 hover:text-black transition-colors group`}
                             >
-                              {chIdx + 1}.
-                            </span>
-                            <span className="flex-1 line-clamp-2">
-                              {ch.title}
-                            </span>
-                            {!isMobile && (
-                              <ArrowUpRight className="size-4 opacity-0 group-hover:opacity-100 transition-opacity" />
-                            )}
-                          </Link>
+                              <span
+                                className={`${
+                                  isMobile
+                                    ? "font-mono text-sm"
+                                    : "font-mono text-base"
+                                }`}
+                              >
+                                {chIdx + 1}.
+                              </span>
+                              <span className="flex-1 line-clamp-2">
+                                {ch.title}
+                              </span>
+                              {!isMobile && (
+                                <ArrowUpRight className="size-4 opacity-0 group-hover:opacity-100 transition-opacity" />
+                              )}
+                            </Link>
                           );
                         })}
                     </div>
@@ -188,9 +192,7 @@ export function BannerCarousel({
                     onClick={(e) => e.stopPropagation()}
                     className="flex items-center justify-end gap-2 text-black mt-4 hover:gap-3 transition-all"
                   >
-                    <span className="text-base font-medium">
-                      Read
-                    </span>
+                    <span className="text-base font-medium">Read</span>
                     <div className="transform rotate-180">
                       <svg
                         width="20"
