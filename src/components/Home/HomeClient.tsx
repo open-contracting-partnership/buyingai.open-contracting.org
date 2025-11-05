@@ -14,16 +14,24 @@ interface HomeClientProps {
   tocContent: string;
 }
 
-export default function HomeClient({ chapters, structure, tocContent }: HomeClientProps) {
+export default function HomeClient({
+  chapters,
+  structure,
+  tocContent,
+}: HomeClientProps) {
   // Parse the TOC content - extract content after the numbered list
   // Skip everything before the ## heading
-  const contentMatch = tocContent.match(/##\s+(.+?)\n([\s\S]*?)(\[Get started.*?\])/);
-  const heading = contentMatch ? contentMatch[1].trim() : "This guidance offers practical and hands-on tips to get the best results from your AI purchases.";
+  const contentMatch = tocContent.match(
+    /##\s+(.+?)\n([\s\S]*?)(\[Get started.*?\])/
+  );
+  const heading = contentMatch
+    ? contentMatch[1].trim()
+    : "This guidance offers practical and hands-on tips to get the best results from your AI purchases.";
   const bodyContent = contentMatch ? contentMatch[2].trim() : "";
-  
+
   // Split body content into paragraphs (separated by blank lines)
-  const paragraphs = bodyContent.split(/\n\s*\n/).filter(p => p.trim());
-  
+  const paragraphs = bodyContent.split(/\n\s*\n/).filter((p) => p.trim());
+
   // Extract the About section
   const aboutMatch = tocContent.match(/###\s+About\s*([\s\S]+)/);
   const aboutContent = aboutMatch ? aboutMatch[1].trim() : "";
@@ -48,10 +56,10 @@ export default function HomeClient({ chapters, structure, tocContent }: HomeClie
           </div>
         </div>
       </div>
-      <div className="w-11/12 ml-auto max-w-[1000px]">
+      <div className="w-11/12 mx-auto lg:ml-auto max-w-[1000px] lg:mr-[68px]">
         <div
           className="
-              rounded-b-[10px]
+              rounded-[10px]
               bg-[linear-gradient(91deg,_#FFF_0.16%,_rgba(255,255,255,0.70)_100%)]
               shadow-[0_10px_40px_0_rgba(0,0,0,0.10)]
               backdrop-blur-[15px]
@@ -65,9 +73,9 @@ export default function HomeClient({ chapters, structure, tocContent }: HomeClie
           <h2 className="text-[#353535] text-3xl lg:text-4xl xl:text-5xl font-bold font-gteesti-display">
             {heading}
           </h2>
-          <div className="lg:mt-12 mt-8 space-y-6 lg:space-y-8 text-xl lg:text-2xl prose prose-xl max-w-none prose-p:my-0">
+          <div className="lg:mt-12 mt-8 !space-y-6 lg:!space-y-8 text-xl lg:text-2xl prose prose-xl max-w-none prose-p:my-0">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>
-              {paragraphs.join('\n\n')}
+              {paragraphs.join("\n\n")}
             </ReactMarkdown>
           </div>
           <Link
@@ -76,19 +84,6 @@ export default function HomeClient({ chapters, structure, tocContent }: HomeClie
           >
             Get started
           </Link>
-          
-          {aboutContent && (
-            <div className="mt-12 pt-8 border-t border-gray-300">
-              <h3 className="text-2xl lg:text-3xl font-bold text-[#353535] mb-4 font-gteesti-display">
-                About
-              </h3>
-              <div className="text-lg lg:text-xl prose prose-lg max-w-none prose-p:my-2 prose-a:text-[#23B2A7] prose-a:no-underline hover:prose-a:underline">
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                  {aboutContent}
-                </ReactMarkdown>
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </>
