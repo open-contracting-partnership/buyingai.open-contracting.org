@@ -145,8 +145,8 @@ export function BannerCarousel({
                     {/* Chapter list - show fewer chapters on mobile */}
                     {section.chapters.length > 0 && (
                       <div
-                        className={`border-t border-black/10 pt-2 ${
-                          isMobile ? "space-y-2 mt-3" : "space-y-2"
+                        className={`border-t border-black/10 ${
+                          isMobile ? "mt-3" : ""
                         }`}
                       >
                         {section.chapters
@@ -164,7 +164,7 @@ export function BannerCarousel({
                                 href={linkHref}
                                 scroll={false}
                                 onClick={(e) => e.stopPropagation()}
-                                className={`flex items-center gap-2.5 border-b border-black/10 pb-2 gont ${
+                                className={`flex items-center gap-2.5 border-b border-black/10 py-1.5 duration-300 hover:bg-black/5 ${
                                   isMobile ? "text-sm" : "text-base"
                                 } text-black/80 hover:text-black transition-colors group`}
                               >
