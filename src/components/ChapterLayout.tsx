@@ -239,7 +239,7 @@ export function ChapterLayout({
                 {/* Close Button - Top left corner */}
                 <button
                   onClick={toggleSidebar}
-                  className="size-8 rounded-full bg-[#92C36F] grid place-items-center text-white transition-colors z-10 cursor-pointer"
+                  className="size-5 rounded-full bg-[#92C36F] grid place-items-center text-white transition-colors z-10 cursor-pointer"
                   aria-label="Close sidebar"
                 >
                   <svg
@@ -255,9 +255,9 @@ export function ChapterLayout({
                   </svg>
                 </button>
               </div>
-              <div className="p-5 flex-1">
-                <div className="mb-6">
-                  <h2 className="text-base font-gteesti-display font-medium text-black">
+              <div className="flex-1">
+                <div className="p-5">
+                  <h2 className="text-base font-medium text-black">
                     Table of content
                   </h2>
                 </div>
@@ -279,24 +279,17 @@ export function ChapterLayout({
                     const color = getSectionColor(section.number);
 
                     return (
-                      <div key={section.number} className="relative">
+                      <div key={section.number} className="relative p-1">
                         {/* Section Header */}
                         <div
                           className={`flex items-center py-3 px-4 ${
                             isActiveSection ? "" : ""
                           }`}
-                          style={
-                            isActiveSection
-                              ? {
-                                  backgroundColor: hexToRgba(color.bg, 0.125),
-                                }
-                              : {}
-                          }
                         >
                           {/* Active Section Indicator Bar */}
                           {isActiveSection && (
                             <div
-                              className="w-1 h-8 rounded-full mr-3 flex-shrink-0"
+                              className="w-2 h-10 rounded-tr-lg rounded-br-lg flex-shrink-0 absolute left-0"
                               style={{ backgroundColor: color.bg }}
                             ></div>
                           )}
@@ -331,7 +324,7 @@ export function ChapterLayout({
                         </div>
 
                         {/* Section Chapters - Always show all chapters */}
-                        <div className="ml-4 space-y-1 pb-4">
+                        <div className="space-y-1 ml-6 border-l border-black">
                           {section.chapters.map((ch) => {
                             const isActiveChapter =
                               ch.slug === currentSlug ||
@@ -354,7 +347,6 @@ export function ChapterLayout({
                                           color.bg,
                                           0.19
                                         ),
-                                        color: color.bg,
                                       }
                                     : undefined
                                 }
