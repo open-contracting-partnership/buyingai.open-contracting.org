@@ -15,7 +15,7 @@ Do you feel stuck? We’ve heard over and over again that teams don’t feel the
 
 ## Use cases of procurement pathways
 
-![][image1]  
+![][image1](https://www.open-contracting.org/wp-content/uploads/2025/11/BuyingAI-table-usecases.pdf)  
 **Download the table: [Use cases for procurement pathways](https://www.open-contracting.org/wp-content/uploads/2025/11/BuyingAI-table-usecases.pdf)**
 
 ```

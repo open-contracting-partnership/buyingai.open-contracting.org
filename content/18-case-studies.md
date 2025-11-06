@@ -13,11 +13,11 @@
 * [AI model clauses](https://www.buyict.gov.au/sp?id=resources_and_policies&kb=KB0010685#ai-clauses)
 
    
-**What worked well:** The DTA meets staff where they are by directly embedding their guidance on good procurement practices for AI technology in go-to resources like their Digital Marketplace. Although the DTA also promotes its materials in other ways, such as through blog posts, they’ve seen that the tactic of integrating the guidance in something that agencies use on a regular basis to be a successful way to support adoption. 
+**What worked well:** The DTA meets staff where they are by directly embedding their guidance on good procurement practices for AI technology in go-to resources like their Digital Marketplace, 2 panel agreement, and the BuyICT request for quote procurement workflow. Although the DTA also promotes its materials in other ways, such as through blog posts, they’ve seen that the tactic of integrating the guidance in something that agencies use on a regular basis to be a successful way to support adoption. 
 
 DTA also keeps their policy documents live, so that they are able to update them on a regular basis and stay current with the latest policy and technology developments.   
    
-**What was harder:** DTA encourages bringing in procurement and technical teams as early as possible in the procurement process. However, sometimes DTA sees situations where agencies are still bringing in these stakeholders too late in a rush to get to market, resulting in protracted contract negotiations that could have been avoided with better up-front cross-departmental engagement. 
+**What was harder:** DTA encourages bringing in procurement and technical teams as early as possible in the procurement process. However, sometimes DTA sees situations where agencies are bringing in these stakeholders late and are in a rush to get to market. This can result in extended contract negotiations that could have been avoided with cross-departmental engagement. 
 
 **Lesson learned:** Applying AI technology in low-risk internal use cases can deliver valuable ROI, while generating useful learning and experience with AI technology. 
 

@@ -49,5 +49,4 @@ Additional resources include:
 * **Responsible AI compliance**, to ensure compliance with key AI policies as agreed upon by the organization and the vendor.  
 * **Exit and transition**, to ensure clear data export and transition terms. 
 
-If compliant with your legal context, you may also consider a requirement around **contract transparency** to enable you to make the full or part of the contract publically available. This transparency can also support knowledge sharing across public entities and other jurisdictions. 
-
+If compliant with your legal context, you may also consider a requirement around **contract transparency** to enable you to make the full or part of the contract publicly available. This transparency can also support knowledge sharing across public entities and other jurisdictions. 

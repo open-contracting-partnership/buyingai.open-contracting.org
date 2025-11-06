@@ -113,20 +113,20 @@ background: grey
 ## Help for public sector procurement AI-readiness 
 
 There are great resources beyond this one that support AI-readiness for procurement, and we found several helpful as we developed this guidance. Here is a selection: 
- - The UK procurement guidelines for AI
- - The State of California’s procurement journeys 
- - New Zealand’s AI-specific guidance to its general procurement guidelines
- - Microsoft Public Sector for Expertise’s guide on AI procurement, targeted especially at governments in the EU
- - The USDS TechFARHub for guidance on iterative procurement at the federal level 
- - The World Economic Forum guidance on AI procurement
- - PUBLIC’s guide on Buying Generative AI in Government
- - The World Bank Group’s Building Trustworthy Artificial Intelligence: Frameworks, Applications, and Self-Assessment for Readiness
+ - The UK procurement [guidelines](https://www.gov.uk/government/publications/guidelines-for-ai-procurement) for AI
+ - The State of California’s [procurement journeys](https://www.genai.ca.gov/choose-your-journey/) 
+ - New Zealand’s [AI-specific guidance](https://dns.govt.nz/standards-and-guidance/technology-and-architecture/artificial-intelligence/responsible-ai-guidance-for-the-public-service-genai/genai-foundations/procurement?utm_source=chatgpt.com) to its general procurement guidelines
+ - Microsoft Public Sector for Expertise’s [guide](https://wwps.microsoft.com/wp-content/uploads/2024/11/MovingfromWhyAItoHowtoAI_APlaybookforGovernmentsProcuringAIandGenAI.pdf) on AI procurement, targeted especially at governments in the EU
+ - The USDS [TechFARHub](https://techfarhub.usds.gov/) for guidance on iterative procurement at the federal level 
+ - The World Economic Forum [guidance](https://www3.weforum.org/docs/WEF_AI_Procurement_in_a_Box_AI_Government_Procurement_Guidelines_2020.pdf) on AI procurement
+ - PUBLIC’s [guide](https://view.publitas.com/public-1/buying-generative-ai-in-government/page/10-11) on Buying Generative AI in Government
+ - The World Bank Group’s [Building Trustworthy Artificial Intelligence: Frameworks, Applications, and Self-Assessment for Readiness](https://documents.worldbank.org/en/publication/documents-reports/documentdetail/099805309022518222)
 ```
 
-| Key questions on AI readiness  Procurement and organization objective: Lay the groundwork for overall good AI procurement through policies and practices |  |
+| AI readiness: Key questions  Procurement and organizational objective:Lay the groundwork for overall good AI procurement through policies and practices |  |
 | :---- | :---- |
 | **Team** | **Questions** |
-| Procurement | \- Can we use agile methods for our IT procurements? \- How can our procurement processes support strong collaboration between technical teams, procurement, legal, and policy stakeholders? \- What does the market for this product or service look like? How can I engage them, both to get input into the best specifications and to ensure a good, competitive process?  \*\*Procurement risks\*\* \- How do we guard against vendor lock-in and ensure that contracts include clear exit strategies and data portability? \- What protections do we need in place to clarify data rights, intellectual property ownership, and the handling of sensitive information? \- What is the state of our data, and how much does that need to be considered in the procurement strategy?  |
-| Agency or department buyer | \- How do our overall organizational mission and goals align with our AI initiatives?  \- What are our internal capability gaps? |
-| IT/Data analytics | \- Who inside the organization can take the lead on AI and connect the dots across teams? \- What governance structures and frameworks do we need for responsible and ethical AI adoption? \- Do we have the necessary AI literacy and understanding across relevant stakeholders? \- How will we manage internal change and encourage safe adoption of AI tools? \- How will we ensure inclusive design and testing of AI tools to reflect diverse public needs? |
+| **Procurement** | \- Can we use agile methods for our IT procurements? \- How can our procurement processes support strong collaboration between technical teams, procurement, legal, and policy stakeholders? \- What does the market for this product or service look like? How can I engage them, both to get input into the best specifications and to ensure a good, competitive process?  **Procurement risks** \- How do we guard against vendor lock-in and ensure that contracts include clear exit strategies and data portability? \- What protections do we need in place to clarify data rights, intellectual property ownership, and the handling of sensitive information? \- What is the state of our data, and how much does that need to be considered in the procurement strategy?  |
+| **Agency or department buyer** | \- How do our overall organizational mission and goals align with our AI initiatives?  \- What are our internal capability gaps? |
+| **IT/Data analytics** | \- Who inside the organization can take the lead on AI and connect the dots across teams? \- What governance structures and frameworks do we need for responsible and ethical AI adoption? \- Do we have the necessary AI literacy and understanding across relevant stakeholders? \- How will we manage internal change and encourage safe adoption of AI tools? \- How will we ensure inclusive design and testing of AI tools to reflect diverse public needs? |
 

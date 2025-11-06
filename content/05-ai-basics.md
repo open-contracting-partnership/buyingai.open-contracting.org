@@ -33,7 +33,7 @@ There is no one single standard way of defining artificial intelligence and its 
 
 
 - The definition provided in the [John S. McCain National Defense Authorization Act for Fiscal Year 2019](https://www.congress.gov/115/bills/hr5515/BILLS-115hr5515enr.pdf), a commonly referenced US federal definition 
-- [The EU Artificial Intelligence Act: General Provisions: Definitions])https://artificialintelligenceact.eu/article/3/)
+- [The EU Artificial Intelligence Act: General Provisions: Definitions](https://artificialintelligenceact.eu/article/3/)
 - The International Organization for Standardization’s [What Is Artificial Intelligence (AI)?](https://www.iso.org/artificial-intelligence/what-is-ai) 
 ```
 
@@ -150,14 +150,14 @@ Common limitations include:
 
 * **GenAI and agentic AI results depend on their training data. {.collapsible}** 
 
-  GenAI models are only as good as the data they are trained on. For example, if your model is only trained on data up to October 2024, it would be unable to tell you current regulations. This is why understanding the training data sources matters a lot, as well as understanding your own data quality if you will be using it to further refine the model.   
-  
+  GenAI models are only as good as the data they are trained on. For example, if your model is only trained on data up to October 2024, it would be unable to tell you current regulations. This is why understanding the training data sources matters a lot, as well as understanding your own data quality if you will be using it to further refine the model. 
+
   Given their reliance on training data, GenAI and agentic AI may pose data security and privacy risks. When you input data into AI systems, that information may be stored, processed, or even used to train future models unless specific protections are in place. This is particularly important for government data that includes personally identifiable information or sensitive operational details. Organizations should ensure their AI solutions include appropriate data-handling safeguards and comply with relevant privacy regulations.
 
 * **GenAI and agentic AI have a limited ability to explain its results. {.collapsible}** 
 
-  GenAI solutions cannot explain in perfect detail how they arrived at their conclusions. This lack of explainability can be fine in some situations, but not ok in others where explainability is critical and a matter of legal risk. For example, an AI chatbot that provides assistance with navigating an unemployment application can be ok, while using an AI system to make decisions around qualifying for public benefits could expose governments to legal concerns given an individual’s right to due process.  
-  
+  GenAI solutions cannot explain in perfect detail how they arrived at their conclusions. This lack of explainability can be fine in some situations, but not ok in others where explainability is critical and a matter of legal risk. For example, an AI chatbot that provides assistance with navigating an unemployment application can be ok, while using an AI system to make decisions around qualifying for public benefits could expose governments to legal concerns given an individual’s right to due process.
+
   Likewise, agentic AI produces results that can be hard to trace or reproduce. Since agentic AI works independently and with minimal human intervention, this can make testing, debugging, and determining where an AI model has gone wrong a challenge. 
 
 * **Agentic AI requires very strong system design. {.collapsible}** 

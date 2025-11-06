@@ -9,7 +9,7 @@ As procurement officials play an increasingly critical role in their organizatio
 
 This section addresses common misconceptions about AI procurement and adoption. We break down popular myths, explain the reality, and highlight key considerations when evaluating vendors. Understanding these nuances will help procurement officials make more informed decisions and set realistic expectations. 
 
-### Planning myths
+### *Planning myths*
 
 #### **Myth: "Implementing AI is always cost-effective and provides immediate ROI." {.collapsible}** 
 
@@ -21,13 +21,13 @@ This section addresses common misconceptions about AI procurement and adoption. 
 
 #### **Myth: "AI systems are set-and-forget solutions." {.collapsible}** 
 
-**Reality: AI systems require ongoing attention, though the level varies significantly.** Managed cloud AI services may reduce operational overhead compared to self-hosted solutions, but all AI implementations need monitoring for performance, accuracy, and bias over time. Models may need updates as data patterns change, and business requirements evolve. During vendor evaluation, consider both the vendor's managed service capabilities and your organization's capacity for ongoing AI system management. Look for solutions that match your technical resources and operational preferences**.**
+**Reality: AI systems require ongoing attention, though the level varies significantly.** Managed cloud AI services may reduce operational overhead compared to self-hosted solutions, but all AI implementations need monitoring for performance, accuracy, and bias over time. Models may need updates as data patterns change, and business requirements evolve. During vendor evaluation, consider both the vendor's managed service capabilities and your organization's capacity for ongoing AI system management. Look for solutions that match your technical resources and operational preferences.
 
 #### **Myth: "Agentic AI will completely replace human decision-making" {.collapsible}**
 
 **Reality: Effective AI implementation typically augments rather than replaces human judgment.** Different levels of automation are appropriate for different contexts and risk levels.
 
-### Technical capacity myths
+### *Technical capacity myths*
 
 #### **Myth: "One AI model can solve all tasks effectively." {.collapsible}** 
 
@@ -51,7 +51,7 @@ When considering vendors, look for clear documentation on model purpose, inputs,
 
 **Reality: AI systems can perpetuate or amplify existing biases if not carefully designed and monitored.** They require robust testing and ongoing oversight, especially for agentic AI making consequential decisions.
 
-### Integration myths 
+### *Integration myths* 
 
 #### **Myth: “AI systems from different vendors can easily work together.” {.collapsible}** 
 
@@ -66,7 +66,7 @@ When considering vendors, look for clear documentation on model purpose, inputs,
 **Reality: Lock-in is not binary. It's about the cost and effort to switch.** Look for vendors that have data available for export, such as prompts, or effort you put in initially to customize/calibrate, as well as open-source model formats, containerization options   
 (e.g., Docker, Kubernetes), and hybrid/multicloud support to enable transitions when needed. 
 
-### Governance myths 
+### *Governance myths* 
 
 #### **Myth: "AI implementation must be risk-free." {.collapsible}** 
 
