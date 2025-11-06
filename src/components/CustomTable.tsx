@@ -210,7 +210,8 @@ export function CustomTable({ children }: CustomTableProps) {
 
     return (
       <div
-        className="!my-8 !overflow-hidden !border !border-gray-300 !rounded-[12px]"
+        className="!my-8 !overflow-hidden !border !border-gray-300"
+        style={{ borderRadius: "8px 36px 0 0" }}
       >
         <table
           className="!w-full !my-0"
@@ -337,9 +338,15 @@ export function CustomTable({ children }: CustomTableProps) {
         });
 
         return (
-          <div className="!my-8 !overflow-hidden !rounded-lg !border !border-gray-300">
+          <div 
+            className="!my-8 !overflow-hidden !border !border-gray-300"
+            style={{ borderRadius: "8px 36px 0 0" }}
+          >
             {/* Title section - Green rounded top */}
-            <div className="!bg-[#92C36F] !px-8 !py-6 !rounded-t-lg">
+            <div 
+              className="!bg-[#92C36F] !px-8 !py-6"
+              style={{ borderRadius: "8px 36px 0 0" }}
+            >
               <h3 className="!text-2xl !font-bold !text-black !mb-2 !font-gteesti-display">
                 {title}
               </h3>
@@ -463,11 +470,13 @@ export function CustomTable({ children }: CustomTableProps) {
 
   return (
     <div
-      className="!my-8 !overflow-hidden !border !border-gray-300 !rounded-[12px]"
+      className="!my-8 !overflow-hidden !border !border-gray-300"
+      style={{ borderRadius: "8px 36px 0 0" }}
     >
       {/* Title section - Green rounded top */}
       <div
-        className="!bg-[#92C36F] !px-6 !py-5 !rounded-t-[12px]"
+        className="!bg-[#92C36F] !px-6 !py-5"
+        style={{ borderRadius: "8px 36px 0 0" }}
       >
         <h3 className="!text-2xl !font-bold !text-black !mb-2 !font-gteesti-display">
           {title}
