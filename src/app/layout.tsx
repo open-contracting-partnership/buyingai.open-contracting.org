@@ -18,14 +18,14 @@ const siteUrl =
 
 export const metadata: Metadata = {
   title:
-    "Open Contracting Partnership: open, fair & efficient public contracting",
+    "BuyingAI: Tools and tips for public procurement",
   description:
-    "We connect governments, civil society and business to open up and monitor public procurement. Open contracting results in fairer deals and less corruption.",
+    "This guide by Open Contracting Partnership offers practical guidance and hands-on tips to get the best results from your AI purchases.",
   openGraph: {
     title:
-      "Open Contracting Partnership: open, fair & efficient public contracting",
+      "BuyingAI: Tools and tips for public procurement",
     description:
-      "We connect governments, civil society and business to open up and monitor public procurement. Open contracting results in fairer deals and less corruption.",
+      "This guide by Open Contracting Partnership offers practical guidance and hands-on tips to get the best results from your AI purchases.",
     url: siteUrl,
     siteName: "Open Contracting Partnership",
     images: [
@@ -42,9 +42,9 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title:
-      "Open Contracting Partnership: open, fair & efficient public contracting",
+      "BuyingAI: Tools and tips for public procurement",
     description:
-      "We connect governments, civil society and business to open up and monitor public procurement. Open contracting results in fairer deals and less corruption.",
+      "This guide by Open Contracting Partnership offers practical guidance and hands-on tips to get the best results from your AI purchases.",
     images: ["/images/og-image.png"], // Ruta de la imagen OG - coloca tu imagen en public/og-image.png
   },
 };
