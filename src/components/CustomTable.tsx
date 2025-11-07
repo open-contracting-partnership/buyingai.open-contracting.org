@@ -338,32 +338,108 @@ export function CustomTable({ children }: CustomTableProps) {
       return content;
     }
 
+    // Clean up escaped markdown first
+    textContent = textContent.replace(/\\\*\\\*/g, "**");
+    textContent = textContent.replace(/\\-/g, "-");
+
+    // Helper function to split text into bullets (handles " - " and " -" patterns)
+    const splitIntoBullets = (text: string): string[] => {
+      const trimmedText = text.trim();
+      if (!trimmedText) return [];
+
+      // Normalize: replace " - " and " -" with a consistent separator
+      // First, handle bullets that start at the beginning
+      let normalized = trimmedText;
+      if (normalized.startsWith("- ")) {
+        normalized = normalized.substring(2); // Remove leading "- "
+      } else if (normalized.startsWith("-")) {
+        normalized = normalized.substring(1); // Remove leading "-"
+      }
+
+      // Split by " - " or " -" patterns
+      const parts = normalized
+        .split(/\s+-\s+|\s+-/)
+        .map((p) => p.trim())
+        .filter((p) => p.length > 0);
+
+      return parts.length > 0 ? parts : [trimmedText];
+    };
+
     // Check if content has bullets (- or \-) or bold markers (** or \*\*)
     const hasBullets =
-      textContent.includes(" - ") || textContent.includes("\\-");
-    const hasBold =
-      textContent.includes("**") || textContent.includes("\\*\\*");
+      textContent.includes(" - ") ||
+      textContent.includes(" -") ||
+      /^\s*-/.test(textContent) ||
+      /\s-\s/.test(textContent);
+    const hasBold = textContent.includes("**");
 
-    // IMPORTANT: Only process if we have BOTH section headers AND bullets
-    // Pattern: **Section** - bullet - bullet
-    const hasSectionPattern = /\*\*([^*]+?)\*\*\s*-\s+/.test(
-      textContent.replace(/\\\*\\\*/g, "**").replace(/\\-/g, "-")
-    );
+    // Check for section pattern: **Section** followed by bullets
+    const hasSectionPattern = /\*\*([^*]+?)\*\*\s*-\s*/.test(textContent);
+
+    // If no section pattern but has bullets, process as simple bullet list
+    if (!hasSectionPattern && hasBullets) {
+      const bullets = splitIntoBullets(textContent);
+      if (bullets.length > 1) {
+        // Process each bullet for inline bold
+        const bulletElements = bullets.map((bullet, idx) => {
+          const trimmedBullet = bullet.trim();
+          if (trimmedBullet.includes("**")) {
+            const processedText: React.ReactNode[] = [];
+            let bulletLastIndex = 0;
+            const boldRegex = /\*\*([^*]+?)\*\*/g;
+            let boldMatch;
+
+            while ((boldMatch = boldRegex.exec(trimmedBullet)) !== null) {
+              if (boldMatch.index > bulletLastIndex) {
+                processedText.push(
+                  trimmedBullet.substring(bulletLastIndex, boldMatch.index)
+                );
+              }
+              processedText.push(
+                <strong key={`bold-${idx}-${boldMatch.index}`}>
+                  {boldMatch[1]}
+                </strong>
+              );
+              bulletLastIndex = boldMatch.index + boldMatch[0].length;
+            }
+
+            if (bulletLastIndex < trimmedBullet.length) {
+              processedText.push(trimmedBullet.substring(bulletLastIndex));
+            }
+
+            return (
+              <li key={`bullet-${idx}`} className="!leading-relaxed">
+                {processedText}
+              </li>
+            );
+          } else {
+            return (
+              <li key={`bullet-${idx}`} className="!leading-relaxed">
+                {trimmedBullet}
+              </li>
+            );
+          }
+        });
+
+        return (
+          <ul className="!list-disc !pl-5 !space-y-2">{bulletElements}</ul>
+        );
+      }
+    }
 
     // If no section pattern detected, just return content with simple bold processing
     if (!hasSectionPattern) {
       // Check if it's just simple bold text without bullets
       if (hasBold && !hasBullets) {
-        const cleanText = textContent.replace(/\\\*\\\*/g, "**");
-        if (cleanText.includes("**")) {
+        if (textContent.includes("**")) {
           const processedText: React.ReactNode[] = [];
           let lastIndex = 0;
           const boldRegex = /\*\*([^*]+?)\*\*/g;
           let match;
 
-          while ((match = boldRegex.exec(cleanText)) !== null) {
+          while ((match = boldRegex.exec(textContent)) !== null) {
             if (match.index > lastIndex) {
-              processedText.push(cleanText.substring(lastIndex, match.index));
+              processedText.push(textContent.substring(lastIndex, match.index));
             }
             processedText.push(
               <strong key={`bold-${match.index}`}>{match[1]}</strong>
@@ -371,8 +447,8 @@ export function CustomTable({ children }: CustomTableProps) {
             lastIndex = match.index + match[0].length;
           }
 
-          if (lastIndex < cleanText.length) {
-            processedText.push(cleanText.substring(lastIndex));
+          if (lastIndex < textContent.length) {
+            processedText.push(textContent.substring(lastIndex));
           }
 
           return <>{processedText}</>;
@@ -383,15 +459,12 @@ export function CustomTable({ children }: CustomTableProps) {
       return content;
     }
 
-    // Clean up escaped markdown
-    textContent = textContent.replace(/\\\*\\\*/g, "**");
-    textContent = textContent.replace(/\\-/g, "-");
-
     // Parse with section pattern
     const elements: React.ReactNode[] = [];
 
     // First, split by pattern: **SectionHeader** followed by content
     // This regex finds: **text** - content - more content
+    // Updated to handle optional space after hyphen
     const sectionPattern = /\*\*([^*]+?)\*\*\s*-\s*/g;
     let lastIndex = 0;
     let match;
@@ -402,21 +475,19 @@ export function CustomTable({ children }: CustomTableProps) {
         const beforeText = textContent.substring(lastIndex, match.index).trim();
         if (beforeText) {
           // Process as regular bullets if it contains -
-          if (beforeText.includes(" - ")) {
-            const bullets = beforeText
-              .split(" - ")
-              .filter((b) => b.trim().length > 0);
-            bullets.forEach((bullet, idx) => {
+          const beforeBullets = splitIntoBullets(beforeText);
+          if (beforeBullets.length > 1) {
+            beforeBullets.forEach((bullet, idx) => {
               elements.push(
                 <li
                   key={`bullet-before-${lastIndex}-${idx}`}
                   className="!leading-relaxed"
                 >
-                  {bullet.trim()}
+                  {bullet}
                 </li>
               );
             });
-          } else {
+          } else if (beforeText) {
             elements.push(
               <li
                 key={`bullet-before-${lastIndex}`}
@@ -447,10 +518,8 @@ export function CustomTable({ children }: CustomTableProps) {
     if (lastIndex < textContent.length) {
       const remainingText = textContent.substring(lastIndex).trim();
       if (remainingText) {
-        // Split by bullets
-        const bullets = remainingText
-          .split(" - ")
-          .filter((b) => b.trim().length > 0);
+        // Split by bullets using the helper function
+        const bullets = splitIntoBullets(remainingText);
         bullets.forEach((bullet, idx) => {
           const trimmedBullet = bullet.trim();
 
