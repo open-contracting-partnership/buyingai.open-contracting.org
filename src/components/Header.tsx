@@ -10,6 +10,7 @@ import * as Popover from "@radix-ui/react-popover";
 import twitterIcon from "@/app/assets/images/twitter-icon.svg";
 import linkedinIcon from "@/app/assets/images/linkedin-icon.svg";
 import facebookIcon from "@/app/assets/images/facebook-icon.svg";
+import { useRegion } from "./RegionProvider";
 
 interface Chapter {
   slug: string;
@@ -20,6 +21,70 @@ interface Chapter {
 
 interface HeaderProps {
   chapters: Chapter[];
+}
+
+// US Flag SVG Component (simplified for icon use)
+function USFlagIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 60 40"
+      className={className}
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      {/* Red background */}
+      <rect width="60" height="40" fill="#B22234" />
+      {/* White stripes */}
+      <rect width="60" height="3.08" y="3.08" fill="#fff" />
+      <rect width="60" height="3.08" y="9.23" fill="#fff" />
+      <rect width="60" height="3.08" y="15.38" fill="#fff" />
+      <rect width="60" height="3.08" y="21.54" fill="#fff" />
+      <rect width="60" height="3.08" y="27.69" fill="#fff" />
+      <rect width="60" height="3.08" y="33.85" fill="#fff" />
+      {/* Blue canton */}
+      <rect width="24" height="18.46" fill="#3C3B6E" />
+      {/* Stars (simplified as dots) */}
+      <circle cx="3" cy="3" r="1" fill="#fff" />
+      <circle cx="8" cy="3" r="1" fill="#fff" />
+      <circle cx="13" cy="3" r="1" fill="#fff" />
+      <circle cx="18" cy="3" r="1" fill="#fff" />
+      <circle cx="21" cy="3" r="1" fill="#fff" />
+      <circle cx="3" cy="8" r="1" fill="#fff" />
+      <circle cx="8" cy="8" r="1" fill="#fff" />
+      <circle cx="13" cy="8" r="1" fill="#fff" />
+      <circle cx="18" cy="8" r="1" fill="#fff" />
+      <circle cx="21" cy="8" r="1" fill="#fff" />
+      <circle cx="3" cy="13" r="1" fill="#fff" />
+      <circle cx="8" cy="13" r="1" fill="#fff" />
+      <circle cx="13" cy="13" r="1" fill="#fff" />
+      <circle cx="18" cy="13" r="1" fill="#fff" />
+      <circle cx="21" cy="13" r="1" fill="#fff" />
+      <circle cx="3" cy="18" r="1" fill="#fff" />
+      <circle cx="8" cy="18" r="1" fill="#fff" />
+      <circle cx="13" cy="18" r="1" fill="#fff" />
+      <circle cx="18" cy="18" r="1" fill="#fff" />
+      <circle cx="21" cy="18" r="1" fill="#fff" />
+    </svg>
+  );
+}
+
+// Globe Icon SVG Component
+function GlobeIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      className={className}
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <circle cx="12" cy="12" r="10" />
+      <line x1="2" y1="12" x2="22" y2="12" />
+      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+    </svg>
+  );
 }
 
 // Helper function to render markdown in titles (handles italics with green background)
@@ -36,7 +101,10 @@ function renderTitleMarkdown(title: string): React.ReactNode {
     }
     // Add italic text with green background
     parts.push(
-      <span key={match.index} className="bg-green-200 px-1 py-0.5 rounded not-italic">
+      <span
+        key={match.index}
+        className="bg-green-200 px-1 py-0.5 rounded not-italic"
+      >
         {match[1]}
       </span>
     );
@@ -56,6 +124,8 @@ export default function Header({ chapters }: HeaderProps) {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredChapters, setFilteredChapters] = useState<Chapter[]>([]);
+  const { region, setRegion } = useRegion();
+  const [isRegionPopoverOpen, setIsRegionPopoverOpen] = useState(false);
   const desktopSearchInputRef = useRef<HTMLInputElement>(null);
   const mobileSearchInputRef = useRef<HTMLInputElement>(null);
 
@@ -278,7 +348,7 @@ export default function Header({ chapters }: HeaderProps) {
               </Popover.Trigger>
               <Popover.Portal>
                 <Popover.Content
-                  className="rounded-lg bg-[#3D393D] p-4 shadow-2xl z-[999] animate-in fade-in slide-in-from-top-2 duration-200 border border-white/10"
+                  className="rounded-lg bg-[#3D393D] p-4 shadow-2xl z-[10000] animate-in fade-in slide-in-from-top-2 duration-200 border border-white/10"
                   sideOffset={8}
                 >
                   <div className="flex flex-col gap-3">
@@ -368,6 +438,67 @@ export default function Header({ chapters }: HeaderProps) {
                 </Popover.Content>
               </Popover.Portal>
             </Popover.Root>
+
+            {/* Region/Language Switcher */}
+            <Popover.Root
+              open={isRegionPopoverOpen}
+              onOpenChange={setIsRegionPopoverOpen}
+            >
+              <Popover.Trigger asChild>
+                <button className="p-2 hover:bg-white/10 rounded text-white flex items-center justify-center">
+                  {region === "US" ? (
+                    <USFlagIcon className="w-7 h-5" />
+                  ) : (
+                    <GlobeIcon className="w-6 h-6" />
+                  )}
+                </button>
+              </Popover.Trigger>
+              <Popover.Portal>
+                <Popover.Content
+                  className="rounded-lg bg-[#3D393D] p-4 shadow-2xl z-[10000] animate-in fade-in slide-in-from-top-2 duration-200 border border-white/10 min-w-[180px]"
+                  sideOffset={8}
+                >
+                  <div className="flex flex-col gap-2">
+                    <h3 className="text-xs font-semibold text-white/60 uppercase tracking-wide font-gteesti-display mb-1">
+                      Region
+                    </h3>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setRegion("US");
+                        setIsRegionPopoverOpen(false);
+                      }}
+                      className={clsx(
+                        "flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-left",
+                        region === "US"
+                          ? "bg-white/20 text-white"
+                          : "hover:bg-white/10 text-white/80"
+                      )}
+                    >
+                      <USFlagIcon className="w-5 h-3.5 shrink-0" />
+                      <span className="text-sm">United States</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setRegion("GLOBAL");
+                        setIsRegionPopoverOpen(false);
+                      }}
+                      className={clsx(
+                        "flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-left",
+                        region === "GLOBAL"
+                          ? "bg-white/20 text-white"
+                          : "hover:bg-white/10 text-white/80"
+                      )}
+                    >
+                      <GlobeIcon className="w-5 h-5 shrink-0" />
+                      <span className="text-sm">Global</span>
+                    </button>
+                  </div>
+                  <Popover.Arrow className="fill-[#3D393D]" />
+                </Popover.Content>
+              </Popover.Portal>
+            </Popover.Root>
             {/* <Link
               href="/chapter/01-introduction#content"
               className="px-6 py-2.5 bg-[#C8D419] text-black font-semibold rounded hover:bg-[#B5C115] transition-colors font-ibm-plex-sans"
@@ -428,6 +559,45 @@ export default function Header({ chapters }: HeaderProps) {
                   </svg>
                   <span className="text-white">Search</span>
                 </button>
+
+                {/* Region/Language Switcher */}
+                <div className="flex flex-col gap-2">
+                  <h3 className="px-4 text-xs font-semibold text-white/60 uppercase tracking-wide font-gteesti-display">
+                    Region
+                  </h3>
+                  <div className="px-2 flex flex-col gap-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setRegion("US");
+                      }}
+                      className={clsx(
+                        "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-left w-full",
+                        region === "US"
+                          ? "bg-white/20 text-white"
+                          : "bg-white/5 hover:bg-white/10 text-white/80"
+                      )}
+                    >
+                      <USFlagIcon className="w-5 h-3.5 shrink-0" />
+                      <span className="text-white">United States</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setRegion("GLOBAL");
+                      }}
+                      className={clsx(
+                        "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-left w-full",
+                        region === "GLOBAL"
+                          ? "bg-white/20 text-white"
+                          : "bg-white/5 hover:bg-white/10 text-white/80"
+                      )}
+                    >
+                      <GlobeIcon className="w-5 h-5 shrink-0" />
+                      <span className="text-white">Global</span>
+                    </button>
+                  </div>
+                </div>
 
                 {/* Share current page */}
                 <div className="flex flex-col gap-2">

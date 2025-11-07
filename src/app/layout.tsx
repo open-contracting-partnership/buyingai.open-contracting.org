@@ -6,6 +6,7 @@ import "./globals.css";
 import Footer from "@/components/Footer";
 import { getAllChapters } from "@/lib/markdown";
 import { GlossaryProvider } from "@/components/GlossaryProvider";
+import { RegionProvider } from "@/components/RegionProvider";
 import glossaryData from "@/app/data/glossary.json";
 
 const ibmPlexSans = IBM_Plex_Sans({
@@ -17,13 +18,11 @@ const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL || "https://ocp-ai-buying.netlify.app";
 
 export const metadata: Metadata = {
-  title:
-    "BuyingAI: Tools and tips for public procurement",
+  title: "BuyingAI: Tools and tips for public procurement",
   description:
     "This guide by Open Contracting Partnership offers practical guidance and hands-on tips to get the best results from your AI purchases.",
   openGraph: {
-    title:
-      "BuyingAI: Tools and tips for public procurement",
+    title: "BuyingAI: Tools and tips for public procurement",
     description:
       "This guide by Open Contracting Partnership offers practical guidance and hands-on tips to get the best results from your AI purchases.",
     url: siteUrl,
@@ -41,8 +40,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title:
-      "BuyingAI: Tools and tips for public procurement",
+    title: "BuyingAI: Tools and tips for public procurement",
     description:
       "This guide by Open Contracting Partnership offers practical guidance and hands-on tips to get the best results from your AI purchases.",
     images: ["/images/og-image.png"], // Ruta de la imagen OG - coloca tu imagen en public/og-image.png
@@ -62,12 +60,14 @@ export default function RootLayout({
       <body
         className={`${ibmPlexSans.variable} antialiased min-h-screen !bg-[#F2F3F4] text-black font-gteesti-text overflow-x-hidden`}
       >
-        <GlossaryProvider glossaryData={glossaryData} autoProcess={true}>
-          <GoogleAnalytics gaId="G-ST56FGCHR2" />
-          <Header chapters={chapters} />
-          <main>{children}</main>
-          <Footer />
-        </GlossaryProvider>
+        <RegionProvider autoProcess={true}>
+          <GlossaryProvider glossaryData={glossaryData} autoProcess={true}>
+            <GoogleAnalytics gaId="G-ST56FGCHR2" />
+            <Header chapters={chapters} />
+            <main>{children}</main>
+            <Footer />
+          </GlossaryProvider>
+        </RegionProvider>
       </body>
     </html>
   );

@@ -1,0 +1,34 @@
+[
+  {
+    "US": "solicitation",
+    "GLOBAL": "Call for tenders"
+  },
+  {
+    "US": "bid",
+    "GLOBAL": "tender"
+  },
+  {
+    "US": "Request for Information (RFI)",
+    "GLOBAL": "Preliminary Market Consultation (PMC)"
+  },
+  {
+    "US": "supplier",
+    "GLOBAL": "awarded supplier"
+  },
+  {
+    "US": "task orders",
+    "GLOBAL": "call‑off contract"
+  },
+  {
+    "US": "Best value",
+    "GLOBAL": "MEAT"
+  },
+  {
+    "US": "Challenge-based procurements",
+    "GLOBAL": "Innovation partnership"
+  },
+  {
+    "US": "RFP",
+    "GLOBAL": "tender notice"
+  }
+]
