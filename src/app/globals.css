@@ -279,6 +279,23 @@ article img {
     display: none !important;
   }
 
+  /* Ensure logo is visible when printing */
+  .print-header img,
+  .print-header svg {
+    filter: none !important;
+    -webkit-filter: none !important;
+    opacity: 1 !important;
+  }
+
+  /* Ensure all images are visible when printing */
+  img {
+    filter: none !important;
+    -webkit-filter: none !important;
+    opacity: 1 !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
   /* Ensure proper page breaks */
   .print-content h1,
   .print-content h2 {
@@ -347,6 +364,7 @@ article img {
 /* Print View Preview Styles (non-print media) */
 .print-view-container {
   max-width: 210mm;
+  margin: 0 auto;
   padding: 40px;
   background: white;
 }
