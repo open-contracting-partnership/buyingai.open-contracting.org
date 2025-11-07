@@ -29,7 +29,7 @@ Articulate why neither off-the-shelf products nor platform customization are eno
 
 ## Who and how to engage 
 
-![who and how to engage](/images/11-tablestakeholders.png) 
+![who and how to engage](/images/11-tablestakeholders.png)
 
 Whom you gather input from as you develop and refine your strategy is as important as the content itself. Key stakeholders include: 
 
@@ -78,7 +78,7 @@ It’s important to recognize that AI solutions typically use different pricing 
 | **Monitoring and optimization** | The KPIs for performance and contract delivery |
 | **Public transparency and accountability** | Your approach to communicating with the public around your planned use of AI and the procurement method |
 
-| Building your procurement strategy: Key questions  Procurement objective: Develop a procurement strategy that fits the overall organizational strategy and the needs of the specific procurement.  Organizational objective:Identify your needs for your specific procurement |  |
+| Building your procurement strategy: Key questions \*\*Procurement objective:\*\*Develop a procurement strategy that fits the overall organizational strategy and the needs of the specific procurement.  \*\*Organizational objective:\*\*Identify your needs for your specific procurement |  |
 | :---- | :---- |
 | **Team** | **Questions** |
 | **Procurement** | \- Are we engaging the right internal and external stakeholders in our strategy development process?  \- Is our budget realistic, given ongoing maintenance needs?  |

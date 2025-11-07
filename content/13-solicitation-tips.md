@@ -47,7 +47,7 @@ background: green
  - PUBLIC has a [guide](https://view.publitas.com/public-1/buying-generative-ai-in-government/page/36-37) on buying GenAI that has specific tips for drafting requirements.
 ```
 
-| Solicitation tips: Key questions Procurement and organizational objectives \- Decide on your procurement procedure \- Draft your solicitation  |  |
+| Solicitation tips: Key questions \*\*Procurement and organizational objectives\*\* \- Decide on your procurement procedure \- Draft your solicitation  |  |
 | :---- | :---- |
 | **Team** | **Questions** |
 | **Procurement** | **Project needs \-** How might we reflect the project team’s needs in a RFP?  \- Can the vendor demonstrate a roadmap and flexibility that aligns with our evolving needs? \- What level of vendor support or service guarantees will we need if something breaks or goes wrong? \- Will the vendor support integration with other AI tools or models we may adopt in the future? **Operational considerations** \- What kind of selection criteria should be used to rank solicitation responses?  \- What commercial or pricing models are appropriate? \- Are the right people in the room for this procurement? **Risk and compliance** \- How will we ensure compliance with current and evolving AI-related legislation, procurement rules, and standards? \- How will we manage and track AI-specific costs (e.g., compute, storage, API usage)? \- How much risk does vendor lock-in pose in our context, and what mitigations are practical? |

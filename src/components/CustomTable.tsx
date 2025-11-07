@@ -11,7 +11,7 @@ interface CustomTableProps {
  * - Data rows in remaining tbody rows
  *
  * Renders with:
- * - Green rounded header section with title and subtitle
+ * - Green rounded header section with title and subtitle (with markdown support)
  * - Gray column header row
  * - White data rows
  */
@@ -89,63 +89,386 @@ export function CustomTable({ children }: CustomTableProps) {
     }
   });
 
-  // Process cell content to handle bullet points
-  const processContent = (content: React.ReactNode): React.ReactNode => {
-    // Extract text content from children
-    let textContent = "";
-    if (typeof content === "string") {
-      textContent = content;
-    } else if (React.isValidElement(content)) {
-      const contentProps = content.props as { children?: any };
-      if (typeof contentProps.children === "string") {
-        textContent = contentProps.children;
+  // Helper function to extract raw text from React nodes
+  const extractRawText = (node: React.ReactNode): string => {
+    if (!node) return "";
+    
+    if (typeof node === "string") {
+      return node;
+    }
+    
+    if (React.isValidElement(node)) {
+      const nodeProps = node.props as { children?: React.ReactNode };
+      if (nodeProps?.children) {
+        return extractRawText(nodeProps.children);
       }
-    } else if (Array.isArray(content)) {
-      textContent = content
-        .map((c) => {
-          if (typeof c === "string") return c;
-          if (React.isValidElement(c)) {
-            const cProps = c.props as { children?: any };
-            return typeof cProps.children === "string" ? cProps.children : "";
-          }
-          return "";
-        })
-        .join("");
+    }
+    
+    if (Array.isArray(node)) {
+      return node.map((item) => extractRawText(item)).join("");
+    }
+    
+    return "";
+  };
+
+  // Helper function to parse and render markdown-like text in header
+  const parseHeaderMarkdown = (text: string): React.ReactNode => {
+    if (!text) return null;
+
+    // Replace <br> tags with actual line breaks
+    text = text.replace(/<br\s*\/?>/gi, '\n');
+    
+    const elements: React.ReactNode[] = [];
+    
+    // Extract title if it exists (text before first ** or \*\*)
+    const titleMatch = text.match(/^([^*\\]+?)(?=(?:\*\*|\\\*\\\*))/);
+    let processableText = text;
+    
+    if (titleMatch && titleMatch[1].trim()) {
+      const titleText = titleMatch[1].trim().replace(/:\s*$/, ''); // Remove trailing colon
+      elements.push(
+        <h3 key="title" className="!text-2xl !font-bold !text-black !mb-3 !font-gteesti-display">
+          {titleText}
+        </h3>
+      );
+      processableText = text.substring(titleMatch[0].length);
+    }
+    
+    // Now split by section headers (text between ** or \*\*)
+    // Pattern: **SectionName** content or \*\*SectionName\*\* content
+    const sections: Array<{title: string, content: string}> = [];
+    
+    // Match all **text** or \*\*text\*\* patterns
+    const sectionRegex = /(?:\*\*|\\\*\\\*)([^*]+?)(?:\*\*|\\\*\\\*)/g;
+    let lastIndex = 0;
+    let sectionMatch;
+    
+    while ((sectionMatch = sectionRegex.exec(processableText)) !== null) {
+      const sectionTitle = sectionMatch[1].trim();
+      const startOfContent = sectionMatch.index + sectionMatch[0].length;
+      
+      // Find where this section's content ends (at the next ** or end of string)
+      let endOfContent = processableText.length;
+      const nextSectionMatch = /(?:\*\*|\\\*\\\*)/.exec(processableText.substring(startOfContent));
+      if (nextSectionMatch) {
+        endOfContent = startOfContent + nextSectionMatch.index;
+      }
+      
+      const content = processableText.substring(startOfContent, endOfContent).trim();
+      sections.push({ title: sectionTitle, content });
+      
+      lastIndex = endOfContent;
+    }
+    
+    // Process each section
+    sections.forEach((section, idx) => {
+      // Add section title
+      elements.push(
+        <p key={`section-${idx}`} className="!text-base !font-bold !text-black !mt-3 !mb-1">
+          {section.title}
+        </p>
+      );
+      
+      // Extract bullets from content
+      if (section.content) {
+        // Split by - or \- (bullets)
+        const bulletParts = section.content.split(/\s*(?:\\-|-)\s+/).filter(part => part.trim().length > 0);
+        
+        if (bulletParts.length > 0) {
+          elements.push(
+            <ul key={`ul-${idx}`} className="!list-disc !pl-5 !my-2 !space-y-1">
+              {bulletParts.map((bullet, bulletIdx) => (
+                <li key={bulletIdx} className="!text-base !text-black !leading-relaxed">
+                  {bullet.trim()}
+                </li>
+              ))}
+            </ul>
+          );
+        }
+      }
+    });
+    
+    // Fallback: if no sections were found, try line-by-line processing
+    if (elements.length === 0 || (titleMatch && elements.length === 1)) {
+      const lines = text.split('\n').filter(line => line.trim());
+      let currentBullets: string[] = [];
+      
+      const flushBullets = () => {
+        if (currentBullets.length > 0) {
+          elements.push(
+            <ul key={`ul-${elements.length}`} className="!list-disc !pl-5 !my-2 !space-y-1">
+              {currentBullets.map((bullet, idx) => (
+                <li key={idx} className="!text-base !text-black !leading-relaxed">
+                  {bullet}
+                </li>
+              ))}
+            </ul>
+          );
+          currentBullets = [];
+        }
+      };
+      
+      lines.forEach((line, lineIdx) => {
+        line = line.trim();
+        
+        // Skip if this was already processed as title
+        if (titleMatch && lineIdx === 0 && line.startsWith(titleMatch[1].trim())) {
+          return;
+        }
+        
+        // Check for bold sections
+        const boldMatch = line.match(/^(?:\\\*\\\*|\*\*)([^*]+)(?:\\\*\\\*|\*\*)$/);
+        if (boldMatch) {
+          flushBullets();
+          const boldText = boldMatch[1].trim();
+          elements.push(
+            <p key={`section-line-${lineIdx}`} className="!text-base !font-bold !text-black !mt-3 !mb-1">
+              {boldText}
+            </p>
+          );
+          return;
+        }
+        
+        // Check for bullets
+        const bulletMatch = line.match(/^(?:\\-|-)\s+(.+)$/);
+        if (bulletMatch) {
+          currentBullets.push(bulletMatch[1].trim());
+          return;
+        }
+        
+        // Regular text
+        if (line.length > 0) {
+          flushBullets();
+          elements.push(
+            <p key={`text-${lineIdx}`} className="!text-base !text-black !leading-relaxed !my-1">
+              {line}
+            </p>
+          );
+        }
+      });
+      
+      flushBullets();
     }
 
-    if (textContent) {
-      // Check for bullet pattern: "- " or "\- "
-      const bulletPattern = /(?:^|\s)[-−–—]\s+/m;
-      const hasBullets = bulletPattern.test(textContent);
+    return elements.length > 0 ? <>{elements}</> : (
+      <p className="!text-base !text-black">{text}</p>
+    );
+  };
 
-      if (hasBullets) {
-        // Split by various bullet markers
-        const parts = textContent.split(/\s*[-−–—]\s+/).filter(Boolean);
+  // Process cell content to handle bullet points and markdown (same logic as parseHeaderMarkdown)
+  const processContent = (content: React.ReactNode): React.ReactNode => {
+    // If content is a complex React element (not p or text), return as is
+    if (React.isValidElement(content) && content.type !== 'p' && content.type !== 'strong') {
+      return content;
+    }
+    
+    // Extract ALL content including text from strong tags
+    const extractAllText = (node: React.ReactNode): string => {
+      if (!node) return "";
+      
+      if (typeof node === "string") {
+        return node;
+      }
+      
+      if (React.isValidElement(node)) {
+        // If it's a strong tag, include marker for later
+        if (node.type === 'strong') {
+          const strongProps = node.props as { children?: any };
+          const innerText = extractAllText(strongProps.children);
+          return `**${innerText}**`; // Mark it with ** so we can detect it
+        }
+        
+        const nodeProps = node.props as { children?: any };
+        return extractAllText(nodeProps.children);
+      }
+      
+      if (Array.isArray(node)) {
+        return node.map(extractAllText).join("");
+      }
+      
+      return "";
+    };
+    
+    let textContent = extractAllText(content);
 
-        return (
-          <ul className="!list-disc !pl-5 !space-y-3">
-            {parts.map((part, idx) => {
-              // Check if this part contains **text** pattern (bold headers like "Procurement risks")
-              const boldMatch = part.match(/\*\*([^*]+)\*\*/);
-              if (boldMatch && part.trim() === boldMatch[0]) {
-                return (
-                  <p
-                    key={idx}
-                    className="!font-semibold !mt-4 !mb-2 !text-black"
-                  >
-                    {boldMatch[1]}
-                  </p>
-                );
-              }
-              return (
-                <li key={idx} className="!leading-relaxed">
-                  {part.trim()}
+    // If no text content, return original
+    if (!textContent || textContent.trim() === "") {
+      return content;
+    }
+
+    // Check if content has bullets (- or \-) or bold markers (** or \*\*)
+    const hasBullets = textContent.includes(' - ') || textContent.includes('\\-');
+    const hasBold = textContent.includes('**') || textContent.includes('\\*\\*');
+    
+    // IMPORTANT: Only process if we have BOTH section headers AND bullets
+    // Pattern: **Section** - bullet - bullet
+    const hasSectionPattern = /\*\*([^*]+?)\*\*\s*-\s+/.test(textContent.replace(/\\\*\\\*/g, '**').replace(/\\-/g, '-'));
+    
+    // If no section pattern detected, just return content with simple bold processing
+    if (!hasSectionPattern) {
+      // Check if it's just simple bold text without bullets
+      if (hasBold && !hasBullets) {
+        const cleanText = textContent.replace(/\\\*\\\*/g, '**');
+        if (cleanText.includes('**')) {
+          const processedText: React.ReactNode[] = [];
+          let lastIndex = 0;
+          const boldRegex = /\*\*([^*]+?)\*\*/g;
+          let match;
+          
+          while ((match = boldRegex.exec(cleanText)) !== null) {
+            if (match.index > lastIndex) {
+              processedText.push(cleanText.substring(lastIndex, match.index));
+            }
+            processedText.push(
+              <strong key={`bold-${match.index}`}>
+                {match[1]}
+              </strong>
+            );
+            lastIndex = match.index + match[0].length;
+          }
+          
+          if (lastIndex < cleanText.length) {
+            processedText.push(cleanText.substring(lastIndex));
+          }
+          
+          return <>{processedText}</>;
+        }
+      }
+      
+      // Return original content if no special processing needed
+      return content;
+    }
+
+    // Clean up escaped markdown
+    textContent = textContent.replace(/\\\*\\\*/g, '**');
+    textContent = textContent.replace(/\\-/g, '-');
+
+    // Parse with section pattern
+    const elements: React.ReactNode[] = [];
+    
+    // First, split by pattern: **SectionHeader** followed by content
+    // This regex finds: **text** - content - more content
+    const sectionPattern = /\*\*([^*]+?)\*\*\s*-\s*/g;
+    let lastIndex = 0;
+    let match;
+    
+    while ((match = sectionPattern.exec(textContent)) !== null) {
+      // Add any text before this section
+      if (match.index > lastIndex) {
+        const beforeText = textContent.substring(lastIndex, match.index).trim();
+        if (beforeText) {
+          // Process as regular bullets if it contains -
+          if (beforeText.includes(' - ')) {
+            const bullets = beforeText.split(' - ').filter(b => b.trim().length > 0);
+            bullets.forEach((bullet, idx) => {
+              elements.push(
+                <li key={`bullet-before-${lastIndex}-${idx}`} className="!leading-relaxed">
+                  {bullet.trim()}
                 </li>
               );
-            })}
+            });
+          } else {
+            elements.push(
+              <li key={`bullet-before-${lastIndex}`} className="!leading-relaxed">
+                {beforeText}
+              </li>
+            );
+          }
+        }
+      }
+      
+      // Add the section header
+      const sectionTitle = match[1].trim();
+      elements.push(
+        <p key={`header-${match.index}`} className="!font-semibold !mt-4 !mb-2 !text-black">
+          {sectionTitle}
+        </p>
+      );
+      
+      lastIndex = match.index + match[0].length;
+    }
+    
+    // Process remaining content after last section
+    if (lastIndex < textContent.length) {
+      const remainingText = textContent.substring(lastIndex).trim();
+      if (remainingText) {
+        // Split by bullets
+        const bullets = remainingText.split(' - ').filter(b => b.trim().length > 0);
+        bullets.forEach((bullet, idx) => {
+          const trimmedBullet = bullet.trim();
+          
+          // Check for inline bold
+          if (trimmedBullet.includes('**')) {
+            const processedText: React.ReactNode[] = [];
+            let bulletLastIndex = 0;
+            const boldRegex = /\*\*([^*]+?)\*\*/g;
+            let boldMatch;
+            
+            while ((boldMatch = boldRegex.exec(trimmedBullet)) !== null) {
+              if (boldMatch.index > bulletLastIndex) {
+                processedText.push(trimmedBullet.substring(bulletLastIndex, boldMatch.index));
+              }
+              processedText.push(
+                <strong key={`bold-${idx}-${boldMatch.index}`}>
+                  {boldMatch[1]}
+                </strong>
+              );
+              bulletLastIndex = boldMatch.index + boldMatch[0].length;
+            }
+            
+            if (bulletLastIndex < trimmedBullet.length) {
+              processedText.push(trimmedBullet.substring(bulletLastIndex));
+            }
+            
+            elements.push(
+              <li key={`bullet-remaining-${idx}`} className="!leading-relaxed">
+                {processedText}
+              </li>
+            );
+          } else {
+            elements.push(
+              <li key={`bullet-remaining-${idx}`} className="!leading-relaxed">
+                {trimmedBullet}
+              </li>
+            );
+          }
+        });
+      }
+    }
+    
+    // If we found sections and bullets, wrap in ul
+    if (elements.length > 0) {
+      // Group consecutive li elements into ul elements
+      const grouped: React.ReactNode[] = [];
+      let currentBullets: React.ReactElement[] = [];
+      
+      elements.forEach((element, idx) => {
+        if (React.isValidElement(element) && element.type === 'li') {
+          currentBullets.push(element);
+        } else {
+          // Flush current bullets
+          if (currentBullets.length > 0) {
+            grouped.push(
+              <ul key={`ul-${grouped.length}`} className="!list-disc !pl-5 !space-y-2">
+                {currentBullets}
+              </ul>
+            );
+            currentBullets = [];
+          }
+          grouped.push(element);
+        }
+      });
+      
+      // Flush remaining bullets
+      if (currentBullets.length > 0) {
+        grouped.push(
+          <ul key={`ul-${grouped.length}`} className="!list-disc !pl-5 !space-y-2">
+            {currentBullets}
           </ul>
         );
       }
+      
+      return <>{grouped}</>;
     }
 
     return content;
@@ -240,33 +563,30 @@ export function CustomTable({ children }: CustomTableProps) {
   // Check if this is a regular table with thead headers (not the special merged format)
   // Regular table: thead has actual column headers (not title/subtitle)
   const theadRows = React.Children.toArray(theadProps.children);
-  const theadRow = theadRows[0];
+  if (theadRows.length > 0) {
+    const theadRow = theadRows[0];
+    if (React.isValidElement(theadRow)) {
+      const theadCells = React.Children.toArray((theadRow.props as any).children);
+      
+      // Check if there are multiple cells with content in thead (indicating column headers)
+      const nonEmptyCells = theadCells.filter((cell) => {
+        if (!React.isValidElement(cell)) return false;
+        const cellProps = (cell.props as any).children;
+        const cellText = typeof cellProps === "string" 
+          ? cellProps.trim() 
+          : String(cellProps || "").trim();
+        return cellText.length > 0;
+      });
 
-  if (React.isValidElement(theadRow)) {
-    const theadCells = React.Children.toArray((theadRow.props as any).children);
-
-    // Check if thead has 2+ cells with content (regular table with column headers)
-    if (theadCells.length >= 2) {
-      const hasMultipleHeaders =
-        theadCells.filter((cell) => {
-          if (!React.isValidElement(cell)) return false;
-          const cellProps = (cell.props as any).children;
-          return cellProps && String(cellProps).trim().length > 0;
-        }).length >= 2;
-
-      // If thead has multiple actual column headers (2+), this is a regular table
-      // In this case, ALL tbody rows are data (not headers)
-      if (hasMultipleHeaders) {
-        // This is a regular table with proper thead headers
+      // If there are 2+ non-empty cells in thead, it's a regular table
+      if (nonEmptyCells.length >= 2) {
         return renderRegularTable(theadCells, tbodyRows);
       }
-    }
 
-    // Check if this is a table with title in first thead cell and empty cells
-    // This is a special format: title in thead, data rows in tbody (no strong tags needed)
-    const firstTheadCell = theadCells[0];
-    if (React.isValidElement(firstTheadCell)) {
-      const firstCellContent = (firstTheadCell.props as any).children;
+      // Check if first cell has content and other cells are empty
+      const firstCellContent = React.isValidElement(theadCells[0]) 
+        ? (theadCells[0].props as any).children 
+        : "";
       const firstCellText = typeof firstCellContent === "string" 
         ? firstCellContent.trim() 
         : String(firstCellContent || "").trim();
@@ -284,25 +604,9 @@ export function CustomTable({ children }: CustomTableProps) {
       // If first cell has content and others are empty, AND no strong tags in first tbody row
       // This is a title-style table where all tbody rows are data
       if (firstCellText.length > 0 && !otherCellsHaveContent && !hasStrongInFirstRow && tbodyRows.length > 0) {
-        // Extract title from first thead cell
-        let title = firstCellText;
-        let subtitle = "";
-
-        // Check if it contains subtitle pattern
-        const subtitlePatterns = [
-          "Procurement and organization objective:",
-          "objective:",
-          "Objective:",
-        ];
-        for (const pattern of subtitlePatterns) {
-          if (firstCellText.includes(pattern)) {
-            const parts = firstCellText.split(pattern);
-            title = parts[0]?.trim() || firstCellText;
-            subtitle = "Objective: " + (parts[1]?.trim() || "");
-            break;
-          }
-        }
-
+        // Extract raw text from first thead cell
+        const rawText = extractRawText(firstCellContent);
+        
         // All tbody rows are data rows (no headers row)
         // Process all rows as data
         const processedDataRows = tbodyRows.map((row, rowIdx) => {
@@ -342,17 +646,12 @@ export function CustomTable({ children }: CustomTableProps) {
             className="!my-8 !overflow-hidden !border !border-gray-300"
             style={{ borderRadius: "8px 36px 0 0" }}
           >
-            {/* Title section - Green rounded top */}
+            {/* Title section - Green rounded top with markdown support */}
             <div 
               className="!bg-[#92C36F] !px-8 !py-6"
               style={{ borderRadius: "8px 36px 0 0" }}
             >
-              <h3 className="!text-2xl !font-bold !text-black !mb-2 !font-gteesti-display">
-                {title}
-              </h3>
-              {subtitle && (
-                <p className="!text-base !text-black !leading-relaxed">{subtitle}</p>
-              )}
+              {parseHeaderMarkdown(rawText)}
             </div>
             {/* Table with data rows only (no column headers) */}
             <table
@@ -372,35 +671,15 @@ export function CustomTable({ children }: CustomTableProps) {
     return null;
   }
 
-  // Extract title and subtitle from thead
-  let title = "";
-  let subtitle = "";
+  // Extract title from thead
+  const theadRow = theadRows[0];
+  let rawHeaderText = "";
 
   if (React.isValidElement(theadRow)) {
     const theadCells = React.Children.toArray((theadRow.props as any).children);
     if (theadCells.length > 0 && React.isValidElement(theadCells[0])) {
       const cellContent = (theadCells[0].props as any).children;
-      if (typeof cellContent === "string") {
-        // Split on common patterns for objective/subtitle
-        const patterns = [
-          "Procurement and organization objective:",
-          "objective:",
-          "Objective:",
-        ];
-        let matched = false;
-        for (const pattern of patterns) {
-          if (cellContent.includes(pattern)) {
-            const parts = cellContent.split(pattern);
-            title = parts[0]?.trim() || cellContent;
-            subtitle = "Objective: " + (parts[1]?.trim() || "");
-            matched = true;
-            break;
-          }
-        }
-        if (!matched) {
-          title = cellContent.trim();
-        }
-      }
+      rawHeaderText = extractRawText(cellContent);
     }
   }
 
@@ -473,17 +752,12 @@ export function CustomTable({ children }: CustomTableProps) {
       className="!my-8 !overflow-hidden !border !border-gray-300"
       style={{ borderRadius: "8px 36px 0 0" }}
     >
-      {/* Title section - Green rounded top */}
+      {/* Title section - Green rounded top with markdown support */}
       <div
         className="!bg-[#92C36F] !px-6 !py-5"
         style={{ borderRadius: "8px 36px 0 0" }}
       >
-        <h3 className="!text-2xl !font-bold !text-black !mb-2 !font-gteesti-display">
-          {title}
-        </h3>
-        {subtitle && (
-          <p className="!text-base !text-black !leading-relaxed">{subtitle}</p>
-        )}
+        {parseHeaderMarkdown(rawHeaderText)}
       </div>
       {/* Table with actual headers and data */}
       <table
