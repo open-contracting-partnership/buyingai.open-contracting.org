@@ -190,7 +190,7 @@ export function CustomTable({ children }: CustomTableProps) {
           elements.push(
             <ul
               key={`ul-${idx}`}
-              className="table-header-bullets !list-disc !pl-5 !my-2 !space-y-1"
+              className="table-header-bullets !list-disc !pl-0 !my-2 !space-y-1"
             >
               {bulletParts.map((bullet, bulletIdx) => (
                 <li
@@ -648,7 +648,7 @@ export function CustomTable({ children }: CustomTableProps) {
         return (
           <td
             key={cellIdx}
-            className={`!pl-8 !pr-4 !py-6 !text-sm !align-top !bg-white !border !border-[#6CBA8C]`}
+            className={`!pl-6 !pr-0 !py-6 !text-sm !align-top !bg-white !border !border-[#6CBA8C]`}
           >
             {processContent(cellProps.children)}
           </td>
@@ -763,7 +763,7 @@ export function CustomTable({ children }: CustomTableProps) {
             return (
               <td
                 key={cellIdx}
-                className={`!pl-8 !pr-4 !py-6 !text-sm !align-top !bg-white ${
+                className={`!pl-6 !pr-0 !py-6 !text-sm !align-top !bg-white ${
                   !isLastCell ? "!border-r !border-[#6CBA8C]" : ""
                 }`}
               >
@@ -871,7 +871,7 @@ export function CustomTable({ children }: CustomTableProps) {
       return (
         <td
           key={cellIdx}
-          className={`!pl-8 !pr-4 !py-6 !text-sm !align-top !bg-white !border !border-[#6CBA8C]`}
+          className={`!pl-6 !pr-0 !py-6 !text-sm !align-top !bg-white !border !border-[#6CBA8C]`}
         >
           {processContent(cellProps.children)}
         </td>
