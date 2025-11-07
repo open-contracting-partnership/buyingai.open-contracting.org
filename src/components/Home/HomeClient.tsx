@@ -8,6 +8,9 @@ import { BannerCarousel } from "@/components/BannerCarousel";
 import { Chapter } from "@/lib/markdown";
 import { SectionsStructure } from "@/lib/sections-types";
 
+import arrowLeft from "@/app/assets/images/arrow-left.svg";
+import Image from "next/image";
+
 interface HomeClientProps {
   chapters: Chapter[];
   structure: SectionsStructure;
@@ -80,9 +83,15 @@ export default function HomeClient({
           </div>
           <Link
             href="/chapter/01-insights-on-ai-adoption#content"
-            className="inline-block mt-8 pt-1 pb-0.5 pl-1 pr-4 bg-[#C8D419] text-black rounded-lg hover:bg-[#B5C115] transition-colors text-xl lg:text-2xl"
+            className="inline-flex mt-8 py-2 pl-3 pr-8 gap-x-2.5 bg-[#AFCB4E] text-black rounded hover:bg-[#AFCB4E] transition-colors text-lg lg:text-xl uppercase font-bold font-gteesti-pro-display"
           >
-            Get started
+            <Image
+              src={arrowLeft}
+              alt="Arrow left"
+              width={28.2}
+              height={28.2}
+            />
+            <span>Get started</span>
           </Link>
         </div>
       </div>
