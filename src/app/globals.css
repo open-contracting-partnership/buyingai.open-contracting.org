@@ -126,6 +126,31 @@ article img {
   background: transparent;
 }
 
+/* Custom bullet color for table header bullets */
+.table-header-bullets {
+  list-style: none !important;
+  padding-left: 0 !important;
+}
+
+.table-header-bullets li {
+  position: relative !important;
+  padding-left: 1.5rem !important;
+  list-style: none !important;
+  color: #000 !important;
+}
+
+/* Custom green bullet using ::before */
+.table-header-bullets li::before {
+  content: "•" !important;
+  position: absolute !important;
+  left: 0 !important;
+  top: 0 !important;
+  color: rgb(108, 186, 140) !important;
+  font-size: 1.5em !important;
+  line-height: 1.2 !important;
+  font-weight: bold !important;
+}
+
 /* Collapsible sections */
 .collapsible-wrapper {
   margin: 1.5rem 0;
