@@ -123,7 +123,7 @@ There are great resources beyond this one that support AI-readiness for procurem
  - The World Bank Group’s [Building Trustworthy Artificial Intelligence: Frameworks, Applications, and Self-Assessment for Readiness](https://documents.worldbank.org/en/publication/documents-reports/documentdetail/099805309022518222)
 ```
 
-| AI readiness: Key questions  Procurement and organizational objective:Lay the groundwork for overall good AI procurement through policies and practices |  |
+| AI readiness: Key questions \*\*Procurement and organizational objective:\*\*Lay the groundwork for overall good AI procurement through policies and practices |  |
 | :---- | :---- |
 | **Team** | **Questions** |
 | **Procurement** | \- Can we use agile methods for our IT procurements? \- How can our procurement processes support strong collaboration between technical teams, procurement, legal, and policy stakeholders? \- What does the market for this product or service look like? How can I engage them, both to get input into the best specifications and to ensure a good, competitive process?  **Procurement risks** \- How do we guard against vendor lock-in and ensure that contracts include clear exit strategies and data portability? \- What protections do we need in place to clarify data rights, intellectual property ownership, and the handling of sensitive information? \- What is the state of our data, and how much does that need to be considered in the procurement strategy?  |
