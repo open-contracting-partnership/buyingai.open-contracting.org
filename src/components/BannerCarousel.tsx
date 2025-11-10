@@ -152,11 +152,8 @@ export function BannerCarousel({
                         {section.chapters
                           .slice(0, isMobile ? 4 : 6)
                           .map((ch, chIdx) => {
-                            // For Introduction section (section 1), always go to first chapter
-                            const linkHref =
-                              section.number === 1
-                                ? `/chapter/${firstChapterSlug}#content`
-                                : `/chapter/${ch.slug}#content`;
+                            // Each chapter link goes to its own chapter
+                            const linkHref = `/chapter/${ch.slug}#content`;
 
                             return (
                               <Link
