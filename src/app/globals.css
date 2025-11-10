@@ -275,20 +275,28 @@ article img {
   nav,
   aside,
   button,
-  .no-print {
+  .no-print,
+  header,
+  .print-header,
+  footer,
+  [aria-label="Download PDF"],
+  .collapsible-header svg,
+  .collapsible-icon {
     display: none !important;
   }
 
-  /* Ensure logo is visible when printing */
+  /* Hide logos when printing - only show content images */
+  header img,
   .print-header img,
+  header svg,
   .print-header svg {
-    filter: none !important;
-    -webkit-filter: none !important;
-    opacity: 1 !important;
+    display: none !important;
   }
 
-  /* Ensure all images are visible when printing */
-  img {
+  /* Ensure content images are visible when printing (but not logos) */
+  .print-content img,
+  .prose img,
+  article img {
     filter: none !important;
     -webkit-filter: none !important;
     opacity: 1 !important;
@@ -358,6 +366,16 @@ article img {
     padding: 0 !important;
     margin: 0 !important;
     background: transparent !important;
+  }
+
+  /* Expand all collapsible content when printing */
+  .collapsible-content {
+    display: block !important;
+  }
+
+  .collapsible-wrapper,
+  .collapsible-wrapper-bullet {
+    page-break-inside: avoid;
   }
 }
 

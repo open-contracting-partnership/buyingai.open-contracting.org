@@ -242,18 +242,6 @@ ${cleanContent}
 
   return (
     <div className="min-h-screen bg-white print-view-container">
-      {/* Minimal Header with Logo Only */}
-      <header className="print-header py-6 px-8 border-b border-gray-200 print:border-b-0 flex justify-center">
-        <Image
-          className="h-[61px] print:filter-none"
-          src={logo}
-          alt="OCP Logo"
-          width={183.19}
-          height={61}
-          style={{ filter: "none" }}
-        />
-      </header>
-
       {/* Main Content */}
       <main className="print-content-wrapper px-8 py-8 max-w-4xl mx-auto">
         <article className="print-content">
