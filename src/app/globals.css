@@ -385,20 +385,62 @@ article img {
   margin: 0 auto;
   padding: 40px;
   background: white;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.print-content-wrapper {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  color: #000;
 }
 
 .print-content-wrapper article {
   background: transparent;
   box-shadow: none;
   padding: 0;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 
 .print-content-wrapper .prose {
   color: #000;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Chrome-specific fixes */
+@supports (-webkit-appearance: none) {
+  .print-view-container,
+  .print-content-wrapper,
+  .print-content-wrapper article,
+  .print-content-wrapper .prose {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: relative !important;
+    z-index: 1 !important;
+  }
+}
+
+/* Ensure provider wrapper divs don't hide content */
+body > div,
+body > div > div {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  min-height: auto !important;
 }
 
 @media screen {
   .print-content-wrapper {
     color: #000;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
   }
 }

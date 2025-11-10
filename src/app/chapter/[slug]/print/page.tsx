@@ -13,6 +13,7 @@ import { CustomTable } from "@/components/CustomTable";
 import { CollapsibleInitializer } from "@/components/CollapsibleInitializer";
 import { PrintPageTrigger } from "@/components/PrintPageTrigger";
 import { DownloadPDFButton } from "@/components/DownloadPDFButton";
+import { ChromeContentFix } from "@/components/ChromeContentFix";
 
 interface PageProps {
   params: Promise<{
@@ -241,10 +242,10 @@ ${cleanContent}
   }
 
   return (
-    <div className="min-h-screen bg-white print-view-container">
+    <div className="min-h-screen bg-white print-view-container" style={{ display: 'block', visibility: 'visible', opacity: 1 }}>
       {/* Main Content */}
-      <main className="print-content-wrapper px-8 py-8 max-w-4xl mx-auto">
-        <article className="print-content">
+      <main className="print-content-wrapper px-8 py-8 max-w-4xl mx-auto" style={{ display: 'block', visibility: 'visible', opacity: 1 }}>
+        <article className="print-content" style={{ display: 'block', visibility: 'visible', opacity: 1 }}>
           <div
             className="prose prose-slate max-w-none print-prose
             prose-headings:font-bold prose-headings:font-gteesti-display
@@ -267,6 +268,7 @@ ${cleanContent}
             prose-thead:bg-gray-50
             prose-pre:bg-transparent prose-pre:p-0 prose-pre:m-0 prose-pre:overflow-visible
           "
+            style={{ display: 'block', visibility: 'visible', opacity: 1 }}
           >
             {contentParts.length > 0 ? (
               contentParts.map((part, index) => {
@@ -865,6 +867,7 @@ ${cleanContent}
         </article>
       </main>
 
+      <ChromeContentFix />
       <CollapsibleInitializer />
       <Suspense fallback={null}>
         <PrintPageTrigger />

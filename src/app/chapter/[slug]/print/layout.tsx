@@ -19,10 +19,13 @@ export default function PrintLayout({
     <html lang="en">
       <body
         className={`${ibmPlexSans.variable} antialiased min-h-screen !bg-white text-black font-gteesti-text overflow-x-hidden`}
+        style={{ display: 'block', visibility: 'visible', opacity: 1 }}
       >
         <RegionProvider autoProcess={true}>
           <GlossaryProvider glossaryData={glossaryData} autoProcess={true}>
-            {children}
+            <div style={{ display: 'block', visibility: 'visible', opacity: 1, minHeight: '100vh' }}>
+              {children}
+            </div>
           </GlossaryProvider>
         </RegionProvider>
       </body>
