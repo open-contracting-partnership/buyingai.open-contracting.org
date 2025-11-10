@@ -408,13 +408,13 @@ export function CustomTable({ children }: CustomTableProps) {
             }
 
             return (
-              <li key={`bullet-${idx}`} className="!leading-relaxed">
+              <li key={`bullet-${idx}`} className="!leading-relaxed !text-xs sm:!text-sm">
                 {processedText}
               </li>
             );
           } else {
             return (
-              <li key={`bullet-${idx}`} className="!leading-relaxed">
+              <li key={`bullet-${idx}`} className="!leading-relaxed !text-xs sm:!text-sm">
                 {trimmedBullet}
               </li>
             );
@@ -422,7 +422,7 @@ export function CustomTable({ children }: CustomTableProps) {
         });
 
         return (
-          <ul className="!list-disc !pl-5 !space-y-2">{bulletElements}</ul>
+          <ul className="!list-disc !pl-5 !space-y-1.5 !my-0 !leading-relaxed">{bulletElements}</ul>
         );
       }
     }
@@ -481,7 +481,7 @@ export function CustomTable({ children }: CustomTableProps) {
               elements.push(
                 <li
                   key={`bullet-before-${lastIndex}-${idx}`}
-                  className="!leading-relaxed"
+                  className="!leading-relaxed !text-xs sm:!text-sm"
                 >
                   {bullet}
                 </li>
@@ -491,7 +491,7 @@ export function CustomTable({ children }: CustomTableProps) {
             elements.push(
               <li
                 key={`bullet-before-${lastIndex}`}
-                className="!leading-relaxed"
+                className="!leading-relaxed !text-xs sm:!text-sm"
               >
                 {beforeText}
               </li>
@@ -505,7 +505,7 @@ export function CustomTable({ children }: CustomTableProps) {
       elements.push(
         <p
           key={`header-${match.index}`}
-          className="!font-semibold !mt-4 !mb-2 !text-black"
+          className="!font-semibold !mt-3 !mb-1.5 !text-black !text-xs sm:!text-sm !leading-normal"
         >
           {sectionTitle}
         </p>
@@ -549,13 +549,13 @@ export function CustomTable({ children }: CustomTableProps) {
             }
 
             elements.push(
-              <li key={`bullet-remaining-${idx}`} className="!leading-relaxed">
+              <li key={`bullet-remaining-${idx}`} className="!leading-relaxed !text-xs sm:!text-sm">
                 {processedText}
               </li>
             );
           } else {
             elements.push(
-              <li key={`bullet-remaining-${idx}`} className="!leading-relaxed">
+              <li key={`bullet-remaining-${idx}`} className="!leading-relaxed !text-xs sm:!text-sm">
                 {trimmedBullet}
               </li>
             );
@@ -579,7 +579,7 @@ export function CustomTable({ children }: CustomTableProps) {
             grouped.push(
               <ul
                 key={`ul-${grouped.length}`}
-                className="!list-disc !pl-5 !space-y-2"
+                className="!list-disc !pl-5 !space-y-1.5 !my-0 !leading-relaxed"
               >
                 {currentBullets}
               </ul>
@@ -648,7 +648,7 @@ export function CustomTable({ children }: CustomTableProps) {
         return (
           <td
             key={cellIdx}
-            className={`!pl-6 !pr-0 !py-6 !text-sm !align-top !bg-white !border !border-[#6CBA8C]`}
+            className={`!pl-3 sm:!pl-6 !pr-2 sm:!pr-4 !py-3 sm:!py-4 !text-xs sm:!text-sm !text-left !align-top !bg-white !border !border-[#6CBA8C] !leading-relaxed`}
           >
             {processContent(cellProps.children)}
           </td>
@@ -664,11 +664,11 @@ export function CustomTable({ children }: CustomTableProps) {
 
     return (
       <div
-        className="!my-8 !overflow-hidden !border !border-gray-300"
+        className="!my-6 sm:!my-8 !overflow-x-auto -mx-4 sm:mx-0 !border !border-gray-300"
         style={{ borderRadius: "8px 36px 0 0" }}
       >
         <table
-          className="!w-full !my-0"
+          className="!w-full !min-w-full !my-0"
           style={{ borderCollapse: "collapse", borderSpacing: 0 }}
         >
           <thead className="!bg-[#EDEBED]/50">
@@ -676,7 +676,7 @@ export function CustomTable({ children }: CustomTableProps) {
               {headers.map((header, idx) => (
                 <th
                   key={idx}
-                  className={`!pl-8 !pr-4 !py-5 !bg-[#EDEBED]/50 !text-left !font-semibold !text-base !text-black !border-b !border-gray-300 ${
+                  className={`!pl-3 sm:!pl-6 !pr-2 sm:!pr-4 !py-3 sm:!py-4 !bg-[#EDEBED]/50 !text-left !font-semibold !text-xs sm:!text-sm !text-black !border-b !border-gray-300 !align-top !leading-normal ${
                     idx < headers.length - 1 ? "!border-r !border-gray-300" : ""
                   }`}
                 >
@@ -763,7 +763,7 @@ export function CustomTable({ children }: CustomTableProps) {
             return (
               <td
                 key={cellIdx}
-                className={`!pl-6 !pr-0 !py-6 !text-sm !align-top !bg-white ${
+                className={`!pl-3 sm:!pl-6 !pr-2 sm:!pr-4 !py-3 sm:!py-4 !text-xs sm:!text-sm !text-left !align-top !bg-white !leading-relaxed ${
                   !isLastCell ? "!border-r !border-[#6CBA8C]" : ""
                 }`}
               >
@@ -784,19 +784,19 @@ export function CustomTable({ children }: CustomTableProps) {
 
         return (
           <div
-            className="!my-8 !overflow-hidden !border !border-gray-300"
+            className="!my-6 sm:!my-8 !overflow-x-auto -mx-4 sm:mx-0 !border !border-gray-300"
             style={{ borderRadius: "8px 36px 0 0" }}
           >
             {/* Title section - Green rounded top with markdown support */}
             <div
-              className="!bg-[#92C36F] !px-8 !py-6"
+              className="!bg-[#92C36F] !px-4 sm:!px-8 !py-4 sm:!py-6"
               style={{ borderRadius: "8px 36px 0 0" }}
             >
               {parseHeaderMarkdown(rawText)}
             </div>
             {/* Table with data rows only (no column headers) */}
             <table
-              className="!w-full !border-collapse !my-0"
+              className="!w-full !min-w-full !border-collapse !my-0"
               style={{ borderSpacing: 0 }}
             >
               <tbody className="!bg-white">{processedDataRows}</tbody>
@@ -871,7 +871,7 @@ export function CustomTable({ children }: CustomTableProps) {
       return (
         <td
           key={cellIdx}
-          className={`!pl-6 !pr-0 !py-6 !text-sm !align-top !bg-white !border !border-[#6CBA8C]`}
+          className={`!pl-3 sm:!pl-6 !pr-2 sm:!pr-4 !py-3 sm:!py-4 !text-xs sm:!text-sm !text-left !align-top !bg-white !border !border-[#6CBA8C] !leading-relaxed`}
         >
           {processContent(cellProps.children)}
         </td>
@@ -887,19 +887,19 @@ export function CustomTable({ children }: CustomTableProps) {
 
   return (
     <div
-      className="!my-8 !overflow-hidden !border !border-gray-300"
+      className="!my-6 sm:!my-8 !overflow-x-auto -mx-4 sm:mx-0 !border !border-gray-300"
       style={{ borderRadius: "8px 36px 0 0" }}
     >
       {/* Title section - Green rounded top with markdown support */}
       <div
-        className="!bg-[#92C36F] !px-6 !py-5"
+        className="!bg-[#92C36F] !px-4 sm:!px-6 !py-3 sm:!py-5"
         style={{ borderRadius: "8px 36px 0 0" }}
       >
         {parseHeaderMarkdown(rawHeaderText)}
       </div>
       {/* Table with actual headers and data */}
       <table
-        className="!my-0 !w-full"
+        className="!my-0 !w-full !min-w-full"
         style={{ borderCollapse: "collapse", borderSpacing: 0 }}
       >
         <thead className="!bg-[#EDEBED]">
@@ -907,7 +907,7 @@ export function CustomTable({ children }: CustomTableProps) {
             {headerCells.map((header, idx) => (
               <th
                 key={idx}
-                className={`!pl-5 !py-2 !bg-[#EDEBED]/50 !text-left !font-semibold !text-base !text-black !border !border-gray-300 !border-b-0`}
+                className={`!pl-3 sm:!pl-6 !pr-2 sm:!pr-4 !py-3 sm:!py-4 !bg-[#EDEBED]/50 !text-left !font-semibold !text-xs sm:!text-sm !text-black !border !border-gray-300 !border-b-0 !align-top !leading-normal`}
               >
                 {header}
               </th>

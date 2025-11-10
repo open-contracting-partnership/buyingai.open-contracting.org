@@ -497,7 +497,7 @@ ${cleanContent}
     >
       <div className="max-w-3xl mx-auto">
         {/* Content Card */}
-        <article className="bg-white rounded-lg shadow-sm p-12 mb-8">
+        <article className="bg-white rounded-lg shadow-sm p-4 sm:p-8 pt-12 lg:p-12 mb-8">
           <div
             className="prose prose-slate max-w-none
             prose-headings:font-bold prose-headings:font-gteesti-display
@@ -514,9 +514,9 @@ ${cleanContent}
             prose-code:bg-transparent prose-code:p-0
             prose-img:rounded-lg prose-img:shadow-md
             prose-hr:border-gray-200 prose-hr:my-8
-            prose-table:border-collapse prose-table:border prose-table:border-gray-300 prose-table:my-6
-            prose-th:border prose-th:border-gray-300 prose-th:bg-gray-50 prose-th:px-4 prose-th:py-2 prose-th:text-left prose-th:font-medium prose-th:text-sm
-            prose-td:border prose-td:border-gray-300 prose-td:px-4 prose-td:py-2 prose-td:text-sm
+            prose-table:border-collapse prose-table:border prose-table:border-gray-300 prose-table:my-4 sm:prose-table:my-6
+            prose-th:border prose-th:border-gray-300 prose-th:bg-gray-50 prose-th:px-2 sm:prose-th:px-4 prose-th:py-1.5 sm:prose-th:py-2 prose-th:text-left prose-th:font-medium prose-th:text-xs sm:prose-th:text-sm
+            prose-td:border prose-td:border-gray-300 prose-td:px-2 sm:prose-td:px-4 prose-td:py-1.5 sm:prose-td:py-2 prose-td:text-xs sm:prose-td:text-sm
             prose-thead:bg-gray-50
             prose-pre:bg-transparent prose-pre:p-0 prose-pre:m-0 prose-pre:overflow-visible
           "
@@ -988,19 +988,21 @@ ${cleanContent}
 
                             if (hasOnlyHeaders) {
                               return (
-                                <div className="my-6 px-6 py-4 bg-[#F5F7E6] border-l-4 border-[#8B9A2E] rounded-xl">
-                                  <table className="w-full" {...props}>
-                                    {children}
-                                  </table>
+                                <div className="my-6 px-3 sm:px-6 py-3 sm:py-4 bg-[#F5F7E6] border-l-4 border-[#8B9A2E] rounded-xl -mx-4 sm:mx-0">
+                                  <div className="overflow-x-auto">
+                                    <table className="w-full min-w-full" {...props}>
+                                      {children}
+                                    </table>
+                                  </div>
                                 </div>
                               );
                             }
 
                             // Default table rendering
                             return (
-                              <div className="my-8 overflow-hidden rounded-lg border border-gray-300">
+                              <div className="my-6 sm:my-8 overflow-x-auto -mx-4 sm:mx-0 rounded-lg border border-gray-300">
                                 <table
-                                  className="w-full border-collapse"
+                                  className="w-full min-w-full border-collapse"
                                   {...props}
                                 >
                                   {children}
@@ -1018,7 +1020,7 @@ ${cleanContent}
                           th: ({ children, ...props }: any) => {
                             return (
                               <th
-                                className="px-6 py-4 text-left font-semibold text-base text-black border-b border-gray-300"
+                                className="px-3 sm:px-6 py-2 sm:py-4 text-left font-semibold text-sm sm:text-base text-black border-b border-gray-300 whitespace-nowrap"
                                 {...props}
                               >
                                 {children}
@@ -1111,7 +1113,7 @@ ${cleanContent}
 
                             return (
                               <td
-                                className="pl-8 pr-4 py-4 text-sm align-top bg-white"
+                                className="pl-3 sm:pl-8 pr-2 sm:pr-4 py-2 sm:py-4 text-xs sm:text-sm align-top bg-white"
                                 {...props}
                               >
                                 {processContent(children)}

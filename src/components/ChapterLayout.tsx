@@ -373,7 +373,7 @@ export function ChapterLayout({
           <SectionMarker sectionId={currentSlug}>
             <div
               id="content"
-              className="px-6 lg:px-12 pt-8 pb-12 transition-all duration-300 w-full lg:max-w-4xl lg:mx-auto"
+              className="px-4 sm:px-6 lg:px-12 pt-6 sm:pt-8 pb-8 sm:pb-12 transition-all duration-300 w-full lg:max-w-4xl lg:mx-auto"
               style={{ scrollMarginTop: "200px" }}
             >
               {children}
