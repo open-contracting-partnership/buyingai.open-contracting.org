@@ -150,7 +150,6 @@ export function BannerCarousel({
                         }`}
                       >
                         {section.chapters
-                          .slice(0, isMobile ? 4 : 6)
                           .map((ch, chIdx) => {
                             // Each chapter link goes to its own chapter
                             const linkHref = `/chapter/${ch.slug}#content`;
