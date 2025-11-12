@@ -261,15 +261,30 @@ function AutoRegionWrapper({ children }: { children: React.ReactNode }) {
       return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     }
 
-    // Process the content with a small delay to ensure DOM is ready after navigation
-    const timeoutId = setTimeout(() => {
+    // Process the content with a delay to ensure React hydration is complete
+    // Use requestIdleCallback if available, otherwise use setTimeout with longer delay
+    const processContent = () => {
       if (containerRef.current) {
         processTextNodes(containerRef.current);
       }
-    }, 150);
+    };
+
+    // Wait for React hydration to complete before processing
+    const timeoutId = setTimeout(() => {
+      // Use requestIdleCallback for better performance, fallback to immediate execution
+      if (typeof window !== "undefined" && "requestIdleCallback" in window) {
+        requestIdleCallback(processContent, { timeout: 1000 });
+      } else {
+        processContent();
+      }
+    }, 300);
 
     return () => clearTimeout(timeoutId);
   }, [region, terms, pathname]);
 
-  return <div ref={containerRef}>{children}</div>;
+  return (
+    <div ref={containerRef} suppressHydrationWarning>
+      {children}
+    </div>
+  );
 }

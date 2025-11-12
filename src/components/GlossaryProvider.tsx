@@ -125,24 +125,8 @@ function AutoGlossaryWrapper({ children }: { children: React.ReactNode }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { terms, showTooltip, hideTooltip } = useGlossary();
   const processedNodesRef = useRef<WeakSet<Node>>(new WeakSet());
-  const childrenKeyRef = useRef<string>("");
 
   useEffect(() => {
-    if (!containerRef.current) return;
-
-    // Generate a key from children to detect actual content changes (not just re-renders)
-    const currentChildrenKey = JSON.stringify(children);
-    const isNewContent = currentChildrenKey !== childrenKeyRef.current;
-
-    if (isNewContent) {
-      // Reset processed nodes when content changes
-      processedNodesRef.current = new WeakSet();
-      childrenKeyRef.current = currentChildrenKey;
-    } else {
-      // Content hasn't changed, skip processing to avoid re-highlighting
-      return;
-    }
-
     const processTextNodes = (node: Node) => {
       // Si ya procesamos este nodo, saltar
       if (processedNodesRef.current.has(node)) return;
@@ -289,17 +273,59 @@ function AutoGlossaryWrapper({ children }: { children: React.ReactNode }) {
       return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     }
 
-    // Procesar el contenido inicial
-    processTextNodes(containerRef.current);
+    // Process content after React hydration is complete
+    const processContent = () => {
+      if (!containerRef.current) return;
+      
+      // Check if there's actual text content to process
+      const hasTextContent = containerRef.current.textContent && 
+                            containerRef.current.textContent.trim().length > 0;
+      
+      if (!hasTextContent) {
+        // If no content yet, try again after a short delay
+        setTimeout(processContent, 100);
+        return;
+      }
+
+      // Reset processed nodes for new content
+      processedNodesRef.current = new WeakSet();
+      processTextNodes(containerRef.current);
+    };
+
+    // Wait for React hydration to complete before processing
+    // Use multiple attempts to ensure content is ready
+    const timeoutId1 = setTimeout(() => {
+      processContent();
+    }, 300);
+
+    const timeoutId2 = setTimeout(() => {
+      processContent();
+    }, 600);
+
+    // Also use requestIdleCallback if available
+    let idleCallbackId: number | null = null;
+    if (typeof window !== "undefined" && "requestIdleCallback" in window) {
+      idleCallbackId = requestIdleCallback(() => {
+        processContent();
+      }, { timeout: 1000 }) as unknown as number;
+    }
 
     // No observer needed - we process all content on initial load and when children prop changes
     // The observer was causing re-processing on hover which highlighted all occurrences
     return () => {
-      // Cleanup if needed
+      clearTimeout(timeoutId1);
+      clearTimeout(timeoutId2);
+      if (idleCallbackId !== null && typeof window !== "undefined" && "cancelIdleCallback" in window) {
+        cancelIdleCallback(idleCallbackId);
+      }
     };
   }, [terms, showTooltip, hideTooltip, children]);
 
-  return <div ref={containerRef}>{children}</div>;
+  return (
+    <div ref={containerRef} suppressHydrationWarning>
+      {children}
+    </div>
+  );
 }
 
 // Exportar también el componente manual para casos específicos
