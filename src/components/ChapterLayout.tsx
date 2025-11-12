@@ -46,25 +46,24 @@ export function ChapterLayout({
   const [scrolled, setScrolled] = useState(false);
   // Always show sticky nav on chapter pages (start with true)
   const [showStickyNav, setShowStickyNav] = useState(true);
-  const [sidebarVisible, setSidebarVisible] = useState(() => {
-    if (typeof window !== "undefined") {
-      return window.innerWidth >= 768; // Sidebar visible by default only on desktop
-    }
-    return true; // Assume visible during SSR/hydration, will correct on client
-  });
+  // Always start with false to avoid hydration mismatch, will be set correctly in useEffect
+  const [sidebarVisible, setSidebarVisible] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   const sidebarRef = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLElement>(null);
 
+  // Set mounted state and initial sidebar visibility after hydration
   useEffect(() => {
+    setIsMounted(true);
     const handleResize = () => {
       setSidebarVisible(window.innerWidth >= 768);
     };
-    window.addEventListener("resize", handleResize);
-
-    // On mount: force-check once for client viewport width
+    
+    // Set initial visibility based on viewport
     handleResize();
-
+    
+    window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
@@ -245,7 +244,7 @@ export function ChapterLayout({
 
       <div className="flex relative">
         {/* Overlay for mobile when sidebar is open */}
-        {sidebarVisible && (
+        {isMounted && sidebarVisible && (
           <div
             className="fixed inset-0 bg-black/50 z-40 lg:hidden"
             onClick={toggleSidebar}
@@ -257,7 +256,9 @@ export function ChapterLayout({
         <aside
           ref={sidebarRef}
           className={`bg-white border-r border-gray-200 transition-all duration-300 h-screen z-50 ${
-            sidebarVisible
+            !isMounted
+              ? "w-[366px] fixed top-[117px] translate-x-0 lg:sticky"
+              : sidebarVisible
               ? "w-[366px] fixed top-[117px] translate-x-0 lg:sticky"
               : "fixed top-[117px] w-full -translate-x-full overflow-hidden lg:sticky lg:w-0 lg:translate-x-0"
           }`}
