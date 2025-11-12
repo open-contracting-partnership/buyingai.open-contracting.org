@@ -35,16 +35,36 @@ export function RegionProvider({
   autoProcess?: boolean;
 }) {
   const [region, setRegionState] = useState<Region>(() => {
-    // Initialize from localStorage or default to US
+    // Always default to US during SSR to avoid hydration mismatch
+    // For print pages, always use US
     if (typeof window !== "undefined") {
+      // Check if we're on a print page - always use US for print
+      const isPrintPage = window.location.pathname.includes("/print");
+      if (isPrintPage) {
+        return "US";
+      }
+      
       const savedRegion = localStorage.getItem("region") as Region | null;
       if (savedRegion === "US" || savedRegion === "GLOBAL") {
         return savedRegion;
       }
       return "US";
     }
+    // During SSR, always return US to match client initial state for print pages
     return "US";
   });
+  
+  // Update region on mount if not a print page and different from localStorage
+  useEffect(() => {
+    if (typeof window !== "undefined" && !window.location.pathname.includes("/print")) {
+      const savedRegion = localStorage.getItem("region") as Region | null;
+      if (savedRegion === "US" || savedRegion === "GLOBAL") {
+        if (savedRegion !== region) {
+          setRegionState(savedRegion);
+        }
+      }
+    }
+  }, []);
 
   const setRegion = (newRegion: Region) => {
     setRegionState(newRegion);
