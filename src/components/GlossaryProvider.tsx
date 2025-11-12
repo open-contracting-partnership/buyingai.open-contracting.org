@@ -125,6 +125,7 @@ function AutoGlossaryWrapper({ children }: { children: React.ReactNode }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { terms, showTooltip, hideTooltip } = useGlossary();
   const processedNodesRef = useRef<WeakSet<Node>>(new WeakSet());
+  const isProcessingRef = useRef(false);
 
   useEffect(() => {
     const processTextNodes = (node: Node) => {
@@ -242,8 +243,31 @@ function AutoGlossaryWrapper({ children }: { children: React.ReactNode }) {
             );
           }
 
-          parent.replaceChild(fragment, node);
+          // Mark the original node as processed before replacing
           processedNodesRef.current.add(node);
+          
+          // Replace the node with the fragment
+          try {
+            parent.replaceChild(fragment, node);
+            
+            // Mark all new nodes in the fragment as processed to avoid re-processing
+            // Note: fragment.childNodes is empty after replaceChild, so we need to get nodes from parent
+            const insertedNodes = Array.from(parent.childNodes).filter(
+              (n) => !processedNodesRef.current.has(n) && n !== node
+            );
+            insertedNodes.forEach((newNode) => {
+              processedNodesRef.current.add(newNode);
+              if (newNode.nodeType === Node.ELEMENT_NODE) {
+                // Also mark text nodes inside
+                newNode.childNodes.forEach((child) => {
+                  processedNodesRef.current.add(child);
+                });
+              }
+            });
+          } catch (error) {
+            // If replaceChild fails (e.g., node was already removed), skip
+            console.warn("GlossaryProvider: Failed to replace node", error);
+          }
         }
       }
       // Si es un elemento, procesar sus hijos
@@ -275,7 +299,11 @@ function AutoGlossaryWrapper({ children }: { children: React.ReactNode }) {
 
     // Process content after React hydration is complete
     const processContent = () => {
-      if (!containerRef.current) return;
+      if (!containerRef.current) {
+        // Try again if container not ready
+        setTimeout(processContent, 100);
+        return;
+      }
       
       // Check if there's actual text content to process
       const hasTextContent = containerRef.current.textContent && 
@@ -287,9 +315,29 @@ function AutoGlossaryWrapper({ children }: { children: React.ReactNode }) {
         return;
       }
 
+      // Prevent multiple simultaneous processing
+      if (isProcessingRef.current) return;
+      isProcessingRef.current = true;
+
       // Reset processed nodes for new content
       processedNodesRef.current = new WeakSet();
+      
+      // Process the container and also look for main element inside
       processTextNodes(containerRef.current);
+      
+      // Also process content inside main element if it exists
+      const mainElement = containerRef.current.querySelector('main');
+      if (mainElement) {
+        processTextNodes(mainElement);
+      }
+      
+      // Also process content inside article elements (common in chapter pages)
+      const articleElements = containerRef.current.querySelectorAll('article');
+      articleElements.forEach(article => {
+        processTextNodes(article);
+      });
+      
+      isProcessingRef.current = false;
     };
 
     // Wait for React hydration to complete before processing
@@ -302,21 +350,64 @@ function AutoGlossaryWrapper({ children }: { children: React.ReactNode }) {
       processContent();
     }, 600);
 
+    const timeoutId3 = setTimeout(() => {
+      processContent();
+    }, 1000);
+
     // Also use requestIdleCallback if available
     let idleCallbackId: number | null = null;
     if (typeof window !== "undefined" && "requestIdleCallback" in window) {
       idleCallbackId = requestIdleCallback(() => {
         processContent();
-      }, { timeout: 1000 }) as unknown as number;
+      }, { timeout: 1500 }) as unknown as number;
     }
 
-    // No observer needed - we process all content on initial load and when children prop changes
-    // The observer was causing re-processing on hover which highlighted all occurrences
+    // Use MutationObserver to detect when content is added dynamically
+    // Set it up after initial processing attempts
+    let observer: MutationObserver | null = null;
+    const setupObserver = () => {
+      if (typeof window !== "undefined" && "MutationObserver" in window && containerRef.current && !observer) {
+        observer = new MutationObserver((mutations) => {
+          // Only process if new nodes were added
+          const hasNewNodes = mutations.some(mutation => 
+            mutation.addedNodes.length > 0 && 
+            Array.from(mutation.addedNodes).some(node => 
+              node.nodeType === Node.TEXT_NODE || 
+              (node.nodeType === Node.ELEMENT_NODE && (node as Element).textContent?.trim().length > 0)
+            )
+          );
+          
+          if (hasNewNodes && !isProcessingRef.current) {
+            // Debounce processing
+            setTimeout(() => {
+              if (!isProcessingRef.current) {
+                processContent();
+              }
+            }, 200);
+          }
+        });
+
+        observer.observe(containerRef.current, {
+          childList: true,
+          subtree: true,
+          characterData: true
+        });
+      }
+    };
+
+    // Setup observer after a delay to ensure container is ready
+    const observerTimeout = setTimeout(setupObserver, 500);
+
     return () => {
       clearTimeout(timeoutId1);
       clearTimeout(timeoutId2);
+      clearTimeout(timeoutId3);
+      clearTimeout(observerTimeout);
       if (idleCallbackId !== null && typeof window !== "undefined" && "cancelIdleCallback" in window) {
         cancelIdleCallback(idleCallbackId);
+      }
+      if (observer) {
+        observer.disconnect();
       }
     };
   }, [terms, showTooltip, hideTooltip, children]);
