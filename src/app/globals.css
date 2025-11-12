@@ -53,6 +53,10 @@
   --font-ibm-plex-sans: var(--font-ibm-plex-sans);
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
@@ -443,4 +447,107 @@ body > div > div {
     visibility: visible !important;
     opacity: 1 !important;
   }
+}
+
+/* Enhanced styles for principles navigation list */
+.prose ul:has(> li > a[href^="#"]) {
+  list-style: none;
+  padding-left: 0;
+  margin: 2rem 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.prose ul:has(> li > a[href^="#"]) > li {
+  margin: 0;
+  padding: 0;
+}
+
+.prose ul:has(> li > a[href^="#"]) > li::before {
+  display: none;
+}
+
+.prose ul:has(> li > a[href^="#"]) > li > a {
+  display: block;
+  padding: 0.875rem 1.25rem;
+  background: linear-gradient(135deg, #f5f7e6 0%, #ffffff 100%);
+  border: 1px solid #e5e7eb;
+  border-left: 4px solid #92c36f;
+  border-radius: 8px;
+  color: #1f2937;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.prose ul:has(> li > a[href^="#"]) > li > a:hover {
+  background: linear-gradient(135deg, #e8f0d8 0%, #f5f7e6 100%);
+  border-left-color: #7ba860;
+  transform: translateX(4px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  color: #111827;
+}
+
+/* Enhanced link styles */
+.prose a {
+  font-weight: 500;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.prose a:hover {
+  color: #1a8a7f;
+}
+
+.prose a[href^="http"]::after {
+  content: " ↗";
+  font-size: 0.875em;
+  opacity: 0.6;
+}
+
+/* Enhanced strong/bold text */
+.prose strong {
+  color: #111827;
+  font-weight: 600;
+}
+
+/* Better spacing for paragraphs after headings */
+.prose h3 + p {
+  margin-top: 1rem;
+}
+
+/* Enhanced blockquote */
+.prose blockquote {
+  background: #f9fafb;
+  padding: 1.25rem 1.5rem;
+  border-radius: 6px;
+  border-left-width: 4px;
+  border-left-color: #c8d419;
+  margin: 1.5rem 0;
+  font-style: normal;
+}
+
+/* Better code styling */
+.prose code {
+  background: #f3f4f6;
+  padding: 0.125rem 0.375rem;
+  border-radius: 4px;
+  font-size: 0.875em;
+  color: #1f2937;
+  font-weight: 500;
+}
+
+/* Enhanced paragraph spacing */
+.prose p {
+  line-height: 1.75;
+}
+
+/* Better list spacing */
+.prose ul:not(:has(> li > a[href^="#"])) {
+  margin: 1.5rem 0;
+}
+
+.prose ol {
+  margin: 1.5rem 0;
 }

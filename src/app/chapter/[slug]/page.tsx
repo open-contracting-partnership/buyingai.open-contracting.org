@@ -6,6 +6,7 @@ import rehypeRaw from "rehype-raw";
 import React from "react";
 import { visit } from "unist-util-visit";
 import type { Root } from "mdast";
+import type { Heading } from "mdast";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { CollapsibleText } from "@/components/CollapsibleText";
 import { CustomTable } from "@/components/CustomTable";
@@ -290,6 +291,52 @@ function processMarkdownImageReferences(content: string): string {
   return processedContent;
 }
 
+// Custom remark plugin to extract IDs from headings in format {#id}
+function remarkHeadingIds() {
+  return (tree: Root) => {
+    visit(tree, "heading", (node: Heading) => {
+      // Process children in reverse to find and remove ID from the last text node
+      const newChildren: any[] = [];
+      let foundId: string | null = null;
+      
+      // Process children from end to start to find the ID pattern
+      for (let i = node.children.length - 1; i >= 0; i--) {
+        const child = node.children[i];
+        
+        if (child.type === "text" && !foundId) {
+          const text = child.value;
+          // Check if this text contains the ID pattern at the end
+          const match = text.match(/(.+?)\s*\{#([^}]+)\}\s*$/);
+          if (match) {
+            // Found the ID, extract it
+            foundId = match[2];
+            const textWithoutId = match[1].trim();
+            // Add the text without ID if it's not empty
+            if (textWithoutId) {
+              newChildren.unshift({
+                ...child,
+                value: textWithoutId,
+              });
+            }
+          } else {
+            newChildren.unshift(child);
+          }
+        } else {
+          newChildren.unshift(child);
+        }
+      }
+      
+      // If we found an ID, update the node
+      if (foundId) {
+        node.children = newChildren;
+        (node as any).data = (node as any).data || {};
+        (node as any).data.hProperties = (node as any).data.hProperties || {};
+        (node as any).data.hProperties.id = foundId;
+      }
+    });
+  };
+}
+
 // Custom remark plugin to fix images with data URIs that might have parsing issues
 function remarkFixImageDataUris() {
   return (tree: Root) => {
@@ -504,8 +551,8 @@ ${cleanContent}
             prose-h1:text-4xl prose-h1:mb-6 prose-h1:mt-0
             prose-h2:text-3xl prose-h2:mb-4 prose-h2:mt-8
             prose-h3:text-2xl prose-h3:mb-3 prose-h3:mt-6
-            prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-4
-            prose-a:text-[#23B2A7] prose-a:no-underline hover:prose-a:underline
+            prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-4 prose-p:text-base
+            prose-a:text-[#23B2A7] prose-a:no-underline hover:prose-a:underline prose-a:font-medium
             prose-strong:text-gray-900 prose-strong:font-semibold
             prose-ul:my-4 prose-ul:list-disc prose-ul:pl-6
             prose-ol:my-4 prose-ol:list-decimal prose-ol:pl-6
@@ -515,9 +562,8 @@ ${cleanContent}
             prose-img:rounded-lg prose-img:shadow-md
             prose-hr:border-gray-200 prose-hr:my-8
             prose-table:border-collapse prose-table:border prose-table:border-gray-300 prose-table:my-4 sm:prose-table:my-6
-            prose-th:border prose-th:border-gray-300 prose-th:bg-gray-50 prose-th:px-2 sm:prose-th:px-4 prose-th:py-1.5 sm:prose-th:py-2 prose-th:text-left prose-th:font-medium prose-th:text-xs sm:prose-th:text-sm
+            prose-th:border prose-th:border-gray-300 prose-th:px-2 sm:prose-th:px-4 prose-th:py-1.5 sm:prose-th:py-2 prose-th:text-left prose-th:font-medium prose-th:text-xs sm:prose-th:text-sm
             prose-td:border prose-td:border-gray-300 prose-td:px-2 sm:prose-td:px-4 prose-td:py-1.5 sm:prose-td:py-2 prose-td:text-xs sm:prose-td:text-sm
-            prose-thead:bg-gray-50
             prose-pre:bg-transparent prose-pre:p-0 prose-pre:m-0 prose-pre:overflow-visible
           "
           >
@@ -551,7 +597,7 @@ ${cleanContent}
                   return (
                     <ReactMarkdown
                       key={`markdown-${index}`}
-                      remarkPlugins={[remarkGfm]}
+                      remarkPlugins={[remarkGfm, remarkHeadingIds]}
                       rehypePlugins={[rehypeRaw]}
                       components={
                         {
@@ -590,7 +636,7 @@ ${cleanContent}
                               />
                             );
                           },
-                          h1: ({ children, className, ...props }: any) => {
+                          h1: ({ children, className, id, ...props }: any) => {
                             const processedChildren =
                               wrapItalicWithBackground(
                                 children,
@@ -599,15 +645,17 @@ ${cleanContent}
                             return (
                               <h1
                                 {...props}
+                                id={id}
                                 className={`${
                                   className || ""
                                 } font-gteesti-display`}
+                                style={{ scrollMarginTop: "200px" }}
                               >
                                 {processedChildren}
                               </h1>
                             );
                           },
-                          h2: ({ children, className, ...props }: any) => {
+                          h2: ({ children, className, id, ...props }: any) => {
                             const processedChildren =
                               wrapItalicWithBackground(
                                 children,
@@ -616,15 +664,17 @@ ${cleanContent}
                             return (
                               <h2
                                 {...props}
+                                id={id}
                                 className={`${
                                   className || ""
                                 } font-gteesti-display`}
+                                style={{ scrollMarginTop: "200px" }}
                               >
                                 {processedChildren}
                               </h2>
                             );
                           },
-                          h3: ({ children, className, ...props }: any) => {
+                          h3: ({ children, className, id, ...props }: any) => {
                             const processedChildren =
                               wrapItalicWithBackground(
                                 children,
@@ -633,15 +683,17 @@ ${cleanContent}
                             return (
                               <h3
                                 {...props}
+                                id={id}
                                 className={`${
                                   className || ""
                                 } font-gteesti-display`}
+                                style={{ scrollMarginTop: "200px" }}
                               >
                                 {processedChildren}
                               </h3>
                             );
                           },
-                          h4: ({ children, className, ...props }: any) => {
+                          h4: ({ children, className, id, ...props }: any) => {
                             const processedChildren =
                               wrapItalicWithBackground(
                                 children,
@@ -650,15 +702,17 @@ ${cleanContent}
                             return (
                               <h4
                                 {...props}
+                                id={id}
                                 className={`${
                                   className || ""
                                 } font-gteesti-display`}
+                                style={{ scrollMarginTop: "200px" }}
                               >
                                 {processedChildren}
                               </h4>
                             );
                           },
-                          h5: ({ children, className, ...props }: any) => {
+                          h5: ({ children, className, id, ...props }: any) => {
                             const processedChildren =
                               wrapItalicWithBackground(
                                 children,
@@ -667,15 +721,17 @@ ${cleanContent}
                             return (
                               <h5
                                 {...props}
+                                id={id}
                                 className={`${
                                   className || ""
                                 } font-gteesti-display`}
+                                style={{ scrollMarginTop: "200px" }}
                               >
                                 {processedChildren}
                               </h5>
                             );
                           },
-                          h6: ({ children, className, ...props }: any) => {
+                          h6: ({ children, className, id, ...props }: any) => {
                             const processedChildren =
                               wrapItalicWithBackground(
                                 children,
@@ -684,9 +740,11 @@ ${cleanContent}
                             return (
                               <h6
                                 {...props}
+                                id={id}
                                 className={`${
                                   className || ""
                                 } font-gteesti-display`}
+                                style={{ scrollMarginTop: "200px" }}
                               >
                                 {processedChildren}
                               </h6>
@@ -1130,7 +1188,7 @@ ${cleanContent}
               })
             ) : (
               <ReactMarkdown
-                remarkPlugins={[remarkGfm]}
+                remarkPlugins={[remarkGfm, remarkHeadingIds]}
                 rehypePlugins={[rehypeRaw]}
                 components={
                   {

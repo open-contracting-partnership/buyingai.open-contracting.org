@@ -86,22 +86,25 @@ export function ChapterLayout({
     ? getSectionColor(currentSection.number)
     : getSectionColor(1);
 
-  // Check for #content hash on mount and scroll to position
+  // Check for hash on mount and scroll to position
   useEffect(() => {
     const hash = window.location.hash;
-    if (hash === "#content") {
+    if (hash) {
       // Set states immediately for navbar/sidebar visibility
       setScrolled(true);
       setShowStickyNav(true);
 
-      // Scroll to content section (accounting for sticky header)
-      const scrollToContent = () => {
-        const contentElement = document.getElementById("content");
-        if (contentElement) {
-          const headerHeight = 119.72; // Height of sticky header
-          const elementPosition = contentElement.getBoundingClientRect().top;
+      // Scroll to element (accounting for sticky header and navbar)
+      const scrollToElement = () => {
+        const elementId = hash.substring(1); // Remove the #
+        const targetElement = document.getElementById(elementId);
+        if (targetElement) {
+          // Header height (117px) + Sticky navbar height (60px) = 177px
+          // Add extra padding (23px) for better visibility = 200px
+          const offset = 200;
+          const elementPosition = targetElement.getBoundingClientRect().top;
           const offsetPosition =
-            elementPosition + window.pageYOffset - headerHeight;
+            elementPosition + window.pageYOffset - offset;
 
           window.scrollTo({
             top: offsetPosition,
@@ -111,9 +114,34 @@ export function ChapterLayout({
       };
 
       // Small delay to ensure page is rendered before smooth scroll
-      setTimeout(scrollToContent, 100);
+      setTimeout(scrollToElement, 100);
     }
   }, [currentSlug]);
+
+  // Handle hash changes (e.g., when clicking anchor links)
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash;
+      if (hash) {
+        const elementId = hash.substring(1);
+        const targetElement = document.getElementById(elementId);
+        if (targetElement) {
+          const offset = 200;
+          const elementPosition = targetElement.getBoundingClientRect().top;
+          const offsetPosition =
+            elementPosition + window.pageYOffset - offset;
+
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth",
+          });
+        }
+      }
+    };
+
+    window.addEventListener("hashchange", handleHashChange);
+    return () => window.removeEventListener("hashchange", handleHashChange);
+  }, []);
 
   useEffect(() => {
     let lastScrollY = window.scrollY;

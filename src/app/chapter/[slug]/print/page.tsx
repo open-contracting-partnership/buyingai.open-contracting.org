@@ -4,6 +4,9 @@ import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import React, { Suspense } from "react";
 import Image from "next/image";
+import { visit } from "unist-util-visit";
+import type { Root } from "mdast";
+import type { Heading } from "mdast";
 import logo from "@/app/assets/images/logo.svg";
 import { getChapterBySlug } from "@/lib/markdown";
 import { getChapterInSection, getSectionColor } from "@/lib/sections-types";
@@ -114,6 +117,52 @@ function processMarkdownImageReferences(content: string): string {
   });
 
   return processedContent;
+}
+
+// Custom remark plugin to extract IDs from headings in format {#id}
+function remarkHeadingIds() {
+  return (tree: Root) => {
+    visit(tree, "heading", (node: Heading) => {
+      // Process children in reverse to find and remove ID from the last text node
+      const newChildren: any[] = [];
+      let foundId: string | null = null;
+      
+      // Process children from end to start to find the ID pattern
+      for (let i = node.children.length - 1; i >= 0; i--) {
+        const child = node.children[i];
+        
+        if (child.type === "text" && !foundId) {
+          const text = child.value;
+          // Check if this text contains the ID pattern at the end
+          const match = text.match(/(.+?)\s*\{#([^}]+)\}\s*$/);
+          if (match) {
+            // Found the ID, extract it
+            foundId = match[2];
+            const textWithoutId = match[1].trim();
+            // Add the text without ID if it's not empty
+            if (textWithoutId) {
+              newChildren.unshift({
+                ...child,
+                value: textWithoutId,
+              });
+            }
+          } else {
+            newChildren.unshift(child);
+          }
+        } else {
+          newChildren.unshift(child);
+        }
+      }
+      
+      // If we found an ID, update the node
+      if (foundId) {
+        node.children = newChildren;
+        (node as any).data = (node as any).data || {};
+        (node as any).data.hProperties = (node as any).data.hProperties || {};
+        (node as any).data.hProperties.id = foundId;
+      }
+    });
+  };
 }
 
 // Generate static paths for all chapters
@@ -295,7 +344,7 @@ ${cleanContent}
                   return (
                     <ReactMarkdown
                       key={`markdown-${index}`}
-                      remarkPlugins={[remarkGfm]}
+                      remarkPlugins={[remarkGfm, remarkHeadingIds]}
                       rehypePlugins={[rehypeRaw]}
                       components={
                         {
@@ -331,7 +380,7 @@ ${cleanContent}
                               />
                             );
                           },
-                          h1: ({ children, className, ...props }: any) => {
+                          h1: ({ children, className, id, ...props }: any) => {
                             const processedChildren =
                               wrapItalicWithBackground(
                                 children,
@@ -340,15 +389,17 @@ ${cleanContent}
                             return (
                               <h1
                                 {...props}
+                                id={id}
                                 className={`${
                                   className || ""
                                 } font-gteesti-display`}
+                                style={{ scrollMarginTop: "200px" }}
                               >
                                 {processedChildren}
                               </h1>
                             );
                           },
-                          h2: ({ children, className, ...props }: any) => {
+                          h2: ({ children, className, id, ...props }: any) => {
                             const processedChildren =
                               wrapItalicWithBackground(
                                 children,
@@ -357,15 +408,17 @@ ${cleanContent}
                             return (
                               <h2
                                 {...props}
+                                id={id}
                                 className={`${
                                   className || ""
                                 } font-gteesti-display`}
+                                style={{ scrollMarginTop: "200px" }}
                               >
                                 {processedChildren}
                               </h2>
                             );
                           },
-                          h3: ({ children, className, ...props }: any) => {
+                          h3: ({ children, className, id, ...props }: any) => {
                             const processedChildren =
                               wrapItalicWithBackground(
                                 children,
@@ -374,15 +427,17 @@ ${cleanContent}
                             return (
                               <h3
                                 {...props}
+                                id={id}
                                 className={`${
                                   className || ""
                                 } font-gteesti-display`}
+                                style={{ scrollMarginTop: "200px" }}
                               >
                                 {processedChildren}
                               </h3>
                             );
                           },
-                          h4: ({ children, className, ...props }: any) => {
+                          h4: ({ children, className, id, ...props }: any) => {
                             const processedChildren =
                               wrapItalicWithBackground(
                                 children,
@@ -391,15 +446,17 @@ ${cleanContent}
                             return (
                               <h4
                                 {...props}
+                                id={id}
                                 className={`${
                                   className || ""
                                 } font-gteesti-display`}
+                                style={{ scrollMarginTop: "200px" }}
                               >
                                 {processedChildren}
                               </h4>
                             );
                           },
-                          h5: ({ children, className, ...props }: any) => {
+                          h5: ({ children, className, id, ...props }: any) => {
                             const processedChildren =
                               wrapItalicWithBackground(
                                 children,
@@ -408,15 +465,17 @@ ${cleanContent}
                             return (
                               <h5
                                 {...props}
+                                id={id}
                                 className={`${
                                   className || ""
                                 } font-gteesti-display`}
+                                style={{ scrollMarginTop: "200px" }}
                               >
                                 {processedChildren}
                               </h5>
                             );
                           },
-                          h6: ({ children, className, ...props }: any) => {
+                          h6: ({ children, className, id, ...props }: any) => {
                             const processedChildren =
                               wrapItalicWithBackground(
                                 children,
@@ -425,9 +484,11 @@ ${cleanContent}
                             return (
                               <h6
                                 {...props}
+                                id={id}
                                 className={`${
                                   className || ""
                                 } font-gteesti-display`}
+                                style={{ scrollMarginTop: "200px" }}
                               >
                                 {processedChildren}
                               </h6>
@@ -622,7 +683,7 @@ ${cleanContent}
                                       icon ? "ml-16" : ""
                                     }`}
                                   >
-                                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                    <ReactMarkdown remarkPlugins={[remarkGfm, remarkHeadingIds]}>
                                       {title
                                         ? `### ${title}\n\n${content}`
                                         : content}
@@ -848,7 +909,7 @@ ${cleanContent}
               })
             ) : (
               <ReactMarkdown
-                remarkPlugins={[remarkGfm]}
+                remarkPlugins={[remarkGfm, remarkHeadingIds]}
                 rehypePlugins={[rehypeRaw]}
                 components={
                   {
