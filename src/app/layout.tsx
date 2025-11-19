@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { GoogleAnalytics } from "@next/third-parties/google";
+import Script from "next/script";
 import { IBM_Plex_Sans } from "next/font/google";
 import Header from "@/components/Header";
 import "./globals.css";
@@ -63,6 +64,15 @@ export default function RootLayout({
         <RegionProvider autoProcess={true}>
           <GlossaryProvider glossaryData={glossaryData} autoProcess={true}>
             <GoogleAnalytics gaId="G-ST56FGCHR2" />
+            <Script
+              id="google-ads-conversion"
+              strategy="afterInteractive"
+              dangerouslySetInnerHTML={{
+                __html: `
+                  gtag('event', 'conversion', {'send_to': 'AW-11089237594/4yOlCPGbz5EYENqs4acp'});
+                `,
+              }}
+            />
             <Header chapters={chapters} />
             <main>{children}</main>
             <Footer />
