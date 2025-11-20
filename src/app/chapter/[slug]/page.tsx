@@ -11,6 +11,8 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { CollapsibleText } from "@/components/CollapsibleText";
 import { CustomTable } from "@/components/CustomTable";
 import { CollapsibleInitializer } from "@/components/CollapsibleInitializer";
+import ProcurementPathways from "@/components/ProcurementPathways";
+import procurementPathwaysData from "@/app/data/procurement-pathways.json";
 import {
   getAllChapters,
   getChapterBySlug,
@@ -472,33 +474,59 @@ ${cleanContent}
   // Process markdown to resolve image references
   processedContent = processMarkdownImageReferences(processedContent);
 
-  // Split content by images to render them separately
+  // Split content by images and ProcurementPathways component to render them separately
   // This avoids ReactMarkdown parsing issues with long data URIs
   const imagePattern = /!\[([^\]]*)\]\((data:[^)]+)\)/g;
+  const procurementPathwaysPattern = /\[PROCUREMENT_PATHWAYS\]/g;
   const contentParts: Array<
     | { type: "markdown"; content: string }
     | { type: "image"; url: string; alt: string }
+    | { type: "procurement-pathways" }
   > = [];
-  let lastIndex = 0;
+  
+  // Find all matches (images and ProcurementPathways markers)
+  const matches: Array<{ index: number; type: "image" | "procurement-pathways"; match: RegExpMatchArray }> = [];
+  
+  // Reset regex lastIndex
+  imagePattern.lastIndex = 0;
+  procurementPathwaysPattern.lastIndex = 0;
+  
   let match;
-
   while ((match = imagePattern.exec(processedContent)) !== null) {
-    // Add markdown content before the image
-    if (match.index > lastIndex) {
+    matches.push({ index: match.index, type: "image", match });
+  }
+  
+  while ((match = procurementPathwaysPattern.exec(processedContent)) !== null) {
+    matches.push({ index: match.index, type: "procurement-pathways", match });
+  }
+  
+  // Sort matches by index
+  matches.sort((a, b) => a.index - b.index);
+  
+  let lastIndex = 0;
+  for (const { index, type, match } of matches) {
+    // Add markdown content before the match
+    if (index > lastIndex) {
       contentParts.push({
         type: "markdown",
-        content: processedContent.substring(lastIndex, match.index),
+        content: processedContent.substring(lastIndex, index),
       });
     }
 
-    // Add the image
-    contentParts.push({
-      type: "image",
-      url: match[2],
-      alt: match[1] || "",
-    });
+    // Add the match
+    if (type === "image") {
+      contentParts.push({
+        type: "image",
+        url: match[2],
+        alt: match[1] || "",
+      });
+    } else if (type === "procurement-pathways") {
+      contentParts.push({
+        type: "procurement-pathways",
+      });
+    }
 
-    lastIndex = match.index + match[0].length;
+    lastIndex = index + match[0].length;
   }
 
   // Add remaining markdown content
@@ -509,7 +537,7 @@ ${cleanContent}
     });
   }
 
-  // If no images found, use original content
+  // If no matches found, use original content
   if (contentParts.length === 0) {
     contentParts.push({
       type: "markdown",
@@ -521,12 +549,15 @@ ${cleanContent}
   if (process.env.NODE_ENV === "development") {
     const hasImageRefs = chapter.content.includes("![][");
     const hasTable = processedContent.includes("|");
+    const hasProcurementPathways = processedContent.includes("[PROCUREMENT_PATHWAYS]");
     console.log("[Content Processing]", {
       slug,
       originalHasRefs: hasImageRefs,
       hasTable,
+      hasProcurementPathways,
       contentParts: contentParts.length,
       imagesFound: contentParts.filter((p) => p.type === "image").length,
+      procurementPathwaysFound: contentParts.filter((p) => p.type === "procurement-pathways").length,
     });
     if (hasTable) {
       console.log("[Content Processing] Table detected in processed content");
@@ -591,6 +622,13 @@ ${cleanContent}
                       decoding="async"
                       fetchPriority="high"
                     />
+                  );
+                } else if (part.type === "procurement-pathways") {
+                  // Render ProcurementPathways component
+                  return (
+                    <div key={`procurement-pathways-${index}`} className="my-8 -mx-4 sm:-mx-8 lg:-mx-12">
+                      <ProcurementPathways data={procurementPathwaysData} />
+                    </div>
                   );
                 } else {
                   // Render markdown content

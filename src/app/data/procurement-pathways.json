@@ -1,0 +1,238 @@
+{
+    "title": "Procurement pathways chart",
+    "categories": [
+      {
+        "id": "off-the-shelf",
+        "name": "Off the shelf",
+        "color": "#D4E157",
+        "description": "Commercially available tools over/under threshold (such as content creation, basic analytics, email assistance, and basic chatbot interactions)"
+      },
+      {
+        "id": "customize",
+        "name": "Customize",
+        "color": "#A5D6A7",
+        "subcategories": [
+          {
+            "id": "mature-ai",
+            "name": "Mature AI systems with known applications",
+            "description": "Mature AI systems with known applications (such as traffic flow optimization, document processing at scale, or permit processing)"
+          },
+          {
+            "id": "cloud-based",
+            "name": "Cloud-based AI platforms",
+            "description": "Cloud-based AI platforms for enterprise digital transformation (e.g., collaboration, knowledge management, analytics)"
+          }
+        ]
+      },
+      {
+        "id": "build",
+        "name": "Build",
+        "color": "#4DB6AC",
+        "subcategories": [
+          {
+            "id": "strategic-complex",
+            "name": "Strategic, complex AI solutions",
+            "description": "Strategic, complex AI solutions for newer use cases where outcomes matter (such as policy impact modelling, dynamic benefits optimization, or real-time emergency response systems)"
+          },
+          {
+            "id": "pilot-ai",
+            "name": "Pilot AI solutions",
+            "description": "Pilot AI solutions for emergent/experimental use cases (such as for smart infrastructure or predictive maintenance or public engagement platforms)"
+          }
+        ]
+      }
+    ],
+    "rows": [
+      {
+        "id": "type-of-ai",
+        "title": "Type of GenAI Feature",
+        "expandedByDefault": true,
+        "items": [
+          {
+            "category_id": "off-the-shelf",
+            "icon": "shopping-cart",
+            "content": "Pre-built AI applications and tools"
+          },
+          {
+            "category_id": "customize",
+            "subcategory_id": "mature-ai",
+            "icon": "settings",
+            "content": "Enterprise-grade AI models with API integration"
+          },
+          {
+            "category_id": "customize",
+            "subcategory_id": "cloud-based",
+            "icon": "cloud",
+            "content": "Cloud-based AI services and platforms"
+          },
+          {
+            "category_id": "build",
+            "subcategory_id": "strategic-complex",
+            "icon": "cpu",
+            "content": "ML models, custom architectures, specialized training"
+          },
+          {
+            "category_id": "build",
+            "subcategory_id": "pilot-ai",
+            "icon": "flask",
+            "content": "Pre-trained models with custom fine-tuning capabilities"
+          }
+        ]
+      },
+      {
+        "id": "customization-level",
+        "title": "Customization Level",
+        "expandedByDefault": false,
+        "items": [
+          {
+            "category_id": "off-the-shelf",
+            "content": "Off-the-shelf"
+          },
+          {
+            "category_id": "customize",
+            "subcategory_id": "mature-ai",
+            "content": "Minimal customization/off-the-shelf"
+          },
+          {
+            "category_id": "customize",
+            "subcategory_id": "cloud-based",
+            "content": "Off-the-shelf"
+          },
+          {
+            "category_id": "build",
+            "subcategory_id": "strategic-complex",
+            "content": "Highly custom/purpose-built"
+          },
+          {
+            "category_id": "build",
+            "subcategory_id": "pilot-ai",
+            "content": "Moderately customized/fine-tuned"
+          }
+        ]
+      },
+      {
+        "id": "purchase-type",
+        "title": "Primary Purchase Type",
+        "expandedByDefault": false,
+        "items": [
+          {
+            "category_id": "off-the-shelf",
+            "content": "Software license"
+          },
+          {
+            "category_id": "customize",
+            "subcategory_id": "mature-ai",
+            "content": "Access to services, platforms or licenses"
+          },
+          {
+            "category_id": "customize",
+            "subcategory_id": "cloud-based",
+            "content": "Platform subscription + minimal labor"
+          },
+          {
+            "category_id": "build",
+            "subcategory_id": "strategic-complex",
+            "content": "Labor-intensive services + platform access; built for a very particular purpose which does not exist in existing models"
+          },
+          {
+            "category_id": "build",
+            "subcategory_id": "pilot-ai",
+            "content": "Labor-intensive services + platform access; built for a very particular purpose which doesn't exist in existing models"
+          }
+        ]
+      },
+      {
+        "id": "commercial-model",
+        "title": "Commercial Model (Pricing & Contract Type)",
+        "expandedByDefault": false,
+        "items": [
+          {
+            "category_id": "off-the-shelf",
+            "content": "License fees, annual renewals, volume pricing"
+          },
+          {
+            "category_id": "customize",
+            "subcategory_id": "mature-ai",
+            "content": "Subscription fees, fixed license + support, integration contracts"
+          },
+          {
+            "category_id": "customize",
+            "subcategory_id": "cloud-based",
+            "content": "Subscription/SaaS fees, usage-based billing"
+          },
+          {
+            "category_id": "build",
+            "subcategory_id": "strategic-complex",
+            "content": "Iterative/Milestone-based payments, time & materials"
+          },
+          {
+            "category_id": "build",
+            "subcategory_id": "pilot-ai",
+            "content": "Time & materials, pilot funding, pay-as-you-go platform"
+          }
+        ]
+      },
+      {
+        "id": "commercial-risks",
+        "title": "Commercial Risks",
+        "expandedByDefault": false,
+        "items": [
+          {
+            "category_id": "off-the-shelf",
+            "content": "License management, upgrade costs"
+          },
+          {
+            "category_id": "customize",
+            "subcategory_id": "mature-ai",
+            "content": "Integration and maintenance costs"
+          },
+          {
+            "category_id": "customize",
+            "subcategory_id": "cloud-based",
+            "content": "Subscription cost variation"
+          },
+          {
+            "category_id": "build",
+            "subcategory_id": "strategic-complex",
+            "content": "High development costs, uncertain ROI, vendor viability"
+          },
+          {
+            "category_id": "build",
+            "subcategory_id": "pilot-ai",
+            "content": "Pilot overruns, scaling difficulties"
+          }
+        ]
+      },
+      {
+        "id": "procurement-methods",
+        "title": "Common procurement methods",
+        "expandedByDefault": false,
+        "items": [
+          {
+            "category_id": "off-the-shelf",
+            "content": "Framework agreement/multiple awards or RFQ (under threshold), or commercial purchase orders"
+          },
+          {
+            "category_id": "customize",
+            "subcategory_id": "mature-ai",
+            "content": "Open Tender: Request for Tender with requirements, or outcome-driven services RFP with defined performance goals"
+          },
+          {
+            "category_id": "customize",
+            "subcategory_id": "cloud-based",
+            "content": "Multiple-awards schedule or RFI/RFP with requirements"
+          },
+          {
+            "category_id": "build",
+            "subcategory_id": "strategic-complex",
+            "content": "Outcome-driven services RFP/RFI with defined performance goals"
+          },
+          {
+            "category_id": "build",
+            "subcategory_id": "pilot-ai",
+            "content": "Innovation procurement: Challenges, pilot funding"
+          }
+        ]
+      }
+    ]
+  }
