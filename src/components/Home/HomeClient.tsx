@@ -10,8 +10,6 @@ import { SectionsStructure } from "@/lib/sections-types";
 
 import arrowLeft from "@/app/assets/images/arrow-left.svg";
 import Image from "next/image";
-import ProcurementPathways from "../ProcurementPathways";
-import procurementPathwaysData from "@/app/data/procurement-pathways.json";
 
 interface HomeClientProps {
   chapters: Chapter[];
@@ -97,7 +95,6 @@ export default function HomeClient({
           </Link>
         </div>
       </div>
-      <ProcurementPathways data={procurementPathwaysData} />
     </>
   );
 }
