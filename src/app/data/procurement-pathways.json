@@ -5,7 +5,7 @@
         "id": "off-the-shelf",
         "name": "Off the shelf",
         "color": "#D4E157",
-        "description": "Commercially available tools over/under threshold (such as content creation, basic analytics, email assistance, and basic chatbot interactions)"
+        "description": "**Commercially available solutions** (Content creation, basic analytics, email assistance, & basic chatbot interactions)"
       },
       {
         "id": "customize",
@@ -15,12 +15,12 @@
           {
             "id": "mature-ai",
             "name": "Mature AI systems with known applications",
-            "description": "Mature AI systems with known applications (such as traffic flow optimization, document processing at scale, or permit processing)"
+            "description": "**Mature AI systems with known applications** (Traffic flow optimization, document processing at scale, or permit processing)"
           },
           {
             "id": "cloud-based",
             "name": "Cloud-based AI platforms",
-            "description": "Cloud-based AI platforms for enterprise digital transformation (e.g., collaboration, knowledge management, analytics)"
+            "description": "**Cloud-based AI platforms for enterprise digital transformation** (Collaboration, knowledge management, analytics)"
           }
         ]
       },
@@ -32,12 +32,12 @@
           {
             "id": "strategic-complex",
             "name": "Strategic, complex AI solutions",
-            "description": "Strategic, complex AI solutions for newer use cases where outcomes matter (such as policy impact modelling, dynamic benefits optimization, or real-time emergency response systems)"
+            "description": "**Strategic, complex AI solutions for newer use cases where outcomes matter** (Policy impact modelling, dynamic benefits optimization, or real-time emergency response systems)"
           },
           {
             "id": "pilot-ai",
             "name": "Pilot AI solutions",
-            "description": "Pilot AI solutions for emergent/experimental use cases (such as for smart infrastructure or predictive maintenance or public engagement platforms)"
+            "description": "**Pilot AI solutions for emergent/experimental use cases** (For smart infrastructure or predictive maintenance or public engagement platforms)"
           }
         ]
       }

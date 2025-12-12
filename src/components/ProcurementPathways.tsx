@@ -62,22 +62,61 @@ const ProcurementPathways: React.FC<{ data: ProcurementData }> = ({ data }) => {
     return category?.color || "#E5E7EB";
   };
 
+  // Helper function to parse markdown bold (**text**) and convert to React elements
+  const parseBoldText = (text: string): React.ReactNode => {
+    if (!text) return "";
+    
+    const parts: React.ReactNode[] = [];
+    const regex = /\*\*(.*?)\*\*/g;
+    let lastIndex = 0;
+    let match;
+    let hasBold = false;
+
+    while ((match = regex.exec(text)) !== null) {
+      hasBold = true;
+      // Add text before the bold
+      if (match.index > lastIndex) {
+        parts.push(text.substring(lastIndex, match.index));
+      }
+      // Add bold text
+      parts.push(
+        <strong key={match.index} className="font-bold">
+          {match[1]}
+        </strong>
+      );
+      lastIndex = regex.lastIndex;
+    }
+
+    // Add remaining text
+    if (lastIndex < text.length) {
+      parts.push(text.substring(lastIndex));
+    }
+
+    // If no bold text found, return original text
+    return hasBold ? <>{parts}</> : text;
+  };
+
   const renderCategoryHeader = (category: Category) => {
     if (!category.subcategories) {
       return (
-        <div
-          className="p-3 md:p-4 h-full flex flex-col justify-start"
-          style={{ backgroundColor: category.color }}
-        >
-          <h3 className="text-base md:text-lg font-bold mb-1.5 md:mb-2 text-center md:text-left break-words">
-            {category.name}
-          </h3>
-          <p
-            className="text-xs leading-relaxed break-words"
-            style={{ wordBreak: "break-word", overflowWrap: "break-word" }}
+        <div className="flex flex-col h-full">
+          <div
+            className="p-2 md:p-3 font-bold text-base md:text-lg text-center whitespace-nowrap"
+            style={{ backgroundColor: category.color }}
           >
-            {category.description}
-          </p>
+            {category.name}
+          </div>
+          <div
+            className="p-3 md:p-4 flex-1"
+            style={{ backgroundColor: category.color }}
+          >
+            <p
+              className="text-xs leading-relaxed break-words !m-0"
+              style={{ wordBreak: "break-word", overflowWrap: "break-word" }}
+            >
+              {category.description ? parseBoldText(category.description) : ""}
+            </p>
+          </div>
         </div>
       );
     }
@@ -102,10 +141,10 @@ const ProcurementPathways: React.FC<{ data: ProcurementData }> = ({ data }) => {
               style={{ backgroundColor: category.color, opacity: 0.9 }}
             >
               <p
-                className="text-xs leading-relaxed break-words"
+                className="text-xs leading-relaxed break-words !m-0"
                 style={{ wordBreak: "break-word", overflowWrap: "break-word" }}
               >
-                {sub.description}
+                {sub.description ? parseBoldText(sub.description) : ""}
               </p>
             </div>
           ))}
@@ -156,13 +195,13 @@ const ProcurementPathways: React.FC<{ data: ProcurementData }> = ({ data }) => {
                 >
                   <div className="w-full">
                     <p
-                      className="text-xs leading-relaxed break-words"
+                      className="text-xs leading-relaxed break-words m-0"
                       style={{
                         wordBreak: "break-word",
                         overflowWrap: "break-word",
                       }}
                     >
-                      {item.content}
+                      {item.content ? parseBoldText(item.content) : ""}
                     </p>
                   </div>
                 </div>
