@@ -249,7 +249,7 @@ function processMarkdownImageReferences(content: string): string {
       Array.from(imageRefs.keys())
     );
   } else {
-    console.warn("[Image Processing] No image references found in content");
+    console.log("[Image Processing] No image references found in content");
   }
 
   // Second pass: replace image references and remove definitions
