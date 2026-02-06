@@ -1,8 +1,7 @@
 # Buying AI: Tips and tools for public procurement
 
-1. Introduction  
-   1. Introduction  
-   2. Insights on AI adoption  
+1. Introduction
+   1. Insights on AI adoption
    3. Why we wrote this guidance  
    4. Who this guidance is for  
    5. How to use this guidance  
