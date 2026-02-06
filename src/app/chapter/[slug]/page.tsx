@@ -345,14 +345,12 @@ function remarkFixImageDataUris() {
   return (tree: Root) => {
     visit(tree, "image", (node: any) => {
       // Debug: log image nodes found
-      if (process.env.NODE_ENV === "development") {
-        logger.debug("[Remark Plugin] Image node found:", {
-          urlLength: node.url?.length || 0,
-          urlPreview: node.url?.substring(0, 50) || "none",
-          alt: node.alt,
-          hasUrl: !!node.url,
-        });
-      }
+      logger.debug("[Remark Plugin] Image node found:", {
+        urlLength: node.url?.length || 0,
+        urlPreview: node.url?.substring(0, 50) || "none",
+        alt: node.alt,
+        hasUrl: !!node.url,
+      });
 
       // If URL is missing or empty, try to reconstruct it from the raw markdown
       // This handles cases where ReactMarkdown fails to parse long data URIs
@@ -375,11 +373,9 @@ function remarkFixImageDataUris() {
         node.url.startsWith("data:")
       ) {
         // Data URI is present, ensure it's preserved
-        if (process.env.NODE_ENV === "development") {
-          logger.debug("[Remark Plugin] Data URI image preserved:", {
-            length: node.url.length,
-          });
-        }
+        logger.debug("[Remark Plugin] Data URI image preserved:", {
+          length: node.url.length,
+        });
         // Ensure the URL is properly set (this might help with parsing issues)
         node.url = node.url;
       }
