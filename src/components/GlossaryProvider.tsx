@@ -7,6 +7,7 @@ import React, {
   useRef,
   useEffect,
 } from "react";
+import { logger } from "@/lib/logger";
 
 interface GlossaryTerm {
   Term: string;
@@ -266,7 +267,7 @@ function AutoGlossaryWrapper({ children }: { children: React.ReactNode }) {
             });
           } catch (error) {
             // If replaceChild fails (e.g., node was already removed), skip
-            console.warn("GlossaryProvider: Failed to replace node", error);
+            logger.warn("GlossaryProvider: Failed to replace node", error);
           }
         }
       }

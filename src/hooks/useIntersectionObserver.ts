@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { logger } from "@/lib/logger";
 
 interface UseIntersectionObserverProps {
   threshold?: number;
@@ -23,7 +24,7 @@ export function useIntersectionObserver({
     };
 
     const observerCallback = (entries: IntersectionObserverEntry[]) => {
-      console.log("Intersection Observer entries:", entries.length);
+      logger.debug("Intersection Observer entries:", entries.length);
 
       // Find the entry with the highest intersection ratio
       let maxRatio = 0;
@@ -31,7 +32,7 @@ export function useIntersectionObserver({
 
       entries.forEach((entry) => {
         const target = entry.target as Element;
-        console.log("Entry:", {
+        logger.debug("Entry:", {
           target: target,
           isIntersecting: entry.isIntersecting,
           intersectionRatio: entry.intersectionRatio,
@@ -51,7 +52,7 @@ export function useIntersectionObserver({
       if (mostVisibleEntry) {
         const target = (mostVisibleEntry as IntersectionObserverEntry).target as Element;
         const sectionId = target.getAttribute("data-section-id");
-        console.log("Setting active section ID:", sectionId);
+        logger.debug("Setting active section ID:", sectionId);
         if (sectionId) {
           setActiveId(sectionId);
         }
@@ -61,7 +62,7 @@ export function useIntersectionObserver({
           if (entry.intersectionRatio > 0) {
             const target = entry.target as Element;
             const sectionId = target.getAttribute("data-section-id");
-            console.warn("Fallback: Setting active section ID:", sectionId);
+            logger.warn("Fallback: Setting active section ID:", sectionId);
             if (sectionId) {
               setActiveId(sectionId);
             }
@@ -78,7 +79,7 @@ export function useIntersectionObserver({
     // Wait for DOM to be ready and then observe elements
     const observeElements = () => {
       const elements = document.querySelectorAll("[data-section-id]");
-      console.log("Found elements to observe:", elements.length); // Debug log
+      logger.debug("Found elements to observe:", elements.length);
       elements.forEach((el) => observer.observe(el));
     };
 

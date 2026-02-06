@@ -1,6 +1,7 @@
 "use client";
 
 import { ReactNode, useEffect } from "react";
+import { logger } from "@/lib/logger";
 
 interface ContentWithObserverProps {
   children: ReactNode;
@@ -9,7 +10,7 @@ interface ContentWithObserverProps {
 
 export function ContentWithObserver({ children, sectionId }: ContentWithObserverProps) {
   useEffect(() => {
-    console.log('ContentWithObserver mounted with sectionId:', sectionId);
+    logger.debug('ContentWithObserver mounted with sectionId:', sectionId);
   }, [sectionId]);
 
   return (

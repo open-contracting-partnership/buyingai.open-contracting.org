@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { logger } from "@/lib/logger";
 
 export function CollapsibleInitializer() {
   useEffect(() => {
@@ -40,7 +41,7 @@ export function CollapsibleInitializer() {
     // Use a small delay to ensure ReactMarkdown has finished rendering
     const timer = setTimeout(() => {
       const headers = document.querySelectorAll('.collapsible-header');
-      console.log(`[Collapsible] Found ${headers.length} collapsible headers`);
+      logger.debug(`[Collapsible] Found ${headers.length} collapsible headers`);
       
       headers.forEach(header => {
         header.addEventListener('click', handleClick as EventListener);

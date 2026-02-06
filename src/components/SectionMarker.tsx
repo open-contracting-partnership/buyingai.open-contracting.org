@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { logger } from "@/lib/logger";
 
 interface SectionMarkerProps {
   sectionId: string;
@@ -12,7 +13,7 @@ export function SectionMarker({ sectionId, children }: SectionMarkerProps) {
 
   useEffect(() => {
     if (ref.current) {
-      console.log('SectionMarker mounted:', sectionId);
+      logger.debug('SectionMarker mounted:', sectionId);
     }
   }, [sectionId]);
 

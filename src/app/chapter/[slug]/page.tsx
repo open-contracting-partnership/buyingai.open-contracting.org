@@ -20,6 +20,7 @@ import {
 } from "@/lib/markdown";
 import { getSectionsStructure } from "@/lib/sections";
 import { ChapterLayout } from "@/components/ChapterLayout";
+import { logger } from "@/lib/logger";
 import { getChapterInSection, getSectionColor } from "@/lib/sections-types";
 
 // Helper function to check if a React node contains italic text
@@ -244,12 +245,12 @@ function processMarkdownImageReferences(content: string): string {
 
   // Debug: log found references
   if (imageRefs.size > 0) {
-    console.log(
+    logger.debug(
       "[Image Processing] Found image references:",
       Array.from(imageRefs.keys())
     );
   } else {
-    console.log("[Image Processing] No image references found in content");
+    logger.debug("[Image Processing] No image references found in content");
   }
 
   // Second pass: replace image references and remove definitions
@@ -266,7 +267,7 @@ function processMarkdownImageReferences(content: string): string {
 
     const matches = processedContent.match(imageRefPattern);
     if (matches) {
-      console.log(
+      logger.debug(
         `[Image Processing] Replacing ${matches.length} image reference(s) for [${refId}]`
       );
     }
@@ -275,7 +276,7 @@ function processMarkdownImageReferences(content: string): string {
       imageRefPattern,
       (match, altText) => {
         const replacement = `![${altText || ""}](${imageUrl})`;
-        console.log(
+        logger.debug(
           `[Image Processing] Replaced: "${match}" -> "${replacement.substring(
             0,
             100
@@ -345,7 +346,7 @@ function remarkFixImageDataUris() {
     visit(tree, "image", (node: any) => {
       // Debug: log image nodes found
       if (process.env.NODE_ENV === "development") {
-        console.log("[Remark Plugin] Image node found:", {
+        logger.debug("[Remark Plugin] Image node found:", {
           urlLength: node.url?.length || 0,
           urlPreview: node.url?.substring(0, 50) || "none",
           alt: node.alt,
@@ -359,7 +360,7 @@ function remarkFixImageDataUris() {
         !node.url ||
         (typeof node.url === "string" && node.url.trim() === "")
       ) {
-        console.warn(
+        logger.warn(
           "[Remark Plugin] Image node has empty URL, attempting to fix:",
           {
             alt: node.alt,
@@ -375,7 +376,7 @@ function remarkFixImageDataUris() {
       ) {
         // Data URI is present, ensure it's preserved
         if (process.env.NODE_ENV === "development") {
-          console.log("[Remark Plugin] Data URI image preserved:", {
+          logger.debug("[Remark Plugin] Data URI image preserved:", {
             length: node.url.length,
           });
         }
@@ -550,7 +551,7 @@ ${cleanContent}
     const hasImageRefs = chapter.content.includes("![][");
     const hasTable = processedContent.includes("|");
     const hasProcurementPathways = processedContent.includes("[PROCUREMENT_PATHWAYS]");
-    console.log("[Content Processing]", {
+    logger.debug("[Content Processing]", {
       slug,
       originalHasRefs: hasImageRefs,
       hasTable,
@@ -560,7 +561,7 @@ ${cleanContent}
       procurementPathwaysFound: contentParts.filter((p) => p.type === "procurement-pathways").length,
     });
     if (hasTable) {
-      console.log("[Content Processing] Table detected in processed content");
+      logger.debug("[Content Processing] Table detected in processed content");
     }
   }
 

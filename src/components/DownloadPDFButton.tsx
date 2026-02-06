@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import { Download } from "lucide-react";
+import { logger } from "@/lib/logger";
 
 interface DownloadPDFButtonProps {
   slug: string;
@@ -118,7 +119,7 @@ export function DownloadPDFButton({ slug }: DownloadPDFButtonProps) {
       // Download the PDF
       pdf.save(`${slug}.pdf`);
     } catch (error) {
-      console.error("Error generating PDF:", error);
+      logger.error("Error generating PDF:", error);
       // Fallback: trigger print dialog
       window.print();
     } finally {

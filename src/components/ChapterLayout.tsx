@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { logger } from "@/lib/logger";
 import { Eye } from "lucide-react";
 import type { Chapter } from "@/lib/markdown";
 import {
@@ -76,7 +77,7 @@ export function ChapterLayout({
 
   // Debug log for activeSectionId
   useEffect(() => {
-    console.log("Active section ID:", activeSectionId);
+    logger.debug("Active section ID:", activeSectionId);
   }, [activeSectionId]);
 
   const currentChapterInfo = getChapterInSection(structure, currentSlug);
