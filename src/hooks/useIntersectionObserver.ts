@@ -61,7 +61,7 @@ export function useIntersectionObserver({
           if (entry.intersectionRatio > 0) {
             const target = entry.target as Element;
             const sectionId = target.getAttribute("data-section-id");
-            console.log("Fallback: Setting active section ID:", sectionId);
+            console.warn("Fallback: Setting active section ID:", sectionId);
             if (sectionId) {
               setActiveId(sectionId);
             }
