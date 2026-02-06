@@ -19,6 +19,7 @@ const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL || "https://ocp-ai-buying.netlify.app";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: "BuyingAI: Tools and tips for public procurement",
   description:
     "This guide by Open Contracting Partnership offers practical guidance and hands-on tips to get the best results from your AI purchases.",
