@@ -1248,7 +1248,7 @@ ${cleanContent}
           <div>
             {previous && (
               <Link
-                href={`/chapter/${previous.slug}#content`}
+                href={`/chapter/${encodeURIComponent(previous.slug)}#content`}
                 scroll={false}
                 className="flex items-center gap-2 text-gray-600 hover:text-black transition-colors group"
               >
@@ -1262,7 +1262,7 @@ ${cleanContent}
           <div>
             {next && (
               <Link
-                href={`/chapter/${next.slug}#content`}
+                href={`/chapter/${encodeURIComponent(next.slug)}#content`}
                 scroll={false}
                 className="flex items-center gap-2 text-gray-600 hover:text-black transition-colors group"
               >
