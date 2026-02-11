@@ -17,9 +17,11 @@
 
 DTA also keeps their policy documents live, so that they are able to update them on a regular basis and stay current with the latest policy and technology developments.   
    
-**What was harder:** DTA encourages bringing in procurement and technical teams as early as possible in the procurement process. However, sometimes DTA sees situations where agencies are bringing in these stakeholders late and are in a rush to get to market. This can result in extended contract negotiations that could have been avoided with cross-departmental engagement. 
+**What was harder:** At the time, use of the templates was mandatory, and felt overly ridged to SUSESO, especially the balance towards price and competition over criteria around vendor capacity and experience around important issues like data protection and model bias, transparency and explainability. These templates have been updated based on SUSESO’s and others’ experience, and new legislation, and are now optional. 
 
-**Lesson learned:** Applying AI technology in low-risk internal use cases can deliver valuable ROI, while generating useful learning and experience with AI technology. 
+**Lesson learned:** AI procurement templates cannot solve for organizational AI-readiness. For example, Chile’s templates do not address how AI should be used in collaboration with human decision-making, and what acceptable risk looks like when it comes to leveraging AI for making decisions that matter for people’s lives.  
+
+ 
 
 ![][image1]
 
@@ -36,5 +38,39 @@ DTA also keeps their policy documents live, so that they are able to update them
 **What was harder:** Institutions are still learning about AI, how it works, and what is required to get the most from this technology, and sometimes building this awareness falls on the vendor. For example, there is still a lack of understanding of the value of a specialized versus generic AI solutions. Generic models can be useful, but are not a one-size fits all solution. Narrow government use cases can require highly specific knowledge management, and be a better fit for specialized solutions. 
 
 **Lesson learned:** For a contracting approach like this to be successful, the government must be willing to trust their vendor partner.
+
+![][image1]
+
+## Ethical and effective procurement of AI for medical claims in Chile
+
+**Who:** Chile’s Ministry of Labor - Department of Social Security Superintendence (SUSESO) 
+
+**What they bought:** Pilot technology to speed up claims resolutions, including a medical claims machine learning model and mental health claims machine learning model audit.
+
+**Procurement procedure:** Open and competitive processes  
+
+**What worked well:** ChileCompra, the national procurement agency, worked with the University of Adolfo Ibáñez’s School of Government’s Ethical Algorithms Project to develop [standard templates for vendor bids](https://www.open-contracting.org/2025/09/09/best-practices-in-procuring-ai-lessons-from-chile/) on data science and AI projects. 
+
+[SUSESO used these then-mandatory templates](https://worldprivacyforum.org/posts/ai-governance-on-the-ground-chiles-social-security-and-medical-insurance-agency-grapples-with-balancing-new-responsible-ai-criteria-and-vendor-cost/) for its procurement processes. SUSESO leadership feels that the templates helped push vendors to provide impact assessments and documentation around responsible AI requirements, as well as build internal awareness around what criteria to consider when buying AI, especially around bias, transparency, and data protection.  
+
+**What was harder:** Institutions are still learning about AI, how it works, and what is required to get the most from this technology, and sometimes building this awareness falls on the vendor. For example, there is still a lack of understanding of the value of a specialized versus generic AI solutions. Generic models can be useful, but are not a one-size fits all solution. Narrow government use cases can require highly specific knowledge management, and be a better fit for specialized solutions. 
+
+**Lesson learned:** For a contracting approach like this to be successful, the government must be willing to trust their vendor partner.
+
+![][image1]
+
+## Buying through a framework agreement in Italy
+
+**Who:** The central procurement agency of Italy, CONSIP, on behalf of the entire Italian government.
+
+**What they bought:** AI application services and support for the Italian National Health System (SSN), valued at $770 million over the next 6 years.
+
+**Procurement procedure:** RFP framework agreement for AI application services.
+
+**What worked well:** Using a simplified procurement model to enable AI application services to be directly ordered from vendors, while Gen AI LMM models and cloud infrastructure/services are made through separate call-offs. This leverages existing government frameworks for cloud services, eliminating the need to specify cloud infrastructure and AI service requirements.
+
+**What was harder:** Identifying the right consortium of companies (Temporary Association of Companies) to cover the full spectrum of services, including areas like AI, ML, Natural Language Processing/Understanding, Big Data, and SaaS solutions on metadating and ontology creation for the health sector.
+
+**Lesson learned:** Despite the inherent complexity of AI procurement, the technical proposal under evaluation was limited to 40 pages to cover all critical aspects of AI procurement. This included regulatory compliance, security/privacy, bias/discrimination mitigation, quality and reliability in terms of transparency and explainability, IP rights, skills and know-how, continuous performance monitoring, integration/interoperability, and cost-effectiveness.
 
 [image1]: <data:image/png;base64,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>
