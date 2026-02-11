@@ -32,7 +32,7 @@ Developed with public sector procurement, project, and technology teams, it buil
    
 The guidance is designed to help you no matter where you are on your AI procurement journey. Each piece of content can stand alone. You are welcome to review this guidance from top to bottom, or jump around.
 
-We provide actionable, plain-language information to help you get started with what’s essential when buying AI. We hope this resource will help you filter out what you really need to know from the noise and provide procurement, project, and technology teams with a shared language and vision for working together\! 
+We provide actionable, plain-language information to help you get started with what’s essential when buying AI. We hope this resource will help you filter out what you really need to know from the noise and provide procurement, project, and technology teams with a shared language and vision for working together! 
 
 [Get started.](?tab=t.j3nx8zxdoepv)  
  
