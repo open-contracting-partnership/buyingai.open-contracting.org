@@ -24,10 +24,6 @@
     "Definition": "AI systems designed to understand, generate, and interact with human language on a large scale, trained on enormous datasets using deep learning techniques like transformer architectures."
   },
   {
-    "Term": "Model",
-    "Definition": "The computational structure and algorithms that enable AI to process data, learn patterns, and perform tasks. Created through training on large amounts of data, defined by specific architecture and parameters."
-  },
-  {
     "Term": "Parameters",
     "Definition": "The internal variables of an AI model learned from training data, including weights and biases in neural networks, that define the model's behavior and determine how it processes input to produce output."
   },
