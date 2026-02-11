@@ -34,11 +34,12 @@ The guidance is designed to help you no matter where you are on your AI procurem
 
 We provide actionable, plain-language information to help you get started with what’s essential when buying AI. We hope this resource will help you filter out what you really need to know from the noise and provide procurement, project, and technology teams with a shared language and vision for working together! 
 
-[Get started.](?tab=t.j3nx8zxdoepv)  
- 
-
 ### About
 
 [Open Contracting Partnership](http://www.open-contracting.org) is a nonprofit organization that supports public sector organizations around the world to get better results from their procurements through leveraging data and technology, cross-sector collaboration, and goal-driven systems change.
 
 [Contact us](mailto:engage@open-contracting.org) if you would like to discuss your project. We'd love to help.
+
+
+[Get started.](?tab=t.j3nx8zxdoepv)  
+
