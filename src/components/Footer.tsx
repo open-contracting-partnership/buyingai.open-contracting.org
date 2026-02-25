@@ -21,7 +21,7 @@ export default function Footer() {
               <div className="md:w-2/3">
                 <div className="border-2 border-[#C8D419] rounded-tl-4xl py-4 px-6 text-white">
                   <h3 className="font-bold font-gteesti-display leading-tight">
-                    This is a resource by <br /> Open Contracting Partnership
+                    This is a resource by <br /> <a href="https://www.open-contracting.org">Open Contracting Partnership</a>
                   </h3>
                   <p className="mt-3.5 text-xs">
                     We are a global nonprofit organization that supports public
@@ -119,7 +119,7 @@ export default function Footer() {
         </div>
         <div className="mt-8">
           <p className="text-[11px]">
-            Open Contracting Partnership 2025. This work, unless otherwise
+            <a href="https://www.open-contracting.org">Open Contracting Partnership</a> 2025. This work, unless otherwise
             noted, is licensed under a Creative Commons Attribution 4.0
             International License.{" "}
             <Link
