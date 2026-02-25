@@ -119,7 +119,14 @@ export default function Footer() {
         </div>
         <div className="mt-8">
           <p className="text-[11px]">
-            <a href="https://www.open-contracting.org"><span style="text-decoration: underline;">Open Contracting Partnership</span></a> 2025. This work, unless otherwise
+            <Link
+              className="underline"
+              href="https://www.open-contracting.org"
+              target="_blank"
+            >
+            Open Contracting Partnership  
+            </Link>
+             2025. This work, unless otherwise
             noted, is licensed under a Creative Commons Attribution 4.0
             International License.{" "}
             <Link
