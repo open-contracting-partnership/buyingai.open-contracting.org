@@ -36,7 +36,7 @@ We provide actionable, plain-language information to help you get started with w
 
 ### About
 
-[Open Contracting Partnership](http://www.open-contracting.org) is a nonprofit organization that supports public sector organizations around the world to get better results from their procurements through leveraging data and technology, cross-sector collaboration, and goal-driven systems change.
+[Open Contracting Partnership](https://www.open-contracting.org) is a nonprofit organization that supports public sector organizations around the world to get better results from their procurements through leveraging data and technology, cross-sector collaboration, and goal-driven systems change.
 
 [Contact us](mailto:engage@open-contracting.org) if you would like to discuss your project. We'd love to help.
 
