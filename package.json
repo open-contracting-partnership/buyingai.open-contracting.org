@@ -1,6 +1,5 @@
 {
   "name": "ocp-ai-buying",
-  "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "npm run build:content && next dev --turbopack",
