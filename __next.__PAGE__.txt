@@ -1,0 +1,65 @@
+1:"$Sreact.fragment"
+2:I[19819,["/_next/static/chunks/3txzwshx4dhn6.js","/_next/static/chunks/39c82rbivf_3j.js","/_next/static/chunks/36me2ojv9u5qb.js","/_next/static/chunks/0u2ve9-44lkq5.js","/_next/static/chunks/268yo9t0i99t_.js"],"default"]
+3:T7f4,# Buying AI: Tips and tools for public procurement
+
+1. Introduction
+   1. Insights on AI adoption
+   3. Why we wrote this guidance  
+   4. Who this guidance is for  
+   5. How to use this guidance  
+2. AI readiness  
+   1. AI basics  
+   2. AI readiness in the public sector  
+   3. Your role as a procurement officer  
+   4. AI adoption myth-busting  
+3. How to buy AI   
+   1. Ways to buy AI  
+   2. Hacks for better AI procurement  
+   3. Planning and procurement strategy tips  
+4. Tips and tools   
+   1. Who to involve   
+   2. Solicitation tips   
+   3. Evaluation tips  
+   4. Contract clauses  
+   5. Contract management tips, roles, and responsibilities  
+   6. Key questions to ask  
+5. Resources   
+   1. Case studies  
+   2. Technical annex: RFP questions and evaluation
+
+## This guidance offers practical and hands-on tips to get the best results from your AI purchases.
+
+   
+Developed with public sector procurement, project, and technology teams, it builds on the insights of over 50 public sector practitioners and experts.  
+   
+The guidance is designed to help you no matter where you are on your AI procurement journey. Each piece of content can stand alone. You are welcome to review this guidance from top to bottom, or jump around.
+
+We provide actionable, plain-language information to help you get started with what’s essential when buying AI. We hope this resource will help you filter out what you really need to know from the noise and provide procurement, project, and technology teams with a shared language and vision for working together! 
+
+### About
+
+[Open Contracting Partnership](https://www.open-contracting.org) is a nonprofit organization that supports public sector organizations around the world to get better results from their procurements through leveraging data and technology, cross-sector collaboration, and goal-driven systems change.
+
+[Contact us](mailto:engage@open-contracting.org) if you would like to discuss your project. We'd love to help.
+
+
+[Get started.](?tab=t.j3nx8zxdoepv)  
+
+8:X
+0:{"buildId":"j2k2LmLBBp233GDuM-lD8","data":[{"rsc":["$","$1","c",{"children":[["$","$L2",null,{"chapters":[{"slug":"01-insights-on-ai-adoption","title":"Introduction: *Insights on AI adoption*","order":1,"filename":"01-insights-on-ai-adoption.md"},{"slug":"02-why-we-wrote-this-guidance","title":"Why we wrote this guidance","order":2,"filename":"02-why-we-wrote-this-guidance.md"},{"slug":"03-who-this-guidance-is-for","title":"Who this guidance is for","order":3,"filename":"03-who-this-guidance-is-for.md"},{"slug":"04-how-to-use-this-guidance","title":"*How to use* this guidance","order":4,"filename":"04-how-to-use-this-guidance.md"},{"slug":"05-ai-basics","title":"*AI basics*","order":5,"filename":"05-ai-basics.md"},{"slug":"06-ai-readiness-in-the-public-sector","title":"*AI readiness* in the public sector","order":6,"filename":"06-ai-readiness-in-the-public-sector.md"},{"slug":"07-your-role-as-a-procurement-officer","title":"*Your role* as a procurement officer","order":7,"filename":"07-your-role-as-a-procurement-officer.md"},{"slug":"08-ai-adoption-myth-busting","title":"AI adoption *myth-busting*","order":8,"filename":"08-ai-adoption-myth-busting.md"},{"slug":"09-ways-to-buy-ai","title":"Ways to _buy AI_","order":9,"filename":"09-ways-to-buy-ai.md"},{"slug":"10-hacks-for-better-ai-procurement","title":"*Hacks* for better AI procurement","order":10,"filename":"10-hacks-for-better-ai-procurement.md"},{"slug":"11-planning-and-procurement-strategy-tips","title":"*Planning* and procurement strategy tips","order":11,"filename":"11-planning-and-procurement-strategy-tips.md"},{"slug":"12-who-to-involve","title":"*Who to involve*","order":12,"filename":"12-who-to-involve.md"},{"slug":"13-solicitation-tips","title":"*Solicitation* tips for AI","order":13,"filename":"13-solicitation-tips.md"},{"slug":"14-evaluation-tips","title":"Tips for *evaluating AI proposals*","order":14,"filename":"14-evaluation-tips.md"},{"slug":"15-contract-clauses","title":"*Contract clauses*","order":15,"filename":"15-contract-clauses.md"},{"slug":"16-contract-management-tips-roles-and-responsibilities","title":"*Contract management* for AI technology","order":16,"filename":"16-contract-management-tips-roles-and-responsibilities.md"},{"slug":"17-key-questions-to-ask","title":"*Key questions to ask:* Overview","order":17,"filename":"17-key-questions-to-ask.md"},{"slug":"18-case-studies","title":"Case studies","order":18,"filename":"18-case-studies.md"},{"slug":"19-technical-annex-rfp-questions-and-evaluation","title":"Technical annex: GenAI requirements and evaluation criteria for cloud service providers","order":19,"filename":"19-technical-annex-rfp-questions-and-evaluation.md"}],"structure":{"title":"Buying AI: Tips and tools for public procurement","sections":[{"number":1,"title":"Introduction","chapters":[{"slug":"01-insights-on-ai-adoption","title":"Insights on AI adoption","order":1},{"slug":"02-why-we-wrote-this-guidance","title":"Why we wrote this guidance","order":2},{"slug":"03-who-this-guidance-is-for","title":"Who this guidance is for","order":3},{"slug":"04-how-to-use-this-guidance","title":"How to use this guidance","order":4}]},{"number":2,"title":"AI readiness","chapters":[{"slug":"05-ai-basics","title":"AI basics","order":5},{"slug":"06-ai-readiness-in-the-public-sector","title":"AI readiness in the public sector","order":6},{"slug":"07-your-role-as-a-procurement-officer","title":"Your role as a procurement officer","order":7},{"slug":"08-ai-adoption-myth-busting","title":"AI adoption myth-busting","order":8}]},{"number":3,"title":"How to buy AI","chapters":[{"slug":"09-ways-to-buy-ai","title":"Ways to buy AI","order":9},{"slug":"10-hacks-for-better-ai-procurement","title":"Hacks for better AI procurement","order":10},{"slug":"11-planning-and-procurement-strategy-tips","title":"Planning and procurement strategy tips","order":11}]},{"number":4,"title":"Tips and tools","chapters":[{"slug":"12-who-to-involve","title":"Who to involve","order":12},{"slug":"13-solicitation-tips","title":"Solicitation tips","order":13},{"slug":"14-evaluation-tips","title":"Evaluation tips","order":14},{"slug":"15-contract-clauses","title":"Contract clauses","order":15},{"slug":"16-contract-management-tips-roles-and-responsibilities","title":"Contract management tips, roles, and responsibilities","order":16},{"slug":"17-key-questions-to-ask","title":"Key questions to ask","order":17}]},{"number":5,"title":"Resources","chapters":[{"slug":"18-case-studies","title":"Case studies","order":18},{"slug":"19-technical-annex-rfp-questions-and-evaluation","title":"Technical annex: RFP questions and evaluation","order":19}]}],"metadata":{"totalSections":5,"totalChapters":19,"version":"1.0","lastUpdated":"2026-09-26"}},"tocContent":"$3"}],["$L4","$L5"],"$L6"]}],"isPartial":"$@7","staleTime":"$8","varyParams":null},{"rsc":"$L9","isPartial":"$@a","staleTime":"$8","varyParams":null}],"isUpgradeableISRFallback":false,"a":"$@b","rootVaryParams":null,"needsRuntimeRequest":"$@c"}
+d:I[97367,["/_next/static/chunks/3txzwshx4dhn6.js","/_next/static/chunks/39c82rbivf_3j.js","/_next/static/chunks/36me2ojv9u5qb.js"],"OutletBoundary"]
+e:"$Sreact.suspense"
+10:I[97367,["/_next/static/chunks/3txzwshx4dhn6.js","/_next/static/chunks/39c82rbivf_3j.js","/_next/static/chunks/36me2ojv9u5qb.js"],"ViewportBoundary"]
+11:I[97367,["/_next/static/chunks/3txzwshx4dhn6.js","/_next/static/chunks/39c82rbivf_3j.js","/_next/static/chunks/36me2ojv9u5qb.js"],"MetadataBoundary"]
+12:I[27201,["/_next/static/chunks/3txzwshx4dhn6.js","/_next/static/chunks/39c82rbivf_3j.js","/_next/static/chunks/36me2ojv9u5qb.js"],"IconMark"]
+4:["$","script","script-0",{"src":"/_next/static/chunks/0u2ve9-44lkq5.js","async":true}]
+5:["$","script","script-1",{"src":"/_next/static/chunks/268yo9t0i99t_.js","async":true}]
+6:["$","$Ld",null,{"children":["$","$e",null,{"name":"Next.MetadataOutlet","children":"$@f"}]}]
+9:["$","$1","h",{"children":[null,["$","$L10",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]}],["$","div",null,{"hidden":true,"children":["$","$L11",null,{"children":["$","$e",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"BuyingAI: Tools and tips for public procurement"}],["$","meta","1",{"name":"description","content":"This guide by Open Contracting Partnership offers practical guidance and hands-on tips to get the best results from your AI purchases."}],["$","meta","2",{"property":"og:title","content":"BuyingAI: Tools and tips for public procurement"}],["$","meta","3",{"property":"og:description","content":"This guide by Open Contracting Partnership offers practical guidance and hands-on tips to get the best results from your AI purchases."}],["$","meta","4",{"property":"og:url","content":"https://buyingai.open-contracting.org"}],["$","meta","5",{"property":"og:site_name","content":"Open Contracting Partnership"}],["$","meta","6",{"property":"og:locale","content":"en_US"}],["$","meta","7",{"property":"og:image","content":"https://buyingai.open-contracting.org/images/og-image.png"}],["$","meta","8",{"property":"og:image:width","content":"1200"}],["$","meta","9",{"property":"og:image:height","content":"630"}],["$","meta","10",{"property":"og:image:alt","content":"Open Contracting Partnership"}],["$","meta","11",{"property":"og:type","content":"website"}],["$","meta","12",{"name":"twitter:card","content":"summary_large_image"}],["$","meta","13",{"name":"twitter:title","content":"BuyingAI: Tools and tips for public procurement"}],["$","meta","14",{"name":"twitter:description","content":"This guide by Open Contracting Partnership offers practical guidance and hands-on tips to get the best results from your AI purchases."}],["$","meta","15",{"name":"twitter:image","content":"https://buyingai.open-contracting.org/images/og-image.png"}],["$","link","16",{"rel":"icon","href":"/favicon.ico?favicon.3r671jri8cvbu.ico","sizes":"32x32","type":"image/x-icon"}],["$","$L12","17",{}]]}]}]}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}]
+c:true
+f:null
+8:300
+8:C
+b:0
+a:"$undefined"
+7:"$undefined"
