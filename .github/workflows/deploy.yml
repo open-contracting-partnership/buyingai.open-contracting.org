@@ -2,11 +2,11 @@ name: Deploy
 on:
   push:
     branches: [main]
-permissions:
-  contents: write
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
