@@ -10,7 +10,7 @@
     "lineWidth": 119
   },
   "files": {
-    "includes": ["**", "!content"]
+    "includes": ["**", "!content", "!**/*.svg"]
   },
   "css": {
     "parser": {
