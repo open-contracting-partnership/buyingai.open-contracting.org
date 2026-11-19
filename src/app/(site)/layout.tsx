@@ -64,15 +64,9 @@ export default function RootLayout({
         <RegionProvider autoProcess={true}>
           <GlossaryProvider glossaryData={glossaryData} autoProcess={true}>
             <GoogleAnalytics gaId="G-ST56FGCHR2" />
-            <Script
-              id="google-ads-conversion"
-              strategy="afterInteractive"
-              dangerouslySetInnerHTML={{
-                __html: `
-                  gtag('event', 'conversion', {'send_to': 'AW-11089237594/4yOlCPGbz5EYENqs4acp'});
-                `,
-              }}
-            />
+            <Script id="google-ads-conversion" strategy="afterInteractive">
+              {`gtag('event', 'conversion', {'send_to': 'AW-11089237594/4yOlCPGbz5EYENqs4acp'});`}
+            </Script>
             <Header chapters={chapters} />
             <main>{children}</main>
             <Footer />
