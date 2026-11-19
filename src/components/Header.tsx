@@ -452,7 +452,7 @@ export default function Header({ chapters }: HeaderProps) {
             <a
               href={FULL_GUIDE_PDF_URL}
               className={clsx(
-                "px-6 py-2.5 bg-[#C8D419] text-black font-semibold rounded hover:bg-[#B5C115] transition-colors font-ibm-plex-sans whitespace-nowrap",
+                "px-6 py-2.5 bg-[#D6E100] text-black font-semibold rounded hover:bg-[#B5C115] transition-colors font-ibm-plex-sans whitespace-nowrap",
                 { "hidden xl:inline": isSearchOpen },
               )}
             >
@@ -484,7 +484,7 @@ export default function Header({ chapters }: HeaderProps) {
                 <div className="flex items-center gap-4">
                   <Image src={logo} alt="OCP Logo" width={120} height={40} />
                   <div>
-                    <p className="text-2xl font-bold bg-gradient-to-r from-[#C8D419] to-[#23B2A7] bg-clip-text text-transparent font-gteesti-display">
+                    <p className="text-2xl font-bold bg-gradient-to-r from-[#D6E100] to-[#23B2A7] bg-clip-text text-transparent font-gteesti-display">
                       Buying AI
                     </p>
                     <p className="text-sm text-white/60 font-gteesti-pro-display">Tips and tools</p>
@@ -598,7 +598,7 @@ export default function Header({ chapters }: HeaderProps) {
                 <a
                   href={FULL_GUIDE_PDF_URL}
                   onClick={toggleMenu}
-                  className="mt-4 px-6 py-3 bg-[#C8D419] text-black font-semibold rounded-lg hover:bg-[#B5C115] transition-colors text-center"
+                  className="mt-4 px-6 py-3 bg-[#D6E100] text-black font-semibold rounded-lg hover:bg-[#B5C115] transition-colors text-center"
                 >
                   Download full guide (PDF)
                 </a>

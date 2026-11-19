@@ -19,7 +19,7 @@ export default function Footer() {
           <div className="lg:w-6/12">
             <div className="flex flex-col gap-y-8 md:flex-row md:gap-x-6">
               <div className="md:w-2/3">
-                <div className="border-2 border-[#C8D419] rounded-tl-4xl py-4 px-6 text-white">
+                <div className="border-2 border-[#D6E100] rounded-tl-4xl py-4 px-6 text-white">
                   <h2 className="font-bold font-gteesti-display leading-tight">
                     This is a resource by <br />
                     <Link className="underline" href="https://www.open-contracting.org" target="_blank">

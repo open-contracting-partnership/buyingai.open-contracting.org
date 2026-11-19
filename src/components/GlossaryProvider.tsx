@@ -178,7 +178,7 @@ function AutoGlossaryWrapper({ children }: { children: React.ReactNode }) {
 
             // Crear elemento para el término
             const span = document.createElement("span");
-            span.className = "glossary-term cursor-help bg-[#c8d419] rounded-full px-1 py-0.5";
+            span.className = "glossary-term cursor-help bg-[#d6e100] rounded-full px-1 py-0.5";
             span.textContent = text.substring(match.index, match.index + match.length);
 
             span.addEventListener("mouseenter", () => {

@@ -33,7 +33,7 @@ export default function HomeClient({ structure, tocContent }: HomeClientProps) {
         <div className="flex flex-col lg:flex-row gap-12 items-center">
           {/* Left: Title - 1/3 of space */}
           <div className="w-full lg:w-[33.33%]">
-            <h1 className="text-4xl md:text-7xl font-bold bg-gradient-to-r from-[#C8D419] to-[#23B2A7] bg-clip-text text-transparent leading-tight font-gteesti-display">
+            <h1 className="text-4xl md:text-7xl font-bold bg-gradient-to-r from-[#D6E100] to-[#23B2A7] bg-clip-text text-transparent leading-tight font-gteesti-display">
               Buying AI
             </h1>
             <p className="mt-2 text-2xl lg:text-3xl xl:text-4xl text-black font-gteesti-pro-display font-bold">

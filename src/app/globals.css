@@ -285,7 +285,7 @@ article img {
 
   .print-content blockquote {
     page-break-inside: avoid;
-    border-left: 4pt solid #c8d419;
+    border-left: 4pt solid #d6e100;
     padding-left: 12pt;
     margin: 12pt 0;
   }
@@ -379,7 +379,7 @@ article img {
   .print-prose blockquote {
     margin: 12pt 0;
     padding-left: 12pt;
-    border-left: 4pt solid #c8d419;
+    border-left: 4pt solid #d6e100;
   }
 
   .print-prose table {
@@ -544,7 +544,7 @@ body > div > div {
   padding: 1.25rem 1.5rem;
   border-radius: 6px;
   border-left-width: 4px;
-  border-left-color: #c8d419;
+  border-left-color: #d6e100;
   margin: 1.5rem 0;
   font-style: normal;
 }

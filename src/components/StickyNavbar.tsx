@@ -32,7 +32,7 @@ export function StickyNavbar({ structure, currentSlug, visible, sidebarVisible, 
   return (
     <nav
       aria-label="Sections"
-      className={`fixed left-0 right-0 z-40 transition-opacity duration-300 bg-[#C8D419] ${
+      className={`fixed left-0 right-0 z-40 transition-opacity duration-300 bg-[#D6E100] ${
         visible ? "opacity-100" : "opacity-0 pointer-events-none"
       }`}
       style={{
