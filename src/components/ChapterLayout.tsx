@@ -258,6 +258,7 @@ export function ChapterLayout({
               <div className="shrink p-4 border-r border-[#3D393D]/20">
                 {/* Close Button - Top left corner */}
                 <button
+                  type="button"
                   onClick={toggleSidebar}
                   className="size-5 rounded-full bg-[#92C36F] grid place-items-center text-white transition-colors z-10 cursor-pointer"
                   aria-label="Close sidebar"

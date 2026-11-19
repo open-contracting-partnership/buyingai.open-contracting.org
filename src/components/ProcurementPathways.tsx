@@ -204,6 +204,7 @@ const ProcurementPathways: React.FC<{
             </p>
             {needsTruncation && !expanded && (
               <button
+                type="button"
                 onClick={() => toggleTextExpansion(textId)}
                 className="mt-2 text-xs font-semibold text-gray-700 hover:text-gray-900 underline"
               >
@@ -247,6 +248,7 @@ const ProcurementPathways: React.FC<{
                 </p>
                 {needsTruncation && !expanded && (
                   <button
+                    type="button"
                     onClick={() => toggleTextExpansion(textId)}
                     className="mt-2 text-xs font-semibold text-gray-700 hover:text-gray-900 underline"
                   >
@@ -327,6 +329,7 @@ const ProcurementPathways: React.FC<{
                     </p>
                     {needsTruncation && !expanded && (
                       <button
+                        type="button"
                         onClick={() => toggleTextExpansion(textId)}
                         className="mt-2 text-xs font-semibold text-gray-700 hover:text-gray-900 underline"
                       >

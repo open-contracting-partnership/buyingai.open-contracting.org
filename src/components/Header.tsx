@@ -252,7 +252,11 @@ export default function Header({ chapters }: HeaderProps) {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="outline-none text-gray-600 placeholder:text-gray-400 w-full"
                 />
-                <button onClick={closeSearch} className="p-1 hover:bg-gray-100 rounded transition-colors shrink-0">
+                <button
+                  type="button"
+                  onClick={closeSearch}
+                  className="p-1 hover:bg-gray-100 rounded transition-colors shrink-0"
+                >
                   <XIcon className="size-4 text-gray-600" />
                 </button>
               </div>
@@ -290,7 +294,11 @@ export default function Header({ chapters }: HeaderProps) {
               )}
 
               {!isSearchOpen && (
-                <button onClick={toggleSearch} className="p-2 hover:bg-white/10 rounded transition-all text-white">
+                <button
+                  type="button"
+                  onClick={toggleSearch}
+                  className="p-2 hover:bg-white/10 rounded transition-all text-white"
+                >
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <circle cx="11" cy="11" r="8" />
                     <path d="m21 21-4.35-4.35" />
@@ -300,7 +308,7 @@ export default function Header({ chapters }: HeaderProps) {
             </div>
             <Popover.Root>
               <Popover.Trigger asChild>
-                <button className="p-2 hover:bg-white/10 rounded text-white">
+                <button type="button" className="p-2 hover:bg-white/10 rounded text-white">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <circle cx="18" cy="5" r="3" />
                     <circle cx="6" cy="12" r="3" />
@@ -371,7 +379,10 @@ export default function Header({ chapters }: HeaderProps) {
             {/* Region/Language Switcher */}
             <Popover.Root open={isRegionPopoverOpen} onOpenChange={setIsRegionPopoverOpen}>
               <Popover.Trigger asChild>
-                <button className="p-2 hover:bg-white/10 rounded text-white flex items-center justify-center">
+                <button
+                  type="button"
+                  className="p-2 hover:bg-white/10 rounded text-white flex items-center justify-center"
+                >
                   {region === "US" ? <USFlagIcon className="w-7 h-5" /> : <GlobeIcon className="w-6 h-6" />}
                 </button>
               </Popover.Trigger>
@@ -439,6 +450,7 @@ export default function Header({ chapters }: HeaderProps) {
             <div className="size-full bg-[#3D393D] backdrop-blur-sm relative p-8">
               {/* Close button */}
               <button
+                type="button"
                 className="absolute top-4 right-4 p-2 hover:bg-white/10 rounded cursor-pointer"
                 onClick={toggleMenu}
               >
@@ -460,6 +472,7 @@ export default function Header({ chapters }: HeaderProps) {
 
                 {/* Search button */}
                 <button
+                  type="button"
                   onClick={toggleSearch}
                   className="flex items-center gap-3 px-4 py-3 bg-white/5 hover:bg-white/10 rounded-lg transition-colors text-white text-left w-full"
                 >
@@ -566,7 +579,7 @@ export default function Header({ chapters }: HeaderProps) {
 
           {/* hamburger menu */}
           <div className="md:hidden">
-            <button className="p-2 hover:bg-white/10 rounded cursor-pointer" onClick={toggleMenu}>
+            <button type="button" className="p-2 hover:bg-white/10 rounded cursor-pointer" onClick={toggleMenu}>
               <MenuIcon className="size-6 text-white" />
             </button>
           </div>
@@ -592,7 +605,11 @@ export default function Header({ chapters }: HeaderProps) {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="outline-none text-gray-600 placeholder:text-gray-400 flex-1"
                 />
-                <button onClick={closeSearch} className="p-1 hover:bg-gray-100 rounded transition-colors">
+                <button
+                  type="button"
+                  onClick={closeSearch}
+                  className="p-1 hover:bg-gray-100 rounded transition-colors"
+                >
                   <XIcon className="size-5 text-gray-600" />
                 </button>
               </div>

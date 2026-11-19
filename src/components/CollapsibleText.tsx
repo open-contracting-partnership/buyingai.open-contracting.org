@@ -33,6 +33,7 @@ export function CollapsibleText({
     <div className="my-6">
       <HeadingTag className="font-gteesti-display">
         <button
+          type="button"
           onClick={() => setIsOpen(!isOpen)}
           className={`flex items-center gap-2 font-bold text-gray-900 hover:text-gray-700 transition-colors w-full text-left cursor-pointer ${textSizeClass}`}
         >

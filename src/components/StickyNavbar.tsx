@@ -46,6 +46,7 @@ export function StickyNavbar({ structure, currentSlug, visible, sidebarVisible, 
         {/* Show Sidebar Button - Only when sidebar is hidden */}
         {!sidebarVisible && (
           <button
+            type="button"
             className="flex items-center px-2 md:px-4 bg-transparent cursor-pointer flex-shrink-0 border-none outline-none focus:outline-none"
             onClick={onToggleSidebar}
           >
