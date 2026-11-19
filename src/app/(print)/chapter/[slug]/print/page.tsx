@@ -174,6 +174,16 @@ export async function generateStaticParams() {
   }));
 }
 
+// Browsers name the saved PDF after the title.
+export async function generateMetadata({ params }: PageProps) {
+  const { slug } = await params;
+  const chapter = getChapterBySlug(slug);
+  if (!chapter) {
+    return {};
+  }
+  return { title: `${chapter.title.replace(/\*/g, "")} - Buying AI` };
+}
+
 export default async function PrintPage({ params }: PageProps) {
   const { slug } = await params;
   const chapter = getChapterBySlug(slug);
@@ -933,7 +943,7 @@ ${cleanContent}
       <Suspense fallback={null}>
         <PrintPageTrigger />
       </Suspense>
-      <DownloadPDFButton slug={slug} />
+      <DownloadPDFButton />
     </div>
   );
 }
