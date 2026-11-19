@@ -1,7 +1,9 @@
 minimumReleaseAge: 10080
 trustPolicy: no-downgrade
 trustPolicyExclude:
+  - chromium-bidi@157.0.8090-0
   - undici-types@6.21.0
 allowBuilds:
   "@tailwindcss/oxide": false
   esbuild: false # via tsx
+  puppeteer: false # Chrome is installed with: pnpm exec puppeteer browsers install chrome

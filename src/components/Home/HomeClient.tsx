@@ -49,6 +49,7 @@ export default function HomeClient({ structure, tocContent }: HomeClientProps) {
       </div>
       <div className="w-11/12 mx-auto lg:ml-auto max-w-[1000px] lg:mr-[68px]">
         <div
+          id="introduction"
           className="
               rounded-[10px]
               bg-[linear-gradient(91deg,_#FFF_0.16%,_rgba(255,255,255,0.70)_100%)]
