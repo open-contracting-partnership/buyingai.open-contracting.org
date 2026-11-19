@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
-import React, { Suspense } from "react";
+import React from "react";
 import Image from "next/image";
 import { visit } from "unist-util-visit";
 import type { Root } from "mdast";
@@ -14,8 +14,6 @@ import { getSectionsStructure } from "@/lib/sections";
 import { CollapsibleText } from "@/components/CollapsibleText";
 import { CustomTable } from "@/components/CustomTable";
 import { CollapsibleInitializer } from "@/components/CollapsibleInitializer";
-import { PrintPageTrigger } from "@/components/PrintPageTrigger";
-import { DownloadPDFButton } from "@/components/DownloadPDFButton";
 import { ChromeContentFix } from "@/components/ChromeContentFix";
 
 interface PageProps {
@@ -174,14 +172,14 @@ export async function generateStaticParams() {
   }));
 }
 
-// Browsers name the saved PDF after the title.
+// The title becomes the generated PDF's title.
 export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params;
   const chapter = getChapterBySlug(slug);
   if (!chapter) {
     return {};
   }
-  return { title: `${chapter.title.replace(/\*/g, "")} - Buying AI` };
+  return { title: `${chapter.title.replace(/[*_]/g, "")} - Buying AI` };
 }
 
 export default async function PrintPage({ params }: PageProps) {
@@ -940,10 +938,6 @@ ${cleanContent}
 
       <ChromeContentFix />
       <CollapsibleInitializer />
-      <Suspense fallback={null}>
-        <PrintPageTrigger />
-      </Suspense>
-      <DownloadPDFButton />
     </div>
   );
 }
