@@ -24,7 +24,7 @@ const PROSE_CLASSES = `prose prose-slate max-w-none
   prose-ul:my-4 prose-ul:list-disc prose-ul:pl-6
   prose-ol:my-4 prose-ol:list-decimal prose-ol:pl-6
   prose-li:text-gray-700 prose-li:mb-2
-  prose-blockquote:border-l-4 prose-blockquote:border-[#C8D419] prose-blockquote:pl-4 prose-blockquote:italic
+  prose-blockquote:border-l-4 prose-blockquote:border-[#D6E100] prose-blockquote:pl-4 prose-blockquote:italic
   prose-code:bg-transparent prose-code:p-0
   prose-img:rounded-lg prose-img:shadow-md
   prose-hr:border-gray-200 prose-hr:my-8

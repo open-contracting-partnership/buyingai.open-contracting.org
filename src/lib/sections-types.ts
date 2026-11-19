@@ -25,7 +25,7 @@ export interface SectionsStructure {
 
 // Color scheme for sections (from yellow-green to teal)
 const sectionColors = [
-  { bg: "#C8D419", text: "#000000", label: "bg-[#C8D419] text-black" }, // Section 1 - Yellow-green
+  { bg: "#D6E100", text: "#000000", label: "bg-[#D6E100] text-black" }, // Section 1 - Yellow-green
   { bg: "#AEC64E", text: "#000000", label: "bg-[#AEC64E] text-black" }, // Section 2 - Light green
   { bg: "#92BA6C", text: "#000000", label: "bg-[#92BA6C] text-black" }, // Section 3 - Medium green
   { bg: "#6CBA8C", text: "#000000", label: "bg-[#6CBA8C] text-black" }, // Section 4 - Teal-green
