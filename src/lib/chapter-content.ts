@@ -90,11 +90,18 @@ export function processChapterContent(content: string): ContentPart[] {
   return parts;
 }
 
+// mdast-util-to-hast copies hProperties to the HTML element.
+declare module "mdast" {
+  interface HeadingData {
+    hProperties?: { id?: string };
+  }
+}
+
 // Remark plugin to set a heading's ID from a trailing "{#id}".
 export function remarkHeadingIds() {
   return (tree: Root) => {
     visit(tree, "heading", (node: Heading) => {
-      const newChildren: any[] = [];
+      const newChildren: Heading["children"] = [];
       let foundId: string | null = null;
 
       for (let i = node.children.length - 1; i >= 0; i--) {
@@ -115,9 +122,7 @@ export function remarkHeadingIds() {
 
       if (foundId) {
         node.children = newChildren;
-        (node as any).data = (node as any).data || {};
-        (node as any).data.hProperties = (node as any).data.hProperties || {};
-        (node as any).data.hProperties.id = foundId;
+        node.data = { ...node.data, hProperties: { ...node.data?.hProperties, id: foundId } };
       }
     });
   };
