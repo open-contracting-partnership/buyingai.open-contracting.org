@@ -16,8 +16,8 @@ export function DownloadPDFButton({ slug }: DownloadPDFButtonProps) {
     try {
       setIsGenerating(true);
 
-      // Dynamically import html2canvas and jspdf
-      const html2canvas = (await import("html2canvas")).default;
+      // Dynamically import html2canvas-pro and jspdf
+      const html2canvas = (await import("html2canvas-pro")).default;
       const { jsPDF } = await import("jspdf");
 
       // Hide header and footer temporarily
