@@ -1,0 +1,56 @@
+name: Accessibility
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  build:
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
+    runs-on: ubuntu-latest
+    env:
+      SITEMAP: http://127.0.0.1:8000/sitemap.xml
+      FROM: https://buyingai.open-contracting.org
+      TO: http://127.0.0.1:8000
+    steps:
+      - name: Disable AppArmor # https://chromium.googlesource.com/chromium/src/+/main/docs/security/apparmor-userns-restrictions.md
+        shell: bash
+        run: echo 0 | sudo tee /proc/sys/kernel/apparmor_restrict_unprivileged_userns
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+      - run: pnpm exec puppeteer browsers install chrome
+      - name: Build
+        env:
+          NEXT_TELEMETRY_DISABLED: 1
+        run: |
+          pnpm exec tsx scripts/build-content.ts
+          pnpm exec next build --turbopack
+      - name: Serve
+        shell: bash
+        run: |
+          pnpm exec tsx scripts/serve.ts 8000 &
+          sleep 5
+      - env:
+          PA11Y_STRATEGY: ignore
+        run: pnpm exec pa11y-ci -c pa11y.default.js -s "$SITEMAP" -f "$FROM" -r "$TO"
+      - env:
+          PA11Y_STRATEGY: ignore
+        run: pnpm exec pa11y-ci -c pa11y.mobile.js -s "$SITEMAP" -f "$FROM" -r "$TO"
+      - env:
+          PA11Y_INCLUDE_WARNINGS: 1
+          PA11Y_SUPPRESS_KNOWN_WARNINGS: 1
+          PA11Y_STRATEGY: ignore
+        run: pnpm exec pa11y-ci -c pa11y.default.js -s "$SITEMAP" -f "$FROM" -r "$TO"
+      - env:
+          PA11Y_INCLUDE_WARNINGS: 1
+          PA11Y_SUPPRESS_KNOWN_WARNINGS: 1
+          PA11Y_STRATEGY: hideElements
+        run: pnpm exec pa11y-ci -c pa11y.default.js -s "$SITEMAP" -f "$FROM" -r "$TO"
+      - env:
+          PA11Y_INCLUDE_WARNINGS: 1
+          PA11Y_SUPPRESS_KNOWN_WARNINGS: 1
+          PA11Y_STRATEGY: ignore
+        run: pnpm exec pa11y-ci -c pa11y.mobile.js -s "$SITEMAP" -f "$FROM" -r "$TO"

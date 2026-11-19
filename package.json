@@ -28,7 +28,9 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "knip": "^6.45.1",
+    "pa11y-ci": "^5.0.0",
     "playwright-core": "^1.64.1",
+    "puppeteer": "^25.17.0",
     "tailwindcss": "^4",
     "tsx": "^4.20.6",
     "typescript": "^5"
