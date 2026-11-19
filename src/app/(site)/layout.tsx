@@ -3,7 +3,7 @@ import { GoogleAnalytics } from "@next/third-parties/google";
 import Script from "next/script";
 import { IBM_Plex_Sans } from "next/font/google";
 import Header from "@/components/Header";
-import "./globals.css";
+import "@/app/globals.css";
 import Footer from "@/components/Footer";
 import { getAllChapters } from "@/lib/markdown";
 import { GlossaryProvider } from "@/components/GlossaryProvider";

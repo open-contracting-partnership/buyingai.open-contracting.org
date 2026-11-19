@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { ReactNode } from "react";
 import { IBM_Plex_Sans } from "next/font/google";
 import "@/app/globals.css";
@@ -9,6 +10,10 @@ const ibmPlexSans = IBM_Plex_Sans({
   variable: "--font-ibm-plex-sans",
   subsets: ["latin"],
 });
+
+export const metadata: Metadata = {
+  title: "BuyingAI: Tools and tips for public procurement",
+};
 
 export default function PrintLayout({
   children,
