@@ -10,6 +10,7 @@ import { SectionsStructure } from "@/lib/sections-types";
 
 import arrowLeft from "@/app/assets/images/arrow-left.svg";
 import Image from "next/image";
+import { FULL_GUIDE_PDF_URL } from "@/lib/links";
 
 interface HomeClientProps {
   chapters: Chapter[];
@@ -93,6 +94,13 @@ export default function HomeClient({
             />
             <span>Get started</span>
           </Link>
+          <p className="mt-6 text-lg lg:text-xl text-[#353535]">
+            Prefer to read offline?{" "}
+            <a href={FULL_GUIDE_PDF_URL} className="underline">
+              Download the full guide
+            </a>{" "}
+            (PDF).
+          </p>
         </div>
       </div>
     </>

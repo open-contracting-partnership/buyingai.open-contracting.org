@@ -11,6 +11,7 @@ import twitterIcon from "@/app/assets/images/twitter-icon.svg";
 import linkedinIcon from "@/app/assets/images/linkedin-icon.svg";
 import facebookIcon from "@/app/assets/images/facebook-icon.svg";
 import { useRegion } from "./RegionProvider";
+import { FULL_GUIDE_PDF_URL } from "@/lib/links";
 
 interface Chapter {
   slug: string;
@@ -499,12 +500,16 @@ export default function Header({ chapters }: HeaderProps) {
                 </Popover.Content>
               </Popover.Portal>
             </Popover.Root>
-            {/* <Link
-              href="/chapter/01-introduction#content"
-              className="px-6 py-2.5 bg-[#C8D419] text-black font-semibold rounded hover:bg-[#B5C115] transition-colors font-ibm-plex-sans"
+            {/* The open search box leaves no room below xl. */}
+            <a
+              href={FULL_GUIDE_PDF_URL}
+              className={clsx(
+                "px-6 py-2.5 bg-[#C8D419] text-black font-semibold rounded hover:bg-[#B5C115] transition-colors font-ibm-plex-sans whitespace-nowrap",
+                { "hidden xl:inline": isSearchOpen }
+              )}
             >
-              Get the playbook
-            </Link> */}
+              Download the full guide (PDF)
+            </a>
           </div>
 
           {/* mobile */}
@@ -682,14 +687,13 @@ export default function Header({ chapters }: HeaderProps) {
                   </div>
                 </div>
 
-                {/* CTA button */}
-                {/* <Link
-                  href="/chapter/01-introduction#content"
+                <a
+                  href={FULL_GUIDE_PDF_URL}
                   onClick={toggleMenu}
                   className="mt-4 px-6 py-3 bg-[#C8D419] text-black font-semibold rounded-lg hover:bg-[#B5C115] transition-colors text-center"
                 >
-                  Get the playbook
-                </Link> */}
+                  Download the full guide (PDF)
+                </a>
               </div>
             </div>
           </div>
