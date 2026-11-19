@@ -1,5 +1,5 @@
 import React from "react";
-import ReactMarkdown from "react-markdown";
+import ReactMarkdown, { type Components, type ExtraProps } from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 import procurementPathwaysData from "@/app/data/procurement-pathways.json";
@@ -63,7 +63,7 @@ function wrapItalicWithBackground(node: React.ReactNode, backgroundColor: string
       const children = React.Children.toArray(props.children).map((child) =>
         wrapItalicWithBackground(child, backgroundColor),
       );
-      return React.cloneElement(node as React.ReactElement<any>, { children });
+      return React.cloneElement(node as React.ReactElement<{ children?: React.ReactNode }>, { children });
     }
   }
 
@@ -78,7 +78,7 @@ function wrapItalicWithBackground(node: React.ReactNode, backgroundColor: string
 }
 
 // Render a fenced code block as a Who/What box or a callout box. Other code blocks are hidden.
-function renderPre({ children }: any) {
+function renderPre({ children }: React.ComponentProps<"pre"> & ExtraProps) {
   let content = "";
   if (typeof children === "string") {
     content = children;
@@ -269,12 +269,12 @@ function renderCellContent(content: React.ReactNode): React.ReactNode {
   );
 }
 
-function markdownComponents(highlightColor: string, print: boolean) {
+function markdownComponents(highlightColor: string, print: boolean): Components {
   const imageLoading = print ? {} : ({ loading: "lazy", decoding: "async", fetchPriority: "high" } as const);
 
   const heading =
     (Tag: "h1" | "h2" | "h3" | "h4" | "h5" | "h6") =>
-    ({ children, className, id, node, ...props }: any) => (
+    ({ children, className, id, node, ...props }: React.ComponentProps<"h1"> & ExtraProps) => (
       <Tag
         {...props}
         id={id}
@@ -286,7 +286,7 @@ function markdownComponents(highlightColor: string, print: boolean) {
     );
 
   return {
-    img: ({ src, alt, node, ...props }: any) => {
+    img: ({ src, alt, node, ...props }) => {
       const srcString = typeof src === "string" ? src : String(src || "");
       if (!srcString) return null;
       return (
@@ -307,7 +307,7 @@ function markdownComponents(highlightColor: string, print: boolean) {
     h5: heading("h5"),
     h6: heading("h6"),
     pre: renderPre,
-    table: ({ children, node, ...props }: any) => {
+    table: ({ children, node, ...props }) => {
       const customTable = CustomTable({ children });
       if (customTable !== null) {
         return customTable;
@@ -333,12 +333,12 @@ function markdownComponents(highlightColor: string, print: boolean) {
         </div>
       );
     },
-    thead: ({ children, node, ...props }: any) => (
+    thead: ({ children, node, ...props }) => (
       <thead className="bg-[#92C36F]" {...props}>
         {children}
       </thead>
     ),
-    th: ({ children, node, ...props }: any) => (
+    th: ({ children, node, ...props }) => (
       <th
         className={`px-3 sm:px-6 py-2 sm:py-4 text-left font-semibold text-sm sm:text-base text-black border-b border-gray-300 ${
           print ? "" : "whitespace-nowrap"
@@ -348,12 +348,12 @@ function markdownComponents(highlightColor: string, print: boolean) {
         {children}
       </th>
     ),
-    tr: ({ children, node, ...props }: any) => (
+    tr: ({ children, node, ...props }) => (
       <tr className="border-b border-gray-300 last:border-b-0" {...props}>
         {children}
       </tr>
     ),
-    td: ({ children, node, ...props }: any) => (
+    td: ({ children, node, ...props }) => (
       <td className="pl-3 sm:pl-8 pr-2 sm:pr-4 py-2 sm:py-4 text-xs sm:text-sm align-top bg-white" {...props}>
         {renderCellContent(children)}
       </td>
@@ -363,7 +363,7 @@ function markdownComponents(highlightColor: string, print: boolean) {
 
 // `print` expands interactive content and loads images eagerly.
 export function ChapterContent({ content, highlightColor, print = false }: ChapterContentProps) {
-  const components = markdownComponents(highlightColor, print) as any;
+  const components = markdownComponents(highlightColor, print);
 
   return (
     <div className={print ? `${PROSE_CLASSES} print-prose` : PROSE_CLASSES}>
