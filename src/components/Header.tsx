@@ -508,7 +508,7 @@ export default function Header({ chapters }: HeaderProps) {
                 { "hidden xl:inline": isSearchOpen }
               )}
             >
-              Download the full guide (PDF)
+              Download full guide (PDF)
             </a>
           </div>
 
@@ -692,7 +692,7 @@ export default function Header({ chapters }: HeaderProps) {
                   onClick={toggleMenu}
                   className="mt-4 px-6 py-3 bg-[#C8D419] text-black font-semibold rounded-lg hover:bg-[#B5C115] transition-colors text-center"
                 >
-                  Download the full guide (PDF)
+                  Download full guide (PDF)
                 </a>
               </div>
             </div>
