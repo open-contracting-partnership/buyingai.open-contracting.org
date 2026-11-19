@@ -12,7 +12,7 @@ const ibmPlexSans = IBM_Plex_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "BuyingAI: Tools and tips for public procurement",
+  title: "BuyingAI: Tips and tools for public procurement",
 };
 
 export default function PrintLayout({
