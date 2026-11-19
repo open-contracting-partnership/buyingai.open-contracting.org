@@ -14,6 +14,9 @@
   },
   "linter": {
     "rules": {
+      "complexity": {
+        "noImportantStyles": "off"
+      },
       "correctness": {
         "useExhaustiveDependencies": {
           "level": "error",
@@ -21,6 +24,9 @@
             "reportUnnecessaryDependencies": false
           }
         }
+      },
+      "style": {
+        "noDescendingSpecificity": "off"
       },
       "suspicious": {
         "noArrayIndexKey": "off"
