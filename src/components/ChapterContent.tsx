@@ -19,7 +19,7 @@ const PROSE_CLASSES = `prose prose-slate max-w-none
   prose-h2:text-3xl prose-h2:mb-4 prose-h2:mt-8
   prose-h3:text-2xl prose-h3:mb-3 prose-h3:mt-6
   prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-4 prose-p:text-base
-  prose-a:text-[#23B2A7] prose-a:no-underline hover:prose-a:underline prose-a:font-medium
+  prose-a:text-[#17736B] prose-a:underline prose-a:font-medium
   prose-strong:text-gray-900 prose-strong:font-semibold
   prose-ul:my-4 prose-ul:list-disc prose-ul:pl-6
   prose-ol:my-4 prose-ol:list-decimal prose-ol:pl-6
@@ -184,7 +184,7 @@ function renderPre({ children }: React.ComponentProps<"pre"> & ExtraProps) {
       <div className="my-8 -mx-12 px-12 py-6 relative" style={{ backgroundColor: bgColor }}>
         {icon && <img src={`/icons/${icon}.png`} alt="" className="absolute top-6 left-12 w-12 h-12 !shadow-none" />}
         <div
-          className={`prose prose-sm max-w-none prose-headings:font-gteesti-display prose-headings:mb-4 prose-ul:my-2 prose-ul:list-disc prose-ul:pl-5 prose-li:my-1 prose-li:text-gray-700 prose-li:leading-relaxed prose-p:my-2 prose-p:text-gray-700 prose-p:leading-relaxed prose-a:text-[#23B2A7] prose-a:no-underline hover:prose-a:underline ${
+          className={`prose prose-sm max-w-none prose-headings:font-gteesti-display prose-headings:mb-4 prose-ul:my-2 prose-ul:list-disc prose-ul:pl-5 prose-li:my-1 prose-li:text-gray-700 prose-li:leading-relaxed prose-p:my-2 prose-p:text-gray-700 prose-p:leading-relaxed prose-a:text-[#17736B] prose-a:underline ${
             icon ? "ml-16" : ""
           }`}
         >
