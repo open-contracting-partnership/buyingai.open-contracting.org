@@ -277,12 +277,9 @@ article img {
     page-break-inside: avoid;
   }
 
-  .print-content table {
-    page-break-inside: avoid;
-  }
-
-  .print-content ul,
-  .print-content ol {
+  /* Keep rows and items whole, rather than whole tables and lists, which can be longer than a page. */
+  .print-content tr,
+  .print-content li {
     page-break-inside: avoid;
   }
 
