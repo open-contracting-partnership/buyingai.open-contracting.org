@@ -248,6 +248,7 @@ export default function Header({ chapters }: HeaderProps) {
                   ref={desktopSearchInputRef}
                   type="text"
                   placeholder="Search chapters..."
+                  aria-label="Search chapters"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="outline-none text-gray-600 placeholder:text-gray-400 w-full"
@@ -255,6 +256,7 @@ export default function Header({ chapters }: HeaderProps) {
                 <button
                   type="button"
                   onClick={closeSearch}
+                  aria-label="Close search"
                   className="p-1 hover:bg-gray-100 rounded transition-colors shrink-0"
                 >
                   <XIcon className="size-4 text-gray-600" />
@@ -471,6 +473,7 @@ export default function Header({ chapters }: HeaderProps) {
                 type="button"
                 className="absolute top-4 right-4 p-2 hover:bg-white/10 rounded cursor-pointer"
                 onClick={toggleMenu}
+                aria-label="Close menu"
               >
                 <XIcon className="size-6 text-white" />
               </button>
@@ -605,7 +608,12 @@ export default function Header({ chapters }: HeaderProps) {
 
           {/* hamburger menu */}
           <div className="md:hidden">
-            <button type="button" className="p-2 hover:bg-white/10 rounded cursor-pointer" onClick={toggleMenu}>
+            <button
+              type="button"
+              className="p-2 hover:bg-white/10 rounded cursor-pointer"
+              onClick={toggleMenu}
+              aria-label="Open menu"
+            >
               <MenuIcon className="size-6 text-white" />
             </button>
           </div>
@@ -635,6 +643,7 @@ export default function Header({ chapters }: HeaderProps) {
                   ref={mobileSearchInputRef}
                   type="text"
                   placeholder="Search chapters..."
+                  aria-label="Search chapters"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="outline-none text-gray-600 placeholder:text-gray-400 flex-1"
@@ -642,6 +651,7 @@ export default function Header({ chapters }: HeaderProps) {
                 <button
                   type="button"
                   onClick={closeSearch}
+                  aria-label="Close search"
                   className="p-1 hover:bg-gray-100 rounded transition-colors"
                 >
                   <XIcon className="size-5 text-gray-600" />
