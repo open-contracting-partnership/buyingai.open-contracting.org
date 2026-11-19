@@ -224,7 +224,11 @@ export function ChapterLayout({ currentSlug, children, structure }: ChapterLayou
                 <div className="p-5">
                   <h2 className="text-base font-medium text-black">Table of content</h2>
                 </div>
-                <nav ref={navRef} className="space-y-0 max-h-[calc(100vh-240px)] overflow-y-auto overscroll-contain">
+                <nav
+                  ref={navRef}
+                  aria-label="Table of contents"
+                  className="space-y-0 max-h-[calc(100vh-240px)] overflow-y-auto overscroll-contain"
+                >
                   {structure.sections.map((section) => {
                     // Check if this section is active based on intersection observer or current chapter
                     const hasCurrentChapter = section.chapters.some((ch) => ch.slug === currentSlug);
@@ -305,8 +309,8 @@ export function ChapterLayout({ currentSlug, children, structure }: ChapterLayou
           </div>
         </aside>
 
-        {/* Main Content */}
-        <main className="transition-all duration-300 w-full lg:flex-1">
+        {/* Main content, in the layout's main element */}
+        <div className="transition-all duration-300 w-full lg:flex-1">
           <SectionMarker sectionId={currentSlug}>
             <div
               id="content"
@@ -316,7 +320,7 @@ export function ChapterLayout({ currentSlug, children, structure }: ChapterLayou
               {children}
             </div>
           </SectionMarker>
-        </main>
+        </div>
       </div>
 
       <a
