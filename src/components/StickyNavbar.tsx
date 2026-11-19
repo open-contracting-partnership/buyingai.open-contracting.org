@@ -49,9 +49,18 @@ export function StickyNavbar({ structure, currentSlug, visible, sidebarVisible, 
             type="button"
             className="flex items-center px-2 md:px-4 bg-transparent cursor-pointer flex-shrink-0 border-none outline-none focus:outline-none"
             onClick={onToggleSidebar}
+            aria-label="Show sidebar"
           >
-            <div className="size-6 md:size-8 grid place-items-center text-black" aria-label="Show sidebar">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <div className="size-6 md:size-8 grid place-items-center text-black">
+              <svg
+                aria-hidden="true"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
                 <line x1="3" y1="6" x2="21" y2="6" />
                 <line x1="3" y1="12" x2="21" y2="12" />
                 <line x1="3" y1="18" x2="21" y2="18" />

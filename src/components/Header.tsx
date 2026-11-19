@@ -27,7 +27,7 @@ interface HeaderProps {
 // US Flag SVG Component (simplified for icon use)
 function USFlagIcon({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 60 40" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg aria-hidden="true" viewBox="0 0 60 40" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
       {/* Red background */}
       <rect width="60" height="40" fill="#B22234" />
       {/* White stripes */}
@@ -68,6 +68,7 @@ function USFlagIcon({ className }: { className?: string }) {
 function GlobeIcon({ className }: { className?: string }) {
   return (
     <svg
+      aria-hidden="true"
       viewBox="0 0 24 24"
       className={className}
       fill="none"
@@ -231,6 +232,7 @@ export default function Header({ chapters }: HeaderProps) {
                 }`}
               >
                 <svg
+                  aria-hidden="true"
                   width="18"
                   height="18"
                   viewBox="0 0 24 24"
@@ -296,8 +298,17 @@ export default function Header({ chapters }: HeaderProps) {
                   type="button"
                   onClick={toggleSearch}
                   className="p-2 hover:bg-white/10 rounded transition-all text-white"
+                  aria-label="Search"
                 >
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <svg
+                    aria-hidden="true"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
                     <circle cx="11" cy="11" r="8" />
                     <path d="m21 21-4.35-4.35" />
                   </svg>
@@ -306,8 +317,16 @@ export default function Header({ chapters }: HeaderProps) {
             </div>
             <Popover.Root>
               <Popover.Trigger asChild>
-                <button type="button" className="p-2 hover:bg-white/10 rounded text-white">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <button type="button" className="p-2 hover:bg-white/10 rounded text-white" aria-label="Share">
+                  <svg
+                    aria-hidden="true"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
                     <circle cx="18" cy="5" r="3" />
                     <circle cx="6" cy="12" r="3" />
                     <circle cx="18" cy="19" r="3" />
@@ -380,6 +399,7 @@ export default function Header({ chapters }: HeaderProps) {
                 <button
                   type="button"
                   className="p-2 hover:bg-white/10 rounded text-white flex items-center justify-center"
+                  aria-label={`Region: ${region === "US" ? "United States" : "Global"}`}
                 >
                   {region === "US" ? <USFlagIcon className="w-7 h-5" /> : <GlobeIcon className="w-6 h-6" />}
                 </button>
@@ -474,7 +494,15 @@ export default function Header({ chapters }: HeaderProps) {
                   onClick={toggleSearch}
                   className="flex items-center gap-3 px-4 py-3 bg-white/5 hover:bg-white/10 rounded-lg transition-colors text-white text-left w-full"
                 >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <svg
+                    aria-hidden="true"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
                     <circle cx="11" cy="11" r="8" />
                     <path d="m21 21-4.35-4.35" />
                   </svg>
@@ -591,7 +619,15 @@ export default function Header({ chapters }: HeaderProps) {
           <div className="absolute top-0 left-0 right-0 bg-white p-6 shadow-lg animate-in slide-in-from-top duration-300">
             <div className="flex flex-col gap-0 bg-white rounded-lg border border-gray-300 overflow-hidden">
               <div className="flex items-center gap-3 px-4 py-3">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" strokeWidth="2">
+                <svg
+                  aria-hidden="true"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#9CA3AF"
+                  strokeWidth="2"
+                >
                   <circle cx="11" cy="11" r="8" />
                   <path d="m21 21-4.35-4.35" />
                 </svg>

@@ -38,6 +38,7 @@ export function CollapsibleText({
           className={`flex items-center gap-2 font-bold text-gray-900 hover:text-gray-700 transition-colors w-full text-left cursor-pointer ${textSizeClass}`}
         >
           <svg
+            aria-hidden="true"
             className={`w-5 h-5 transition-transform flex-shrink-0 ${isOpen ? "rotate-90" : ""}`}
             fill="currentColor"
             viewBox="0 0 20 20"

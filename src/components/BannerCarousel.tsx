@@ -150,6 +150,7 @@ export function BannerCarousel({ structure, currentSlug }: BannerCarouselProps) 
                       <span className="text-base font-medium">Read</span>
                       <div className="transform rotate-180">
                         <svg
+                          aria-hidden="true"
                           width="20"
                           height="20"
                           viewBox="0 0 24 24"
