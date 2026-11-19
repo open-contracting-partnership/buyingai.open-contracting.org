@@ -54,7 +54,11 @@ interface ProcurementData {
   rows: Row[];
 }
 
-const ProcurementPathways: React.FC<{ data: ProcurementData }> = ({ data }) => {
+// `expanded` shows all rows and full texts, without toggles, for print.
+const ProcurementPathways: React.FC<{
+  data: ProcurementData;
+  expanded?: boolean;
+}> = ({ data, expanded = false }) => {
   // Initialize with rows that have expandedByDefault = true
   const initialExpanded = new Set(
     data.rows.filter((row) => row.expandedByDefault).map((row) => row.id)
@@ -182,7 +186,7 @@ const ProcurementPathways: React.FC<{ data: ProcurementData }> = ({ data }) => {
     if (!category.subcategories) {
       const description = category.description || "";
       const textId = `category-${category.id}`;
-      const isExpanded = expandedTexts.has(textId);
+      const isExpanded = (expanded || expandedTexts.has(textId));
       const needsTruncation = description.length > maxLength;
       const displayText = needsTruncation && !isExpanded
         ? description.substring(0, maxLength) + "..."
@@ -207,7 +211,7 @@ const ProcurementPathways: React.FC<{ data: ProcurementData }> = ({ data }) => {
             >
               {displayText ? parseBoldText(displayText) : ""}
             </p>
-            {needsTruncation && (
+            {needsTruncation && !expanded && (
               <button
                 onClick={() => toggleTextExpansion(textId)}
                 className="mt-2 text-xs font-semibold text-gray-700 hover:text-gray-900 underline"
@@ -233,7 +237,7 @@ const ProcurementPathways: React.FC<{ data: ProcurementData }> = ({ data }) => {
           {category.subcategories.map((sub, idx) => {
             const description = sub.description || "";
             const textId = `subcategory-${sub.id}`;
-            const isExpanded = expandedTexts.has(textId);
+            const isExpanded = (expanded || expandedTexts.has(textId));
             const needsTruncation = description.length > maxLength;
             const displayText = needsTruncation && !isExpanded
               ? description.substring(0, maxLength) + "..."
@@ -255,7 +259,7 @@ const ProcurementPathways: React.FC<{ data: ProcurementData }> = ({ data }) => {
                 >
                   {displayText ? parseBoldText(displayText) : ""}
                 </p>
-                {needsTruncation && (
+                {needsTruncation && !expanded && (
                   <button
                     onClick={() => toggleTextExpansion(textId)}
                     className="mt-2 text-xs font-semibold text-gray-700 hover:text-gray-900 underline"
@@ -279,14 +283,15 @@ const ProcurementPathways: React.FC<{ data: ProcurementData }> = ({ data }) => {
   };
 
   const renderExpandableRow = (row: Row) => {
-    const isExpanded = expandedRows.has(row.id);
+    const isExpanded = expanded || expandedRows.has(row.id);
     const RowIcon = getRowIcon(row.id);
     const maxLength = 120; // Character limit before showing "ver más"
+    const RowHeader = expanded ? "div" : "button";
 
     return (
       <div key={row.id} className="border-t-2 border-gray-200">
-        <button
-          onClick={() => toggleRow(row.id)}
+        <RowHeader
+          onClick={expanded ? undefined : () => toggleRow(row.id)}
           className="w-full flex items-center justify-between p-2.5 md:p-3 hover:bg-gray-50 transition-colors gap-2"
         >
           <div className="flex items-center gap-2 flex-1 min-w-0">
@@ -298,12 +303,12 @@ const ProcurementPathways: React.FC<{ data: ProcurementData }> = ({ data }) => {
               {row.title}
             </span>
           </div>
-          {isExpanded ? (
+          {expanded ? null : isExpanded ? (
             <ChevronUp className="w-4 h-4 md:w-5 md:h-5 text-gray-600 flex-shrink-0" />
           ) : (
             <ChevronDown className="w-4 h-4 md:w-5 md:h-5 text-gray-600 flex-shrink-0" />
           )}
-        </button>
+        </RowHeader>
 
         {isExpanded && (
           <div className="flex flex-col md:flex-row border-t border-gray-200">
@@ -312,7 +317,7 @@ const ProcurementPathways: React.FC<{ data: ProcurementData }> = ({ data }) => {
               const ItemIcon = getItemIcon(item.icon);
               const content = item.content || "";
               const textId = `item-${row.id}-${idx}`;
-              const isTextExpanded = expandedTexts.has(textId);
+              const isTextExpanded = (expanded || expandedTexts.has(textId));
               const needsTruncation = content.length > maxLength;
               const displayText = needsTruncation && !isTextExpanded
                 ? content.substring(0, maxLength) + "..."
@@ -337,7 +342,7 @@ const ProcurementPathways: React.FC<{ data: ProcurementData }> = ({ data }) => {
                     >
                       {displayText ? parseBoldText(displayText) : ""}
                     </p>
-                    {needsTruncation && (
+                    {needsTruncation && !expanded && (
                       <button
                         onClick={() => toggleTextExpansion(textId)}
                         className="mt-2 text-xs font-semibold text-gray-700 hover:text-gray-900 underline"
