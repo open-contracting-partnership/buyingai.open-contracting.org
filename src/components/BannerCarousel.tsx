@@ -2,7 +2,8 @@
 
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import type React from "react";
+import { useEffect, useRef, useState } from "react";
 import { getSectionColor, type SectionsStructure } from "@/lib/sections-types";
 
 interface BannerCarouselProps {
@@ -14,6 +15,8 @@ export function BannerCarousel({ structure, currentSlug }: BannerCarouselProps) 
   const [hoveredSection, setHoveredSection] = useState<number | null>(null);
   const [clickedSection, setClickedSection] = useState<number | null>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const focusSectionRef = useRef<number | null>(null);
 
   // Find current section based on current slug (if provided)
   const currentSectionNumber = currentSlug
@@ -37,20 +40,30 @@ export function BannerCarousel({ structure, currentSlug }: BannerCarouselProps) 
     }
   }, [isMobile, currentSectionNumber]);
 
-  // Handle click for mobile
-  const handleCardClick = (sectionNumber: number) => {
+  const openSection = (sectionNumber: number, event: React.MouseEvent) => {
     if (isMobile) {
-      // Toggle: if clicking the same section, close it; otherwise open the clicked one
-      if (clickedSection === sectionNumber) {
-        setClickedSection(null);
-      } else {
-        setClickedSection(sectionNumber);
-      }
+      setClickedSection(sectionNumber);
+    } else {
+      setHoveredSection(sectionNumber);
+    }
+    // A click from the keyboard has no mouse clicks (detail is 0).
+    if (event.detail === 0) {
+      focusSectionRef.current = sectionNumber;
     }
   };
 
+  // Move focus into a section opened from the keyboard, since its button is replaced.
+  useEffect(() => {
+    const sectionNumber = focusSectionRef.current;
+    if (sectionNumber !== null) {
+      focusSectionRef.current = null;
+      containerRef.current?.querySelector<HTMLAnchorElement>(`[data-section="${sectionNumber}"] a`)?.focus();
+    }
+  });
+
   return (
     <div
+      ref={containerRef}
       className={`flex-1 relative h-[500px] flex items-center overflow-x-auto overflow-y-hidden scrollbar-hide p-4`}
     >
       {structure.sections.map((section, idx) => {
@@ -81,21 +94,24 @@ export function BannerCarousel({ structure, currentSlug }: BannerCarouselProps) 
               zIndex: shouldExpand ? 10 : 5 - idx,
             }}
           >
+            {/* biome-ignore lint/a11y/noStaticElementInteractions: Hover is a shortcut for mouse users. Buttons open sections for everyone. */}
             <div
-              className="h-full overflow-hidden relative rounded-tl-[8px] rounded-tr-[36px] rounded-bl-[36px] rounded-br-[8px] cursor-pointer"
+              className="h-full overflow-hidden relative rounded-tl-[8px] rounded-tr-[36px] rounded-bl-[36px] rounded-br-[8px]"
               style={{
                 backgroundColor: color.bg,
                 width: "100%",
                 height: "100%",
                 boxShadow: shouldExpand ? "0 4px 15px 0 #000" : "0 4px 10px 0 rgba(0, 0, 0, 0.50)",
               }}
-              onClick={() => handleCardClick(section.number)}
               onMouseEnter={() => !isMobile && setHoveredSection(section.number)}
               onMouseLeave={() => !isMobile && setHoveredSection(null)}
             >
               {shouldExpand ? (
                 // Expanded card with chapter list
-                <div className={`${isMobile ? "px-6 py-5" : "p-8"} h-full flex flex-col justify-between`}>
+                <div
+                  data-section={section.number}
+                  className={`${isMobile ? "px-6 py-5" : "p-8"} h-full flex flex-col justify-between`}
+                >
                   <div>
                     <div className={`${isMobile ? "text-4xl" : "text-5xl"} font-bold text-black font-gteesti-display`}>
                       {section.number.toString().padStart(2, "0")}
@@ -120,7 +136,6 @@ export function BannerCarousel({ structure, currentSlug }: BannerCarouselProps) 
                               key={ch.slug}
                               href={linkHref}
                               scroll={false}
-                              onClick={(e) => e.stopPropagation()}
                               className={`flex items-center gap-2.5 border-b border-black/10 py-1.5 duration-300 hover:bg-black/5 ${
                                 isMobile ? "text-sm" : "text-base"
                               } text-black/80 hover:text-black transition-colors group`}
@@ -143,7 +158,6 @@ export function BannerCarousel({ structure, currentSlug }: BannerCarouselProps) 
                     <Link
                       href={`/chapter/${firstChapterSlug}${currentSlug ? "#content" : ""}`}
                       scroll={false}
-                      onClick={(e) => e.stopPropagation()}
                       className="flex items-center justify-end gap-2 text-black mt-4 hover:gap-3 transition-all"
                     >
                       <span className="text-base font-medium">Read</span>
@@ -168,11 +182,17 @@ export function BannerCarousel({ structure, currentSlug }: BannerCarouselProps) 
                 </div>
               ) : (
                 // Collapsed card
-                <div className={`h-full flex items-start justify-center ${isMobile ? "pt-5 pl-5" : "pt-8 pl-8"}`}>
+                <button
+                  type="button"
+                  aria-expanded={false}
+                  aria-label={`Section ${section.number}: ${section.title}`}
+                  onClick={(event) => openSection(section.number, event)}
+                  className={`h-full w-full flex items-start justify-center cursor-pointer ${isMobile ? "pt-5 pl-5" : "pt-8 pl-8"}`}
+                >
                   <span className={`${isMobile ? "text-3xl" : "text-3xl"} font-bold text-black/50 transition-colors`}>
                     {section.number.toString().padStart(2, "0")}
                   </span>
-                </div>
+                </button>
               )}
             </div>
           </div>
