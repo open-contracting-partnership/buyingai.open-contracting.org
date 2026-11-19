@@ -6,6 +6,17 @@ import { chromium } from 'playwright-core';
 const OUT_DIR = path.join(process.cwd(), 'out');
 const PDF_DIR = path.join(OUT_DIR, 'pdfs');
 
+// Chrome renders the header in isolation, so it can't load external resources.
+const LOGO = fs.readFileSync(path.join(process.cwd(), 'src/app/assets/images/logo-grey.svg')).toString('base64');
+const HEADER_TEMPLATE = `
+<div style="width: 100%; margin: 0 15mm; display: flex; justify-content: space-between; align-items: center; font-family: 'Open Sans', Helvetica, Arial, sans-serif; font-size: 8pt; color: #000;">
+  <div>
+    <div style="font-weight: bold;">BuyingAI: Tips and tools for public procurement</div>
+    <div>Open Contracting Partnership 2025. More at: buyingai.open-contracting.org</div>
+  </div>
+  <img src="data:image/svg+xml;base64,${LOGO}" style="height: 10mm;">
+</div>`;
+
 const CONTENT_TYPES: Record<string, string> = {
   '.css': 'text/css',
   '.html': 'text/html; charset=utf-8',
@@ -61,11 +72,14 @@ async function main() {
       await page.evaluate(() => document.fonts.ready);
       await page.pdf({
         path: path.join(PDF_DIR, `${slug}.pdf`),
-        format: 'A4',
+        format: 'Letter',
         printBackground: true,
         // Lays out the page wider than Tailwind's md breakpoint (768px), as on desktop.
         scale: 0.85,
-        margin: { top: '15mm', right: '15mm', bottom: '15mm', left: '15mm' },
+        margin: { top: '30mm', right: '15mm', bottom: '15mm', left: '15mm' },
+        displayHeaderFooter: true,
+        headerTemplate: HEADER_TEMPLATE,
+        footerTemplate: '<span></span>',
       });
       console.log(`✓ pdfs/${slug}.pdf`);
     }
