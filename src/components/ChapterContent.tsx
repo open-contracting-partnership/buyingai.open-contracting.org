@@ -307,14 +307,6 @@ function markdownComponents(highlightColor: string, print: boolean) {
     h5: heading("h5"),
     h6: heading("h6"),
     pre: renderPre,
-    code: ({ inline, children, node, ...props }: any) =>
-      inline ? (
-        <code className="bg-gray-100 px-1 py-0.5 rounded text-sm" {...props}>
-          {children}
-        </code>
-      ) : (
-        <code {...props}>{children}</code>
-      ),
     table: ({ children, node, ...props }: any) => {
       const customTable = CustomTable({ children });
       if (customTable !== null) {
