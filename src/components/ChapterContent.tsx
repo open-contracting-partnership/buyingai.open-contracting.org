@@ -124,7 +124,7 @@ function renderPre({ children }: React.ComponentProps<"pre"> & ExtraProps) {
     const labelStyle: React.CSSProperties = {
       width: "80px",
       fontWeight: "bold",
-      color: "#8B9A2E",
+      color: "#323232",
       fontSize: "1.125rem",
       paddingRight: "1.5rem",
       verticalAlign: "top",
