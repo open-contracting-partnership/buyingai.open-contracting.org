@@ -171,7 +171,7 @@ const ProcurementPathways: React.FC<{
     }
 
     // If no bold text found, return original text
-    return hasBold ? <>{parts}</> : text;
+    return hasBold ? parts : text;
   };
 
   const renderCategoryHeader = (category: Category) => {

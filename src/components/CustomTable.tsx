@@ -248,7 +248,7 @@ export function CustomTable({ children }: CustomTableProps) {
       flushBullets();
     }
 
-    return elements.length > 0 ? <>{elements}</> : <p className="!text-base !text-black">{text}</p>;
+    return elements.length > 0 ? elements : <p className="!text-base !text-black">{text}</p>;
   };
 
   // Process cell content to handle bullet points and markdown (same logic as parseHeaderMarkdown)

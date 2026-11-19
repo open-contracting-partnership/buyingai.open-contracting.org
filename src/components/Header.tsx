@@ -108,7 +108,7 @@ function renderTitleMarkdown(title: string): React.ReactNode {
     parts.push(title.substring(lastIndex));
   }
 
-  return parts.length > 0 ? <>{parts}</> : title;
+  return parts.length > 0 ? parts : title;
 }
 
 export default function Header({ chapters }: HeaderProps) {
