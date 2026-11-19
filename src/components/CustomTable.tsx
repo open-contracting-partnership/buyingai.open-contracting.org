@@ -124,7 +124,7 @@ export function CustomTable({ children }: CustomTableProps) {
     const titleMatch = text.match(/^([^*\\]+?)(?=(?:\*\*|\\\*\\\*))/);
     let processableText = text;
 
-    if (titleMatch && titleMatch[1].trim()) {
+    if (titleMatch?.[1].trim()) {
       const titleText = titleMatch[1].trim().replace(/:\s*$/, ""); // Remove trailing colon
       elements.push(
         <h3 key="title" className="!text-2xl !font-bold !text-black !mb-3 !font-gteesti-display">
