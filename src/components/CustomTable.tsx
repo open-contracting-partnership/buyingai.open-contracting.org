@@ -140,7 +140,6 @@ export function CustomTable({ children }: CustomTableProps) {
 
     // Match all **text** or \*\*text\*\* patterns
     const sectionRegex = /(?:\*\*|\\\*\\\*)([^*]+?)(?:\*\*|\\\*\\\*)/g;
-    let lastIndex = 0;
     for (const sectionMatch of processableText.matchAll(sectionRegex)) {
       const sectionTitle = sectionMatch[1].trim();
       const startOfContent = sectionMatch.index + sectionMatch[0].length;
@@ -154,8 +153,6 @@ export function CustomTable({ children }: CustomTableProps) {
 
       const content = processableText.substring(startOfContent, endOfContent).trim();
       sections.push({ title: sectionTitle, content });
-
-      lastIndex = endOfContent;
     }
 
     // Process each section

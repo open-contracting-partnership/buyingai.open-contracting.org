@@ -65,7 +65,7 @@ export function getChapterBySlug(slug: string): ChapterContent | null {
       filename: `${slug}.md`,
       content,
     };
-  } catch (error) {
+  } catch {
     return null;
   }
 }

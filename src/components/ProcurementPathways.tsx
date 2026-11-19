@@ -136,11 +136,6 @@ const ProcurementPathways: React.FC<{
     });
   };
 
-  const getCategoryColor = (categoryId: string): string => {
-    const category = data.categories.find((cat) => cat.id === categoryId);
-    return category?.color || "#E5E7EB";
-  };
-
   // Helper function to parse markdown bold (**text**) and convert to React elements
   const parseBoldText = (text: string): React.ReactNode => {
     if (!text) return "";

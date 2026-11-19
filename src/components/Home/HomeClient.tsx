@@ -28,9 +28,6 @@ export default function HomeClient({ chapters, structure, tocContent }: HomeClie
   // Split body content into paragraphs (separated by blank lines)
   const paragraphs = bodyContent.split(/\n\s*\n/).filter((p) => p.trim());
 
-  // Extract the About section
-  const aboutMatch = tocContent.match(/###\s+About\s*([\s\S]+)/);
-  const aboutContent = aboutMatch ? aboutMatch[1].trim() : "";
   return (
     <>
       {/* Hero Section */}
