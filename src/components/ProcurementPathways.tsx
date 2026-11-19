@@ -171,7 +171,7 @@ const ProcurementPathways: React.FC<{
 
   const renderCategoryHeader = (category: Category) => {
     const CategoryIcon = getCategoryIcon(category.id);
-    const maxLength = 150; // Character limit before showing "ver más"
+    const maxLength = 150; // Character limit before showing "See more"
 
     if (!category.subcategories) {
       const description = category.description || "";
@@ -202,7 +202,7 @@ const ProcurementPathways: React.FC<{
                 onClick={() => toggleTextExpansion(textId)}
                 className="mt-2 text-xs font-semibold text-gray-700 hover:text-gray-900 underline"
               >
-                {isExpanded ? "Ver menos" : "Ver más"}
+                {isExpanded ? "See less" : "See more"}
               </button>
             )}
           </div>
@@ -246,7 +246,7 @@ const ProcurementPathways: React.FC<{
                     onClick={() => toggleTextExpansion(textId)}
                     className="mt-2 text-xs font-semibold text-gray-700 hover:text-gray-900 underline"
                   >
-                    {isExpanded ? "Ver menos" : "Ver más"}
+                    {isExpanded ? "See less" : "See more"}
                   </button>
                 )}
               </div>
@@ -267,7 +267,7 @@ const ProcurementPathways: React.FC<{
   const renderExpandableRow = (row: Row) => {
     const isExpanded = expanded || expandedRows.has(row.id);
     const RowIcon = getRowIcon(row.id);
-    const maxLength = 120; // Character limit before showing "ver más"
+    const maxLength = 120; // Character limit before showing "See more"
     const RowHeader = expanded ? "div" : "button";
 
     return (
@@ -327,7 +327,7 @@ const ProcurementPathways: React.FC<{
                         onClick={() => toggleTextExpansion(textId)}
                         className="mt-2 text-xs font-semibold text-gray-700 hover:text-gray-900 underline"
                       >
-                        {isTextExpanded ? "Ver menos" : "Ver más"}
+                        {isTextExpanded ? "See less" : "See more"}
                       </button>
                     )}
                   </div>
