@@ -4,6 +4,16 @@ interface CustomTableProps {
   children: React.ReactNode;
 }
 
+// The props that this component reads from react-markdown's elements.
+interface ElementProps {
+  children?: React.ReactNode;
+  node?: { tagName?: string };
+}
+
+function propsOf(element: React.ReactElement): ElementProps {
+  return element.props as ElementProps;
+}
+
 /**
  * CustomTable component handles special table rendering for tables with:
  * - A title/subtitle in the thead
@@ -22,7 +32,7 @@ export function CustomTable({ children }: CustomTableProps) {
 
   React.Children.forEach(children, (child) => {
     if (React.isValidElement(child)) {
-      const props = child.props as any;
+      const props = propsOf(child);
 
       // Check multiple ways to identify thead/tbody
       // ReactMarkdown may use custom components with 'node' prop
@@ -266,12 +276,12 @@ export function CustomTable({ children }: CustomTableProps) {
       if (React.isValidElement(node)) {
         // If it's a strong tag, include marker for later
         if (node.type === "strong") {
-          const strongProps = node.props as { children?: any };
+          const strongProps = propsOf(node);
           const innerText = extractAllText(strongProps.children);
           return `**${innerText}**`; // Mark it with ** so we can detect it
         }
 
-        const nodeProps = node.props as { children?: any };
+        const nodeProps = propsOf(node);
         return extractAllText(nodeProps.children);
       }
 
@@ -528,7 +538,7 @@ export function CustomTable({ children }: CustomTableProps) {
     // Extract header text from cells
     const headers = headerCells.map((cell) => {
       if (!React.isValidElement(cell)) return "";
-      const cellProps = (cell.props as any).children;
+      const cellProps = propsOf(cell).children;
 
       // Handle different types of children content
       if (typeof cellProps === "string") {
@@ -538,7 +548,7 @@ export function CustomTable({ children }: CustomTableProps) {
         return cellProps.map((c) => (typeof c === "string" ? c : "")).join("");
       }
       if (React.isValidElement(cellProps)) {
-        const nestedProps = (cellProps.props as any).children;
+        const nestedProps = propsOf(cellProps).children;
         return String(nestedProps || "");
       }
 
@@ -606,12 +616,12 @@ export function CustomTable({ children }: CustomTableProps) {
   if (theadRows.length > 0) {
     const theadRow = theadRows[0];
     if (React.isValidElement(theadRow)) {
-      const theadCells = React.Children.toArray((theadRow.props as any).children);
+      const theadCells = React.Children.toArray(propsOf(theadRow).children);
 
       // Check if there are multiple cells with content in thead (indicating column headers)
       const nonEmptyCells = theadCells.filter((cell) => {
         if (!React.isValidElement(cell)) return false;
-        const cellProps = (cell.props as any).children;
+        const cellProps = propsOf(cell).children;
         const cellText = typeof cellProps === "string" ? cellProps.trim() : String(cellProps || "").trim();
         return cellText.length > 0;
       });
@@ -622,14 +632,14 @@ export function CustomTable({ children }: CustomTableProps) {
       }
 
       // Check if first cell has content and other cells are empty
-      const firstCellContent = React.isValidElement(theadCells[0]) ? (theadCells[0].props as any).children : "";
+      const firstCellContent = React.isValidElement(theadCells[0]) ? propsOf(theadCells[0]).children : "";
       const firstCellText =
         typeof firstCellContent === "string" ? firstCellContent.trim() : String(firstCellContent || "").trim();
 
       // Check if first cell has content and other cells are empty or mostly empty
       const otherCellsHaveContent = theadCells.slice(1).some((cell) => {
         if (!React.isValidElement(cell)) return false;
-        const cellProps = (cell.props as any).children;
+        const cellProps = propsOf(cell).children;
         const cellText = typeof cellProps === "string" ? cellProps.trim() : String(cellProps || "").trim();
         return cellText.length > 0;
       });
@@ -700,9 +710,9 @@ export function CustomTable({ children }: CustomTableProps) {
   let rawHeaderText = "";
 
   if (React.isValidElement(theadRow)) {
-    const theadCells = React.Children.toArray((theadRow.props as any).children);
+    const theadCells = React.Children.toArray(propsOf(theadRow).children);
     if (theadCells.length > 0 && React.isValidElement(theadCells[0])) {
-      const cellContent = (theadCells[0].props as any).children;
+      const cellContent = propsOf(theadCells[0]).children;
       rawHeaderText = extractRawText(cellContent);
     }
   }
