@@ -343,9 +343,9 @@ export default function Header({ chapters }: HeaderProps) {
                   sideOffset={8}
                 >
                   <div className="flex flex-col gap-3">
-                    <h3 className="text-xs font-semibold text-white/60 uppercase tracking-wide font-gteesti-display">
+                    <p className="text-xs font-semibold text-white/60 uppercase tracking-wide font-gteesti-display">
                       Share
-                    </h3>
+                    </p>
                     <div className="flex items-center gap-2">
                       <button
                         type="button"
@@ -412,9 +412,9 @@ export default function Header({ chapters }: HeaderProps) {
                   sideOffset={8}
                 >
                   <div className="flex flex-col gap-2">
-                    <h3 className="text-xs font-semibold text-white/60 uppercase tracking-wide font-gteesti-display mb-1">
+                    <p className="text-xs font-semibold text-white/60 uppercase tracking-wide font-gteesti-display mb-1">
                       Region
-                    </h3>
+                    </p>
                     <button
                       type="button"
                       onClick={() => {
@@ -514,9 +514,9 @@ export default function Header({ chapters }: HeaderProps) {
 
                 {/* Region/Language Switcher */}
                 <div className="flex flex-col gap-2">
-                  <h3 className="px-4 text-xs font-semibold text-white/60 uppercase tracking-wide font-gteesti-display">
+                  <p className="px-4 text-xs font-semibold text-white/60 uppercase tracking-wide font-gteesti-display">
                     Region
-                  </h3>
+                  </p>
                   <div className="px-2 flex flex-col gap-2">
                     <button
                       type="button"
@@ -549,9 +549,9 @@ export default function Header({ chapters }: HeaderProps) {
 
                 {/* Share current page */}
                 <div className="flex flex-col gap-2">
-                  <h3 className="px-4 text-xs font-semibold text-white/60 uppercase tracking-wide font-gteesti-display">
+                  <p className="px-4 text-xs font-semibold text-white/60 uppercase tracking-wide font-gteesti-display">
                     Share
-                  </h3>
+                  </p>
                   <div className="px-2 flex items-center gap-2">
                     <button
                       type="button"
