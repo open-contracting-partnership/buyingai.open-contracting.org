@@ -289,7 +289,7 @@ const ProcurementPathways: React.FC<{
     const RowHeader = expanded ? "div" : "button";
 
     return (
-      <div key={row.id} className="border-t-2 border-gray-200">
+      <div key={row.id} className="border-t-2 border-gray-200 break-inside-avoid">
         <RowHeader
           onClick={expanded ? undefined : () => toggleRow(row.id)}
           className="w-full flex items-center justify-between p-2.5 md:p-3 hover:bg-gray-50 transition-colors gap-2"
@@ -377,7 +377,7 @@ const ProcurementPathways: React.FC<{
             key={category.id}
             className={`${
               category.subcategories ? "w-full md:flex-[2]" : "w-full md:flex-1"
-            } rounded-t-lg overflow-hidden shadow-md`}
+            } rounded-t-lg overflow-hidden shadow-md break-inside-avoid`}
           >
             {renderCategoryHeader(category)}
           </div>

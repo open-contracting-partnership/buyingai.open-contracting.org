@@ -63,6 +63,8 @@ async function main() {
         path: path.join(PDF_DIR, `${slug}.pdf`),
         format: 'A4',
         printBackground: true,
+        // Lays out the page wider than Tailwind's md breakpoint (768px), as on desktop.
+        scale: 0.85,
         margin: { top: '15mm', right: '15mm', bottom: '15mm', left: '15mm' },
       });
       console.log(`✓ pdfs/${slug}.pdf`);
