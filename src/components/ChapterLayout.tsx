@@ -222,7 +222,7 @@ export function ChapterLayout({ currentSlug, children, structure }: ChapterLayou
               </div>
               <div className="flex-1">
                 <div className="p-5">
-                  <h2 className="text-base font-medium text-black">Table of content</h2>
+                  <p className="text-base font-medium text-black">Table of content</p>
                 </div>
                 <nav
                   ref={navRef}
