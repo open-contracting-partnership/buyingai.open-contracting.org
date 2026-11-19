@@ -69,7 +69,7 @@ export async function generateMetadata({ params }: PageProps) {
   let description = `Read ${chapter.title} - Buying AI guide by Open Contracting Partnership.`;
   const firstParagraph = chapter.content.split("\n\n").find((p) => p.trim().length > 50 && !p.trim().startsWith("#"));
   if (firstParagraph) {
-    description = firstParagraph.trim().replace(/\n/g, " ").substring(0, 160) + "...";
+    description = `${firstParagraph.trim().replace(/\n/g, " ").substring(0, 160)}...`;
   }
 
   return {

@@ -183,7 +183,7 @@ const ProcurementPathways: React.FC<{
       const textId = `category-${category.id}`;
       const isExpanded = expanded || expandedTexts.has(textId);
       const needsTruncation = description.length > maxLength;
-      const displayText = needsTruncation && !isExpanded ? description.substring(0, maxLength) + "..." : description;
+      const displayText = needsTruncation && !isExpanded ? `${description.substring(0, maxLength)}...` : description;
 
       return (
         <div className="flex flex-col h-full">
@@ -231,7 +231,7 @@ const ProcurementPathways: React.FC<{
             const isExpanded = expanded || expandedTexts.has(textId);
             const needsTruncation = description.length > maxLength;
             const displayText =
-              needsTruncation && !isExpanded ? description.substring(0, maxLength) + "..." : description;
+              needsTruncation && !isExpanded ? `${description.substring(0, maxLength)}...` : description;
 
             return (
               <div
@@ -307,7 +307,7 @@ const ProcurementPathways: React.FC<{
               const isTextExpanded = expanded || expandedTexts.has(textId);
               const needsTruncation = content.length > maxLength;
               const displayText =
-                needsTruncation && !isTextExpanded ? content.substring(0, maxLength) + "..." : content;
+                needsTruncation && !isTextExpanded ? `${content.substring(0, maxLength)}...` : content;
 
               return (
                 <div
