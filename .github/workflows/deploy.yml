@@ -13,10 +13,11 @@ jobs:
         with:
           node-version: 24
       - run: npm ci
-      - name: Install Open Sans for the PDF page header
+      - name: Install GT Eesti for the PDF page header
         run: |
-          mkdir -p ~/.local/share/fonts
-          cp scripts/fonts/*.ttf ~/.local/share/fonts/
+          python3 -m venv /tmp/fonts
+          /tmp/fonts/bin/pip install -q fonttools brotli
+          /tmp/fonts/bin/python scripts/install-fonts.py
           fc-cache -f
       - name: Build
         env:

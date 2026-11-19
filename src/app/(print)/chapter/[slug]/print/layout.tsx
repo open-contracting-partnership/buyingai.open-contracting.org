@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { ReactNode } from "react";
-import { IBM_Plex_Sans, Open_Sans } from "next/font/google";
+import { IBM_Plex_Sans } from "next/font/google";
 import "@/app/globals.css";
 import { GlossaryProvider } from "@/components/GlossaryProvider";
 import { RegionProvider } from "@/components/RegionProvider";
@@ -9,13 +9,6 @@ import glossaryData from "@/app/data/glossary.json";
 const ibmPlexSans = IBM_Plex_Sans({
   variable: "--font-ibm-plex-sans",
   subsets: ["latin"],
-});
-
-// GT Eesti isn't licensed for embedding in the PDFs generated from this page.
-const openSans = Open_Sans({
-  variable: "--font-open-sans",
-  subsets: ["latin"],
-  style: ["normal", "italic"],
 });
 
 export const metadata: Metadata = {
@@ -30,7 +23,7 @@ export default function PrintLayout({
   return (
     <html lang="en">
       <body
-        className={`${ibmPlexSans.variable} ${openSans.variable} open-sans-only antialiased min-h-screen !bg-white text-black font-gteesti-text overflow-x-hidden`}
+        className={`${ibmPlexSans.variable} antialiased min-h-screen !bg-white text-black font-gteesti-text overflow-x-hidden`}
         style={{ display: 'block', visibility: 'visible', opacity: 1 }}
       >
         <RegionProvider autoProcess={false}>

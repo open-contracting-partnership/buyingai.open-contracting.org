@@ -28,7 +28,7 @@
 
 @font-face {
   font-family: "GT Eesti Display";
-  src: url("/fonts/GT-Eesti-Display-Bold-Trial.otf") format("opentype");
+  src: url("/fonts/GT-Eesti-Display-Bold.woff2") format("woff2");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -36,9 +36,33 @@
 
 @font-face {
   font-family: "GT Eesti Text";
-  src: url("/fonts/GT-Eesti-Text-Regular-Trial.otf") format("opentype");
+  src: url("/fonts/GT-Eesti-Text-Regular.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "GT Eesti Text";
+  src: url("/fonts/GT-Eesti-Text-Regular-Italic.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "GT Eesti Text";
+  src: url("/fonts/GT-Eesti-Text-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "GT Eesti Text";
+  src: url("/fonts/GT-Eesti-Text-Bold-Italic.woff2") format("woff2");
+  font-weight: 700;
+  font-style: italic;
   font-display: swap;
 }
 
@@ -550,10 +574,4 @@ body > div > div {
 
 .prose ol {
   margin: 1.5rem 0;
-}
-
-/* Print pages, from which the chapter PDFs are generated. */
-.open-sans-only,
-.open-sans-only * {
-  font-family: var(--font-open-sans), Arial, sans-serif !important;
 }
