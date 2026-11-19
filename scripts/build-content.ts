@@ -49,7 +49,7 @@ function buildChaptersStructure() {
     // Match main section (e.g., "1. Introduction")
     const sectionMatch = line.match(/^(\d+)\.\s+(.+)$/);
     if (sectionMatch) {
-      const sectionNumber = parseInt(sectionMatch[1]);
+      const sectionNumber = parseInt(sectionMatch[1], 10);
       const sectionTitle = sectionMatch[2].trim();
 
       currentSection = {
@@ -72,7 +72,7 @@ function buildChaptersStructure() {
       if (slug) {
         // Extract the actual order from the filename
         const orderMatch = slug.match(/^(\d+)/);
-        const actualOrder = orderMatch ? parseInt(orderMatch[1]) : chapterOrder + 1;
+        const actualOrder = orderMatch ? parseInt(orderMatch[1], 10) : chapterOrder + 1;
 
         currentSection.chapters.push({
           slug,

@@ -15,7 +15,7 @@ export function CollapsibleText({
   const [isOpen, setIsOpen] = useState(false);
 
   // Determine heading level and corresponding classes
-  const headingLevel = heading ? parseInt(heading.replace(/^#+/, "").trim() || "4") : 4;
+  const headingLevel = heading ? parseInt(heading.replace(/^#+/, "").trim() || "4", 10) : 4;
   const HeadingTag = `h${headingLevel}` as React.ElementType;
 
   // Get appropriate text size based on heading level
