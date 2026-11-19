@@ -10,31 +10,42 @@
     "lineWidth": 119
   },
   "files": {
-    "includes": ["**", "!content", "!**/*.svg"]
+    "includes": [
+      "**",
+      // Chapters copied from Google Docs. The site's renderers rely on their Markdown syntax (like * for italics).
+      "!content",
+      // Images displayed with img elements, which set alternative text.
+      "!**/*.svg"
+    ]
   },
   "linter": {
     "rules": {
       "complexity": {
+        // The stylesheet overrides Tailwind and Typography styles, and print styles override screen styles.
         "noImportantStyles": "off"
       },
       "correctness": {
         "useExhaustiveDependencies": {
           "level": "error",
           "options": {
+            // Some effects re-run on purpose when the chapter or content changes.
             "reportUnnecessaryDependencies": false
           }
         }
       },
       "style": {
+        // The stylesheet orders rules by component, not by specificity.
         "noDescendingSpecificity": "off"
       },
       "suspicious": {
+        // The lists are rendered from static content, which is never reordered.
         "noArrayIndexKey": "off"
       }
     }
   },
   "css": {
     "parser": {
+      // Tailwind's @plugin and @theme directives.
       "tailwindDirectives": true
     }
   }
