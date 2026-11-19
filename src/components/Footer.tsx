@@ -1,12 +1,12 @@
-import logoFooter from "@/app/assets/images/logo-footer.svg";
 import Image from "next/image";
 import Link from "next/link";
 import facebookIcon from "@/app/assets/images/facebook-icon.svg";
-import twitterIcon from "@/app/assets/images/twitter-icon.svg";
-import linkedinIcon from "@/app/assets/images/linkedin-icon.svg";
-import youtubeIcon from "@/app/assets/images/youtube-icon.svg";
-import soundcloudIcon from "@/app/assets/images/soundcloud-icon.svg";
 import githubIcon from "@/app/assets/images/github-icon.svg";
+import linkedinIcon from "@/app/assets/images/linkedin-icon.svg";
+import logoFooter from "@/app/assets/images/logo-footer.svg";
+import soundcloudIcon from "@/app/assets/images/soundcloud-icon.svg";
+import twitterIcon from "@/app/assets/images/twitter-icon.svg";
+import youtubeIcon from "@/app/assets/images/youtube-icon.svg";
 
 export default function Footer() {
   return (
@@ -22,26 +22,17 @@ export default function Footer() {
                 <div className="border-2 border-[#C8D419] rounded-tl-4xl py-4 px-6 text-white">
                   <h3 className="font-bold font-gteesti-display leading-tight">
                     This is a resource by <br />
-                    <Link
-                      className="underline"
-                      href="https://www.open-contracting.org"
-                      target="_blank"
-                    >
+                    <Link className="underline" href="https://www.open-contracting.org" target="_blank">
                       Open Contracting Partnership
                     </Link>
                   </h3>
                   <p className="mt-3.5 text-xs">
-                    We are a global nonprofit organization that supports public
-                    sector organizations to get better results from their
-                    procurements by opening up and leveraging data,
-                    multi-stakeholder collaboration, and goal-driven systems
-                    change.
+                    We are a global nonprofit organization that supports public sector organizations to get better
+                    results from their procurements by opening up and leveraging data, multi-stakeholder collaboration,
+                    and goal-driven systems change.
                   </p>
                   <p className="mt-3.5 text-xs">
-                    <Link
-                      className="underline"
-                      href="mailto:engage@open-contracting.org"
-                    >
+                    <Link className="underline" href="mailto:engage@open-contracting.org">
                       Contact us
                     </Link>{" "}
                     to discuss your project. We'd love to help!
@@ -49,75 +40,25 @@ export default function Footer() {
                 </div>
               </div>
               <div className="md:w-1/3">
-                <h3 className="font-bold text-white font-gteesti-display">
-                  Connect with us:
-                </h3>
+                <h3 className="font-bold text-white font-gteesti-display">Connect with us:</h3>
                 <div className="mt-5 grid grid-cols-2 gap-4 w-1/2 md:translate-x-4 lg:translate-x-6">
-                  <Link
-                    href="https://twitter.com/opencontracting"
-                    target="_blank"
-                  >
-                    <Image
-                      src={twitterIcon}
-                      alt="Twitter"
-                      width={26}
-                      height={26}
-                    />
+                  <Link href="https://twitter.com/opencontracting" target="_blank">
+                    <Image src={twitterIcon} alt="Twitter" width={26} height={26} />
                   </Link>
-                  <Link
-                    href="https://github.com/open-contracting-partnership/"
-                    target="_blank"
-                  >
-                    <Image
-                      src={githubIcon}
-                      alt="GitHub"
-                      width={26}
-                      height={26}
-                    />
+                  <Link href="https://github.com/open-contracting-partnership/" target="_blank">
+                    <Image src={githubIcon} alt="GitHub" width={26} height={26} />
                   </Link>
-                  <Link
-                    href="https://www.facebook.com/OpenContracting"
-                    target="_blank"
-                  >
-                    <Image
-                      src={facebookIcon}
-                      alt="Facebook"
-                      width={26}
-                      height={26}
-                    />
+                  <Link href="https://www.facebook.com/OpenContracting" target="_blank">
+                    <Image src={facebookIcon} alt="Facebook" width={26} height={26} />
                   </Link>
-                  <Link
-                    href="https://soundcloud.com/opencontracting"
-                    target="_blank"
-                  >
-                    <Image
-                      src={soundcloudIcon}
-                      alt="SoundCloud"
-                      width={26}
-                      height={26}
-                    />
+                  <Link href="https://soundcloud.com/opencontracting" target="_blank">
+                    <Image src={soundcloudIcon} alt="SoundCloud" width={26} height={26} />
                   </Link>
-                  <Link
-                    href="https://www.linkedin.com/company/open-contracting-partnership"
-                    target="_blank"
-                  >
-                    <Image
-                      src={linkedinIcon}
-                      alt="LinkedIn"
-                      width={26}
-                      height={26}
-                    />
+                  <Link href="https://www.linkedin.com/company/open-contracting-partnership" target="_blank">
+                    <Image src={linkedinIcon} alt="LinkedIn" width={26} height={26} />
                   </Link>
-                  <Link
-                    href="https://www.youtube.com/OpenContractingPartnership"
-                    target="_blank"
-                  >
-                    <Image
-                      src={youtubeIcon}
-                      alt="YouTube"
-                      width={26}
-                      height={26}
-                    />
+                  <Link href="https://www.youtube.com/OpenContractingPartnership" target="_blank">
+                    <Image src={youtubeIcon} alt="YouTube" width={26} height={26} />
                   </Link>
                 </div>
               </div>
@@ -126,21 +67,12 @@ export default function Footer() {
         </div>
         <div className="mt-8">
           <p className="text-[11px]">
-            <Link
-              className="underline"
-              href="https://www.open-contracting.org"
-              target="_blank"
-            >
-            Open Contracting Partnership  
+            <Link className="underline" href="https://www.open-contracting.org" target="_blank">
+              Open Contracting Partnership
             </Link>
-             2025. This work, unless otherwise
-            noted, is licensed under a Creative Commons Attribution 4.0
-            International License.{" "}
-            <Link
-              className="underline"
-              href="https://www.open-contracting.org/terms-of-use/"
-              target="_blank"
-            >
+            2025. This work, unless otherwise noted, is licensed under a Creative Commons Attribution 4.0 International
+            License.{" "}
+            <Link className="underline" href="https://www.open-contracting.org/terms-of-use/" target="_blank">
               Terms
             </Link>
           </p>

@@ -1,12 +1,7 @@
 "use client";
 
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useRef,
-  useEffect,
-} from "react";
+import type React from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { logger } from "@/lib/logger";
 
 interface GlossaryTerm {
@@ -27,9 +22,7 @@ interface GlossaryContextType {
   tooltip: TooltipState | null;
 }
 
-const GlossaryContext = createContext<GlossaryContextType | undefined>(
-  undefined
-);
+const GlossaryContext = createContext<GlossaryContextType | undefined>(undefined);
 
 export function GlossaryProvider({
   children,
@@ -42,12 +35,7 @@ export function GlossaryProvider({
 }) {
   const [tooltip, setTooltip] = useState<TooltipState | null>(null);
 
-  const showTooltip = (
-    term: string,
-    definition: string,
-    x: number,
-    y: number
-  ) => {
+  const showTooltip = (term: string, definition: string, x: number, y: number) => {
     setTooltip({ term, definition, position: { x, y } });
   };
 
@@ -56,14 +44,8 @@ export function GlossaryProvider({
   };
 
   return (
-    <GlossaryContext.Provider
-      value={{ terms: glossaryData, showTooltip, hideTooltip, tooltip }}
-    >
-      {autoProcess ? (
-        <AutoGlossaryWrapper>{children}</AutoGlossaryWrapper>
-      ) : (
-        children
-      )}
+    <GlossaryContext.Provider value={{ terms: glossaryData, showTooltip, hideTooltip, tooltip }}>
+      {autoProcess ? <AutoGlossaryWrapper>{children}</AutoGlossaryWrapper> : children}
       {tooltip && <Tooltip {...tooltip} />}
     </GlossaryContext.Provider>
   );
@@ -151,9 +133,7 @@ function AutoGlossaryWrapper({ children }: { children: React.ReactNode }) {
         }
 
         // Buscar términos en el texto
-        const sortedTerms = [...terms].sort(
-          (a, b) => b.Term.length - a.Term.length
-        );
+        const sortedTerms = [...terms].sort((a, b) => b.Term.length - a.Term.length);
         let hasMatches = false;
         const matches: Array<{
           index: number;
@@ -175,10 +155,8 @@ function AutoGlossaryWrapper({ children }: { children: React.ReactNode }) {
           while ((match = regex.exec(text)) !== null) {
             const overlaps = matches.some(
               (m) =>
-                (match!.index >= m.index &&
-                  match!.index < m.index + m.length) ||
-                (match!.index + match![0].length > m.index &&
-                  match!.index + match![0].length <= m.index + m.length)
+                (match!.index >= m.index && match!.index < m.index + m.length) ||
+                (match!.index + match![0].length > m.index && match!.index + match![0].length <= m.index + m.length),
             );
 
             if (!overlaps) {
@@ -189,7 +167,7 @@ function AutoGlossaryWrapper({ children }: { children: React.ReactNode }) {
               });
               hasMatches = true;
             }
-            
+
             // Prevent infinite loops with zero-length matches
             if (match[0].length === 0) {
               regex.lastIndex++;
@@ -205,28 +183,17 @@ function AutoGlossaryWrapper({ children }: { children: React.ReactNode }) {
           matches.forEach((match) => {
             // Texto antes del match
             if (match.index > lastIndex) {
-              fragment.appendChild(
-                document.createTextNode(text.substring(lastIndex, match.index))
-              );
+              fragment.appendChild(document.createTextNode(text.substring(lastIndex, match.index)));
             }
 
             // Crear elemento para el término
             const span = document.createElement("span");
-            span.className =
-              "glossary-term cursor-help bg-[#c8d419] rounded-full px-1 py-0.5";
-            span.textContent = text.substring(
-              match.index,
-              match.index + match.length
-            );
+            span.className = "glossary-term cursor-help bg-[#c8d419] rounded-full px-1 py-0.5";
+            span.textContent = text.substring(match.index, match.index + match.length);
 
             span.addEventListener("mouseenter", (e) => {
               const rect = span.getBoundingClientRect();
-              showTooltip(
-                match.term.Term,
-                match.term.Definition,
-                rect.left,
-                rect.bottom + 5
-              );
+              showTooltip(match.term.Term, match.term.Definition, rect.left, rect.bottom + 5);
             });
 
             span.addEventListener("mouseleave", () => {
@@ -239,22 +206,20 @@ function AutoGlossaryWrapper({ children }: { children: React.ReactNode }) {
 
           // Texto restante
           if (lastIndex < text.length) {
-            fragment.appendChild(
-              document.createTextNode(text.substring(lastIndex))
-            );
+            fragment.appendChild(document.createTextNode(text.substring(lastIndex)));
           }
 
           // Mark the original node as processed before replacing
           processedNodesRef.current.add(node);
-          
+
           // Replace the node with the fragment
           try {
             parent.replaceChild(fragment, node);
-            
+
             // Mark all new nodes in the fragment as processed to avoid re-processing
             // Note: fragment.childNodes is empty after replaceChild, so we need to get nodes from parent
             const insertedNodes = Array.from(parent.childNodes).filter(
-              (n) => !processedNodesRef.current.has(n) && n !== node
+              (n) => !processedNodesRef.current.has(n) && n !== node,
             );
             insertedNodes.forEach((newNode) => {
               processedNodesRef.current.add(newNode);
@@ -305,11 +270,10 @@ function AutoGlossaryWrapper({ children }: { children: React.ReactNode }) {
         setTimeout(processContent, 100);
         return;
       }
-      
+
       // Check if there's actual text content to process
-      const hasTextContent = containerRef.current.textContent && 
-                            containerRef.current.textContent.trim().length > 0;
-      
+      const hasTextContent = containerRef.current.textContent && containerRef.current.textContent.trim().length > 0;
+
       if (!hasTextContent) {
         // If no content yet, try again after a short delay
         setTimeout(processContent, 100);
@@ -322,22 +286,22 @@ function AutoGlossaryWrapper({ children }: { children: React.ReactNode }) {
 
       // Reset processed nodes for new content
       processedNodesRef.current = new WeakSet();
-      
+
       // Process the container and also look for main element inside
       processTextNodes(containerRef.current);
-      
+
       // Also process content inside main element if it exists
-      const mainElement = containerRef.current.querySelector('main');
+      const mainElement = containerRef.current.querySelector("main");
       if (mainElement) {
         processTextNodes(mainElement);
       }
-      
+
       // Also process content inside article elements (common in chapter pages)
-      const articleElements = containerRef.current.querySelectorAll('article');
-      articleElements.forEach(article => {
+      const articleElements = containerRef.current.querySelectorAll("article");
+      articleElements.forEach((article) => {
         processTextNodes(article);
       });
-      
+
       isProcessingRef.current = false;
     };
 
@@ -358,9 +322,12 @@ function AutoGlossaryWrapper({ children }: { children: React.ReactNode }) {
     // Also use requestIdleCallback if available
     let idleCallbackId: number | null = null;
     if (typeof window !== "undefined" && "requestIdleCallback" in window) {
-      idleCallbackId = requestIdleCallback(() => {
-        processContent();
-      }, { timeout: 1500 }) as unknown as number;
+      idleCallbackId = requestIdleCallback(
+        () => {
+          processContent();
+        },
+        { timeout: 1500 },
+      ) as unknown as number;
     }
 
     // Use MutationObserver to detect when content is added dynamically
@@ -370,14 +337,16 @@ function AutoGlossaryWrapper({ children }: { children: React.ReactNode }) {
       if (typeof window !== "undefined" && "MutationObserver" in window && containerRef.current && !observer) {
         observer = new MutationObserver((mutations) => {
           // Only process if new nodes were added
-          const hasNewNodes = mutations.some(mutation => 
-            mutation.addedNodes.length > 0 && 
-            Array.from(mutation.addedNodes).some(node => 
-              node.nodeType === Node.TEXT_NODE || 
-              (node.nodeType === Node.ELEMENT_NODE && (node as Element).textContent?.trim().length > 0)
-            )
+          const hasNewNodes = mutations.some(
+            (mutation) =>
+              mutation.addedNodes.length > 0 &&
+              Array.from(mutation.addedNodes).some(
+                (node) =>
+                  node.nodeType === Node.TEXT_NODE ||
+                  (node.nodeType === Node.ELEMENT_NODE && (node as Element).textContent?.trim().length > 0),
+              ),
           );
-          
+
           if (hasNewNodes && !isProcessingRef.current) {
             // Debounce processing
             setTimeout(() => {
@@ -391,7 +360,7 @@ function AutoGlossaryWrapper({ children }: { children: React.ReactNode }) {
         observer.observe(containerRef.current, {
           childList: true,
           subtree: true,
-          characterData: true
+          characterData: true,
         });
       }
     };

@@ -1,5 +1,5 @@
-import { visit } from "unist-util-visit";
 import type { Heading, Root } from "mdast";
+import { visit } from "unist-util-visit";
 
 export type ContentPart =
   | { type: "markdown"; content: string }
@@ -28,18 +28,14 @@ ${content}
 // Convert "#### **Title {.collapsible}**" headings and "* **Title: {.collapsible}**" bullets to collapsible HTML.
 function processCollapsibles(content: string): string {
   // A heading's section ends at the next h1-h4 heading or at two blank lines.
-  const h4CollapsibleRegex =
-    /^####\s+\*\*(.*?)\s*\{\.collapsible\}\*\*\s*\n\n((?:(?!^#{1,4}\s|\n\n\n)[\s\S])*)/gm;
+  const h4CollapsibleRegex = /^####\s+\*\*(.*?)\s*\{\.collapsible\}\*\*\s*\n\n((?:(?!^#{1,4}\s|\n\n\n)[\s\S])*)/gm;
   // A bullet's section is its 2-space-indented and blank lines.
-  const bulletCollapsibleRegex =
-    /^\*\s+\*\*(.*?)\s*\{\.collapsible\}\*\*\s*\n((?:(?:  .+|\s*)\n)*(?:  .+)?)/gm;
+  const bulletCollapsibleRegex = /^\*\s+\*\*(.*?)\s*\{\.collapsible\}\*\*\s*\n((?:(?: {2}.+|\s*)\n)*(?: {2}.+)?)/gm;
 
   return content
-    .replace(h4CollapsibleRegex, (_match, title, body) =>
-      collapsibleHtml("collapsible-wrapper", title, body.trim())
-    )
+    .replace(h4CollapsibleRegex, (_match, title, body) => collapsibleHtml("collapsible-wrapper", title, body.trim()))
     .replace(bulletCollapsibleRegex, (_match, title, body) =>
-      collapsibleHtml("collapsible-wrapper-bullet", title, body.replace(/^  /gm, "").trim())
+      collapsibleHtml("collapsible-wrapper-bullet", title, body.replace(/^ {2}/gm, "").trim()),
     );
 }
 
@@ -60,7 +56,10 @@ function processImageReferences(content: string): string {
   imageRefs.forEach((imageUrl, refId) => {
     const escapedRefId = refId.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     processed = processed
-      .replace(new RegExp(`!\\[(.*?)\\]\\[${escapedRefId}\\]`, "gi"), (_match, altText) => `![${altText || ""}](${imageUrl})`)
+      .replace(
+        new RegExp(`!\\[(.*?)\\]\\[${escapedRefId}\\]`, "gi"),
+        (_match, altText) => `![${altText || ""}](${imageUrl})`,
+      )
       .replace(new RegExp(`^\\[${escapedRefId}\\]:\\s*.+$`, "gim"), "");
   });
   return processed;

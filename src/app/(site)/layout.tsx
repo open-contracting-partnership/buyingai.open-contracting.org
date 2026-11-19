@@ -1,22 +1,21 @@
-import type { Metadata } from "next";
 import { GoogleAnalytics } from "@next/third-parties/google";
-import Script from "next/script";
+import type { Metadata } from "next";
 import { IBM_Plex_Sans } from "next/font/google";
+import Script from "next/script";
 import Header from "@/components/Header";
 import "@/app/globals.css";
+import glossaryData from "@/app/data/glossary.json";
 import Footer from "@/components/Footer";
-import { getAllChapters } from "@/lib/markdown";
 import { GlossaryProvider } from "@/components/GlossaryProvider";
 import { RegionProvider } from "@/components/RegionProvider";
-import glossaryData from "@/app/data/glossary.json";
+import { getAllChapters } from "@/lib/markdown";
 
 const ibmPlexSans = IBM_Plex_Sans({
   variable: "--font-ibm-plex-sans",
   subsets: ["latin"],
 });
 
-const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://ocp-ai-buying.netlify.app";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ocp-ai-buying.netlify.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

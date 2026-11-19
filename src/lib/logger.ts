@@ -1,7 +1,7 @@
 const LOG_LEVELS = { debug: 0, log: 1, info: 2, warn: 3, error: 4 } as const;
 type LogLevel = keyof typeof LOG_LEVELS;
 
-const defaultLevel: LogLevel = process.env.CI ? 'warn' : 'debug';
+const defaultLevel: LogLevel = process.env.CI ? "warn" : "debug";
 const minLevel = LOG_LEVELS[(process.env.LOG_LEVEL as LogLevel) || defaultLevel];
 
 export const logger = {

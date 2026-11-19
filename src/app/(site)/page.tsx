@@ -7,6 +7,6 @@ export default function Home() {
   const structure = getSectionsStructure();
   const tocChapter = getChapterBySlug("00-toc");
   const tocContent = tocChapter?.content || "";
-  
+
   return <HomeClient chapters={chapters} structure={structure} tocContent={tocContent} />;
 }

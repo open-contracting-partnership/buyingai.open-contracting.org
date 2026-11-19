@@ -1,16 +1,12 @@
-import { notFound } from "next/navigation";
-import Link from "next/link";
-import React from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import { CollapsibleInitializer } from "@/components/CollapsibleInitializer";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import type React from "react";
 import { ChapterContent } from "@/components/ChapterContent";
-import {
-  getAllChapters,
-  getChapterBySlug,
-  getAdjacentChapters,
-} from "@/lib/markdown";
-import { getSectionsStructure } from "@/lib/sections";
 import { ChapterLayout } from "@/components/ChapterLayout";
+import { CollapsibleInitializer } from "@/components/CollapsibleInitializer";
+import { getAdjacentChapters, getAllChapters, getChapterBySlug } from "@/lib/markdown";
+import { getSectionsStructure } from "@/lib/sections";
 import { getChapterInSection, getSectionColor } from "@/lib/sections-types";
 
 // Helper function to render markdown in navigation titles (handles italics)
@@ -28,12 +24,9 @@ function renderTitleMarkdown(title: string): React.ReactNode {
     }
     // Add italic text with green background
     parts.push(
-      <span
-        key={match.index}
-        className="bg-green-200 px-1 py-0.5 rounded not-italic"
-      >
+      <span key={match.index} className="bg-green-200 px-1 py-0.5 rounded not-italic">
         {match[1]}
-      </span>
+      </span>,
     );
     lastIndex = match.index + match[0].length;
   }
@@ -71,18 +64,14 @@ export async function generateMetadata({ params }: PageProps) {
     };
   }
 
-  const siteUrl =
-    process.env.NEXT_PUBLIC_SITE_URL || "https://ocp-ai-buying.netlify.app";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ocp-ai-buying.netlify.app";
   const chapterUrl = `${siteUrl}/chapter/${slug}`;
 
   // Extract description from chapter content (first paragraph or first 160 chars)
   let description = `Read ${chapter.title} - Buying AI guide by Open Contracting Partnership.`;
-  const firstParagraph = chapter.content
-    .split("\n\n")
-    .find((p) => p.trim().length > 50 && !p.trim().startsWith("#"));
+  const firstParagraph = chapter.content.split("\n\n").find((p) => p.trim().length > 50 && !p.trim().startsWith("#"));
   if (firstParagraph) {
-    description =
-      firstParagraph.trim().replace(/\n/g, " ").substring(0, 160) + "...";
+    description = firstParagraph.trim().replace(/\n/g, " ").substring(0, 160) + "...";
   }
 
   return {
@@ -112,7 +101,6 @@ export async function generateMetadata({ params }: PageProps) {
     },
   };
 }
-
 
 export default async function ChapterPage({ params }: PageProps) {
   const { slug } = await params;
@@ -154,9 +142,7 @@ export default async function ChapterPage({ params }: PageProps) {
                 className="flex items-center gap-2 text-gray-600 hover:text-black transition-colors group"
               >
                 <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-                <span className="text-sm">
-                  {renderTitleMarkdown(previous.title)}
-                </span>
+                <span className="text-sm">{renderTitleMarkdown(previous.title)}</span>
               </Link>
             )}
           </div>
@@ -167,9 +153,7 @@ export default async function ChapterPage({ params }: PageProps) {
                 scroll={false}
                 className="flex items-center gap-2 text-gray-600 hover:text-black transition-colors group"
               >
-                <span className="text-sm">
-                  {renderTitleMarkdown(next.title)}
-                </span>
+                <span className="text-sm">{renderTitleMarkdown(next.title)}</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
             )}

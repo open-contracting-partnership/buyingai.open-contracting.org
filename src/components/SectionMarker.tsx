@@ -13,17 +13,17 @@ export function SectionMarker({ sectionId, children }: SectionMarkerProps) {
 
   useEffect(() => {
     if (ref.current) {
-      logger.debug('SectionMarker mounted:', sectionId);
+      logger.debug("SectionMarker mounted:", sectionId);
     }
   }, [sectionId]);
 
   return (
-    <div 
+    <div
       ref={ref}
-      data-section-id={sectionId} 
+      data-section-id={sectionId}
       className="section-marker"
-      style={{ 
-        minHeight: '100vh',
+      style={{
+        minHeight: "100vh",
         // Removed debug borders for cleaner look
       }}
     >

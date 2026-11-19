@@ -1,18 +1,14 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import Link from "next/link";
-import { logger } from "@/lib/logger";
 import { Download } from "lucide-react";
-import type { Chapter } from "@/lib/markdown";
-import {
-  SectionsStructure,
-  getChapterInSection,
-  getSectionColor,
-} from "@/lib/sections-types";
-import { StickyNavbar } from "./StickyNavbar";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
+import { logger } from "@/lib/logger";
+import type { Chapter } from "@/lib/markdown";
+import { getChapterInSection, getSectionColor, type SectionsStructure } from "@/lib/sections-types";
 import { SectionMarker } from "./SectionMarker";
+import { StickyNavbar } from "./StickyNavbar";
 
 // Helper function to convert hex color to rgba with opacity
 function hexToRgba(hex: string, opacity: number): string {
@@ -60,10 +56,10 @@ export function ChapterLayout({
     const handleResize = () => {
       setSidebarVisible(window.innerWidth >= 768);
     };
-    
+
     // Set initial visibility based on viewport
     handleResize();
-    
+
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
@@ -82,9 +78,7 @@ export function ChapterLayout({
 
   const currentChapterInfo = getChapterInSection(structure, currentSlug);
   const currentSection = currentChapterInfo?.section;
-  const sectionColor = currentSection
-    ? getSectionColor(currentSection.number)
-    : getSectionColor(1);
+  const sectionColor = currentSection ? getSectionColor(currentSection.number) : getSectionColor(1);
 
   // Check for hash on mount and scroll to position
   useEffect(() => {
@@ -103,8 +97,7 @@ export function ChapterLayout({
           // Add extra padding (23px) for better visibility = 200px
           const offset = 200;
           const elementPosition = targetElement.getBoundingClientRect().top;
-          const offsetPosition =
-            elementPosition + window.pageYOffset - offset;
+          const offsetPosition = elementPosition + window.pageYOffset - offset;
 
           window.scrollTo({
             top: offsetPosition,
@@ -128,8 +121,7 @@ export function ChapterLayout({
         if (targetElement) {
           const offset = 200;
           const elementPosition = targetElement.getBoundingClientRect().top;
-          const offsetPosition =
-            elementPosition + window.pageYOffset - offset;
+          const offsetPosition = elementPosition + window.pageYOffset - offset;
 
           window.scrollTo({
             top: offsetPosition,
@@ -193,16 +185,13 @@ export function ChapterLayout({
     const nav = navRef.current;
     if (!nav) return;
 
-    const activeItem = nav.querySelector(
-      `[data-chapter-slug="${currentSlug}"]`
-    ) as HTMLElement;
+    const activeItem = nav.querySelector(`[data-chapter-slug="${currentSlug}"]`) as HTMLElement;
 
     if (activeItem) {
       // Check if the active item is already in view
       const navRect = nav.getBoundingClientRect();
       const itemRect = activeItem.getBoundingClientRect();
-      const isInView =
-        itemRect.top >= navRect.top && itemRect.bottom <= navRect.bottom;
+      const isInView = itemRect.top >= navRect.top && itemRect.bottom <= navRect.bottom;
 
       // If not in view, scroll it into view (this maintains context)
       if (!isInView) {
@@ -260,8 +249,8 @@ export function ChapterLayout({
             !isMounted
               ? "w-[366px] fixed top-[117px] translate-x-0 lg:sticky"
               : sidebarVisible
-              ? "w-[366px] fixed top-[117px] translate-x-0 lg:sticky"
-              : "fixed top-[117px] w-full -translate-x-full overflow-hidden lg:sticky lg:w-0 lg:translate-x-0"
+                ? "w-[366px] fixed top-[117px] translate-x-0 lg:sticky"
+                : "fixed top-[117px] w-full -translate-x-full overflow-hidden lg:sticky lg:w-0 lg:translate-x-0"
           }`}
         >
           <div className="">
@@ -273,14 +262,7 @@ export function ChapterLayout({
                   className="size-5 rounded-full bg-[#92C36F] grid place-items-center text-white transition-colors z-10 cursor-pointer"
                   aria-label="Close sidebar"
                 >
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <line x1="18" y1="6" x2="6" y2="18" />
                     <line x1="6" y1="6" x2="18" y2="18" />
                   </svg>
@@ -288,35 +270,21 @@ export function ChapterLayout({
               </div>
               <div className="flex-1">
                 <div className="p-5">
-                  <h2 className="text-base font-medium text-black">
-                    Table of content
-                  </h2>
+                  <h2 className="text-base font-medium text-black">Table of content</h2>
                 </div>
-                <nav
-                  ref={navRef}
-                  className="space-y-0 max-h-[calc(100vh-240px)] overflow-y-auto overscroll-contain"
-                >
+                <nav ref={navRef} className="space-y-0 max-h-[calc(100vh-240px)] overflow-y-auto overscroll-contain">
                   {structure.sections.map((section) => {
                     // Check if this section is active based on intersection observer or current chapter
-                    const hasCurrentChapter = section.chapters.some(
-                      (ch) => ch.slug === currentSlug
-                    );
+                    const hasCurrentChapter = section.chapters.some((ch) => ch.slug === currentSlug);
                     const isActiveSection =
                       hasCurrentChapter ||
-                      (activeSectionId &&
-                        section.chapters.some(
-                          (ch) => ch.slug === activeSectionId
-                        ));
+                      (activeSectionId && section.chapters.some((ch) => ch.slug === activeSectionId));
                     const color = getSectionColor(section.number);
 
                     return (
                       <div key={section.number} className="relative p-1">
                         {/* Section Header */}
-                        <div
-                          className={`flex items-center py-3 px-4 ${
-                            isActiveSection ? "" : ""
-                          }`}
-                        >
+                        <div className={`flex items-center py-3 px-4 ${isActiveSection ? "" : ""}`}>
                           {/* Active Section Indicator Bar */}
                           {isActiveSection && (
                             <div
@@ -331,11 +299,7 @@ export function ChapterLayout({
                               className={`text-sm font-gteesti-display font-medium mr-2 ${
                                 isActiveSection ? "" : "text-black"
                               }`}
-                              style={
-                                isActiveSection
-                                  ? { color: color.bg }
-                                  : undefined
-                              }
+                              style={isActiveSection ? { color: color.bg } : undefined}
                             >
                               {section.number.toString().padStart(2, "0")}
                             </span>
@@ -343,11 +307,7 @@ export function ChapterLayout({
                               className={`text-sm font-gteesti-display font-medium ${
                                 isActiveSection ? "" : "text-black"
                               }`}
-                              style={
-                                isActiveSection
-                                  ? { color: color.bg }
-                                  : undefined
-                              }
+                              style={isActiveSection ? { color: color.bg } : undefined}
                             >
                               {section.title}
                             </span>
@@ -357,9 +317,7 @@ export function ChapterLayout({
                         {/* Section Chapters - Always show all chapters */}
                         <div className="space-y-1 ml-6 border-l border-black">
                           {section.chapters.map((ch) => {
-                            const isActiveChapter =
-                              ch.slug === currentSlug ||
-                              ch.slug === activeSectionId;
+                            const isActiveChapter = ch.slug === currentSlug || ch.slug === activeSectionId;
                             return (
                               <Link
                                 key={ch.slug}
@@ -374,10 +332,7 @@ export function ChapterLayout({
                                 style={
                                   isActiveChapter
                                     ? {
-                                        backgroundColor: hexToRgba(
-                                          color.bg,
-                                          0.19
-                                        ),
+                                        backgroundColor: hexToRgba(color.bg, 0.19),
                                       }
                                     : undefined
                                 }

@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
-import { useState, useEffect } from "react";
-import { SectionsStructure, getSectionColor } from "@/lib/sections-types";
 import { ChevronRightIcon } from "lucide-react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { getSectionColor, type SectionsStructure } from "@/lib/sections-types";
 
 interface StickyNavbarProps {
   structure: SectionsStructure;
@@ -13,13 +13,7 @@ interface StickyNavbarProps {
   onToggleSidebar: () => void;
 }
 
-export function StickyNavbar({
-  structure,
-  currentSlug,
-  visible,
-  sidebarVisible,
-  onToggleSidebar,
-}: StickyNavbarProps) {
+export function StickyNavbar({ structure, currentSlug, visible, sidebarVisible, onToggleSidebar }: StickyNavbarProps) {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -33,9 +27,7 @@ export function StickyNavbar({
   }, []);
   // Find current section based on current slug
   const currentSectionNumber =
-    structure.sections.find((section) =>
-      section.chapters.some((ch) => ch.slug === currentSlug)
-    )?.number || 1;
+    structure.sections.find((section) => section.chapters.some((ch) => ch.slug === currentSlug))?.number || 1;
 
   return (
     <nav
@@ -49,9 +41,7 @@ export function StickyNavbar({
       {/* Chapter Indicator Bar */}
       <div className="h-[60px] flex overflow-x-auto overflow-y-hidden scrollbar-hide">
         {/* Sidebar Space - Only when sidebar is visible */}
-        {sidebarVisible && !isMobile && (
-          <div className="w-[366px] bg-transparent flex-shrink-0">&nbsp;</div>
-        )}
+        {sidebarVisible && !isMobile && <div className="w-[366px] bg-transparent flex-shrink-0">&nbsp;</div>}
 
         {/* Show Sidebar Button - Only when sidebar is hidden */}
         {!sidebarVisible && (
@@ -59,18 +49,8 @@ export function StickyNavbar({
             className="flex items-center px-2 md:px-4 bg-transparent cursor-pointer flex-shrink-0 border-none outline-none focus:outline-none"
             onClick={onToggleSidebar}
           >
-            <div
-              className="size-6 md:size-8 grid place-items-center text-black"
-              aria-label="Show sidebar"
-            >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
+            <div className="size-6 md:size-8 grid place-items-center text-black" aria-label="Show sidebar">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <line x1="3" y1="6" x2="21" y2="6" />
                 <line x1="3" y1="12" x2="21" y2="12" />
                 <line x1="3" y1="18" x2="21" y2="18" />
@@ -96,28 +76,18 @@ export function StickyNavbar({
                   isMobile
                     ? "flex-1" // Mobile: todos usan flex-1 para distribuir uniformemente
                     : isActive
-                    ? "md:flex-1 flex-shrink-0"
-                    : "flex-shrink-0"
-                } ${
-                  isLast && isMobile ? "rounded-tr-[8px] rounded-br-[8px]" : ""
-                }`}
+                      ? "md:flex-1 flex-shrink-0"
+                      : "flex-shrink-0"
+                } ${isLast && isMobile ? "rounded-tr-[8px] rounded-br-[8px]" : ""}`}
                 style={{
                   backgroundColor: color.bg,
                   // Desktop: mantiene comportamiento original con minWidth
-                  minWidth: !isMobile
-                    ? isActive
-                      ? "420px"
-                      : "50px"
-                    : undefined,
+                  minWidth: !isMobile ? (isActive ? "420px" : "50px") : undefined,
                   width: !isMobile && isActive ? "auto" : undefined,
                 }}
               >
                 <div
-                  className={`flex items-center ${
-                    isActive
-                      ? "px-2 md:px-6 gap-2 md:gap-4"
-                      : "justify-center w-full"
-                  }`}
+                  className={`flex items-center ${isActive ? "px-2 md:px-6 gap-2 md:gap-4" : "justify-center w-full"}`}
                 >
                   {/* Section Number */}
                   <span className="text-black font-medium text-sm md:text-base">
@@ -128,17 +98,14 @@ export function StickyNavbar({
                   {isActive && (
                     <>
                       {/* Section Title - hidden on mobile */}
-                      <span className="hidden md:inline text-black font-medium text-base">
-                        {section.title}
-                      </span>
+                      <span className="hidden md:inline text-black font-medium text-base">{section.title}</span>
 
                       {/* Arrow - hidden on mobile */}
                       <ChevronRightIcon className="hidden md:inline size-6 text-black" />
 
                       {/* Current Chapter - abbreviated on mobile */}
                       <span className="text-black text-xs md:text-sm truncate max-w-[120px] md:max-w-none">
-                        {section.chapters.find((ch) => ch.slug === currentSlug)
-                          ?.title || section.chapters[0]?.title}
+                        {section.chapters.find((ch) => ch.slug === currentSlug)?.title || section.chapters[0]?.title}
                       </span>
                     </>
                   )}

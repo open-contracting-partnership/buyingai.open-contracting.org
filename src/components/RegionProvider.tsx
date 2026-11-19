@@ -1,13 +1,8 @@
 "use client";
 
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useRef,
-  useEffect,
-} from "react";
 import { usePathname } from "next/navigation";
+import type React from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import termsData from "@/app/data/terms.json";
 
 type Region = "US" | "GLOBAL";
@@ -43,7 +38,7 @@ export function RegionProvider({
       if (isPrintPage) {
         return "US";
       }
-      
+
       const savedRegion = localStorage.getItem("region") as Region | null;
       if (savedRegion === "US" || savedRegion === "GLOBAL") {
         return savedRegion;
@@ -53,7 +48,7 @@ export function RegionProvider({
     // During SSR, always return US to match client initial state for print pages
     return "US";
   });
-  
+
   // Update region on mount if not a print page and different from localStorage
   useEffect(() => {
     if (typeof window !== "undefined" && !window.location.pathname.includes("/print")) {
@@ -99,11 +94,7 @@ export function RegionProvider({
         getTermForRegionReverse,
       }}
     >
-      {autoProcess ? (
-        <AutoRegionWrapper>{children}</AutoRegionWrapper>
-      ) : (
-        children
-      )}
+      {autoProcess ? <AutoRegionWrapper>{children}</AutoRegionWrapper> : children}
     </RegionContext.Provider>
   );
 }
@@ -131,7 +122,7 @@ function AutoRegionWrapper({ children }: { children: React.ReactNode }) {
     // Create a unique key for this processing cycle
     const regionChanged = lastRegionRef.current !== region;
     const pathnameChanged = lastPathnameRef.current !== pathname;
-    
+
     if (regionChanged || pathnameChanged) {
       lastRegionRef.current = region;
       lastPathnameRef.current = pathname;
@@ -141,7 +132,7 @@ function AutoRegionWrapper({ children }: { children: React.ReactNode }) {
 
     // Always process when pathname or region changes, or on initial mount
     const shouldProcess = regionChanged || pathnameChanged || !processingKeyRef.current;
-    
+
     if (!shouldProcess) {
       return;
     }
@@ -176,18 +167,14 @@ function AutoRegionWrapper({ children }: { children: React.ReactNode }) {
 
         // Sort terms by length (longest first) to handle compound terms
         const sortedTerms = [...terms].sort(
-          (a, b) =>
-            Math.max(b.US.length, b.GLOBAL.length) -
-            Math.max(a.US.length, a.GLOBAL.length)
+          (a, b) => Math.max(b.US.length, b.GLOBAL.length) - Math.max(a.US.length, a.GLOBAL.length),
         );
 
         sortedTerms.forEach((termMapping) => {
           // If region is US, we want to replace GLOBAL terms with US terms
           // If region is GLOBAL, we want to replace US terms with GLOBAL terms
-          const sourceTerm =
-            region === "US" ? termMapping.GLOBAL : termMapping.US;
-          const targetTerm =
-            region === "US" ? termMapping.US : termMapping.GLOBAL;
+          const sourceTerm = region === "US" ? termMapping.GLOBAL : termMapping.US;
+          const targetTerm = region === "US" ? termMapping.US : termMapping.GLOBAL;
 
           // Escape special regex characters
           const escapedSource = escapeRegex(sourceTerm);
@@ -200,10 +187,8 @@ function AutoRegionWrapper({ children }: { children: React.ReactNode }) {
           while ((match = regex.exec(text)) !== null) {
             const overlaps = replacements.some(
               (m) =>
-                (match!.index >= m.index &&
-                  match!.index < m.index + m.length) ||
-                (match!.index + match![0].length > m.index &&
-                  match!.index + match![0].length <= m.index + m.length)
+                (match!.index >= m.index && match!.index < m.index + m.length) ||
+                (match!.index + match![0].length > m.index && match!.index + match![0].length <= m.index + m.length),
             );
 
             if (!overlaps) {

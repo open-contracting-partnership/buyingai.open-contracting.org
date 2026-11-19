@@ -1,23 +1,24 @@
 "use client";
 
-import React, { useState } from "react";
 import {
+  AlertTriangle,
+  Building2,
   ChevronDown,
   ChevronUp,
-  ShoppingCart,
-  Wrench,
-  Building2,
-  Settings,
+  ClipboardList,
   Cloud,
   Cpu,
-  FlaskConical,
-  Sparkles,
-  FileText,
   DollarSign,
-  AlertTriangle,
-  ClipboardList,
-  LucideIcon,
+  FileText,
+  FlaskConical,
+  type LucideIcon,
+  Settings,
+  ShoppingCart,
+  Sparkles,
+  Wrench,
 } from "lucide-react";
+import type React from "react";
+import { useState } from "react";
 
 // Types
 interface RowItem {
@@ -60,14 +61,9 @@ const ProcurementPathways: React.FC<{
   expanded?: boolean;
 }> = ({ data, expanded = false }) => {
   // Initialize with rows that have expandedByDefault = true
-  const initialExpanded = new Set(
-    data.rows.filter((row) => row.expandedByDefault).map((row) => row.id)
-  );
-  const [expandedRows, setExpandedRows] =
-    useState<Set<string>>(initialExpanded);
-  const [expandedTexts, setExpandedTexts] = useState<Set<string>>(
-    new Set<string>()
-  );
+  const initialExpanded = new Set(data.rows.filter((row) => row.expandedByDefault).map((row) => row.id));
+  const [expandedRows, setExpandedRows] = useState<Set<string>>(initialExpanded);
+  const [expandedTexts, setExpandedTexts] = useState<Set<string>>(new Set<string>());
 
   // Map category IDs to icons
   const getCategoryIcon = (categoryId: string): LucideIcon => {
@@ -148,7 +144,7 @@ const ProcurementPathways: React.FC<{
   // Helper function to parse markdown bold (**text**) and convert to React elements
   const parseBoldText = (text: string): React.ReactNode => {
     if (!text) return "";
-    
+
     const parts: React.ReactNode[] = [];
     const regex = /\*\*(.*?)\*\*/g;
     let lastIndex = 0;
@@ -165,7 +161,7 @@ const ProcurementPathways: React.FC<{
       parts.push(
         <strong key={match.index} className="font-bold">
           {match[1]}
-        </strong>
+        </strong>,
       );
       lastIndex = regex.lastIndex;
     }
@@ -186,11 +182,9 @@ const ProcurementPathways: React.FC<{
     if (!category.subcategories) {
       const description = category.description || "";
       const textId = `category-${category.id}`;
-      const isExpanded = (expanded || expandedTexts.has(textId));
+      const isExpanded = expanded || expandedTexts.has(textId);
       const needsTruncation = description.length > maxLength;
-      const displayText = needsTruncation && !isExpanded
-        ? description.substring(0, maxLength) + "..."
-        : description;
+      const displayText = needsTruncation && !isExpanded ? description.substring(0, maxLength) + "..." : description;
 
       return (
         <div className="flex flex-col h-full">
@@ -201,10 +195,7 @@ const ProcurementPathways: React.FC<{
             <CategoryIcon className="w-4 h-4 md:w-5 md:h-5 flex-shrink-0" />
             <span className="whitespace-nowrap">{category.name}</span>
           </div>
-          <div
-            className="p-3 md:p-4 flex-1"
-            style={{ backgroundColor: category.color }}
-          >
+          <div className="p-3 md:p-4 flex-1" style={{ backgroundColor: category.color }}>
             <p
               className="text-xs leading-relaxed break-words !m-0"
               style={{ wordBreak: "break-word", overflowWrap: "break-word" }}
@@ -237,20 +228,15 @@ const ProcurementPathways: React.FC<{
           {category.subcategories.map((sub, idx) => {
             const description = sub.description || "";
             const textId = `subcategory-${sub.id}`;
-            const isExpanded = (expanded || expandedTexts.has(textId));
+            const isExpanded = expanded || expandedTexts.has(textId);
             const needsTruncation = description.length > maxLength;
-            const displayText = needsTruncation && !isExpanded
-              ? description.substring(0, maxLength) + "..."
-              : description;
+            const displayText =
+              needsTruncation && !isExpanded ? description.substring(0, maxLength) + "..." : description;
 
             return (
               <div
                 key={sub.id}
-                className={`flex-1 p-3 md:p-4 ${
-                  idx > 0
-                    ? "border-t-2 md:border-t-0 md:border-l-2 border-white"
-                    : ""
-                }`}
+                className={`flex-1 p-3 md:p-4 ${idx > 0 ? "border-t-2 md:border-t-0 md:border-l-2 border-white" : ""}`}
                 style={{ backgroundColor: category.color, opacity: 0.9 }}
               >
                 <p
@@ -317,11 +303,10 @@ const ProcurementPathways: React.FC<{
               const ItemIcon = getItemIcon(item.icon);
               const content = item.content || "";
               const textId = `item-${row.id}-${idx}`;
-              const isTextExpanded = (expanded || expandedTexts.has(textId));
+              const isTextExpanded = expanded || expandedTexts.has(textId);
               const needsTruncation = content.length > maxLength;
-              const displayText = needsTruncation && !isTextExpanded
-                ? content.substring(0, maxLength) + "..."
-                : content;
+              const displayText =
+                needsTruncation && !isTextExpanded ? content.substring(0, maxLength) + "..." : content;
 
               return (
                 <div
@@ -329,9 +314,7 @@ const ProcurementPathways: React.FC<{
                   className="flex-1 p-2.5 md:p-3 border-b-2 md:border-b-0 md:border-l-2 border-white min-h-[50px] md:min-h-[60px] flex items-start gap-2"
                   style={{ backgroundColor: bgColor }}
                 >
-                  {ItemIcon && (
-                    <ItemIcon className="w-4 h-4 text-gray-600 flex-shrink-0 mt-0.5" />
-                  )}
+                  {ItemIcon && <ItemIcon className="w-4 h-4 text-gray-600 flex-shrink-0 mt-0.5" />}
                   <div className="w-full min-w-0">
                     <p
                       className="text-xs leading-relaxed break-words m-0"
@@ -368,10 +351,7 @@ const ProcurementPathways: React.FC<{
       </div>
 
       {/* Main Category Headers */}
-      <div
-        className="flex flex-col md:flex-row gap-2 md:gap-3 mb-3 md:mb-4"
-        style={{ minHeight: "auto" }}
-      >
+      <div className="flex flex-col md:flex-row gap-2 md:gap-3 mb-3 md:mb-4" style={{ minHeight: "auto" }}>
         {data.categories.map((category) => (
           <div
             key={category.id}

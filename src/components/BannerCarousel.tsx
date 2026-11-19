@@ -1,28 +1,23 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import Link from "next/link";
-import { SectionsStructure, getSectionColor } from "@/lib/sections-types";
 import { ArrowUpRight } from "lucide-react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { getSectionColor, type SectionsStructure } from "@/lib/sections-types";
 
 interface BannerCarouselProps {
   structure: SectionsStructure;
   currentSlug?: string;
 }
 
-export function BannerCarousel({
-  structure,
-  currentSlug,
-}: BannerCarouselProps) {
+export function BannerCarousel({ structure, currentSlug }: BannerCarouselProps) {
   const [hoveredSection, setHoveredSection] = useState<number | null>(null);
   const [clickedSection, setClickedSection] = useState<number | null>(null);
   const [isMobile, setIsMobile] = useState(false);
 
   // Find current section based on current slug (if provided)
   const currentSectionNumber = currentSlug
-    ? structure.sections.find((section) =>
-        section.chapters.some((ch) => ch.slug === currentSlug)
-      )?.number || 1
+    ? structure.sections.find((section) => section.chapters.some((ch) => ch.slug === currentSlug))?.number || 1
     : 1;
 
   useEffect(() => {
@@ -66,31 +61,15 @@ export function BannerCarousel({
         const isClicked = clickedSection === section.number;
 
         // Mobile: use clicked state; Desktop: use hover state, fallback to current section
-        const shouldExpand = isMobile
-          ? isClicked
-          : hoveredSection !== null
-          ? isHovered
-          : isCurrentSection;
+        const shouldExpand = isMobile ? isClicked : hoveredSection !== null ? isHovered : isCurrentSection;
 
         // Responsive widths: mobile 320px expanded, 100px collapsed
-        const baseWidth = isMobile
-          ? shouldExpand
-            ? 320
-            : 100
-          : shouldExpand
-          ? 400
-          : 120;
+        const baseWidth = isMobile ? (shouldExpand ? 320 : 100) : shouldExpand ? 400 : 120;
 
         const firstChapterSlug = section.chapters[0]?.slug;
 
         // Responsive overlap: better spacing on mobile
-        const overlap = isMobile
-          ? shouldExpand
-            ? "12px"
-            : "-20px"
-          : shouldExpand
-          ? "-20px"
-          : "-40px";
+        const overlap = isMobile ? (shouldExpand ? "12px" : "-20px") : shouldExpand ? "-20px" : "-40px";
 
         return (
           <div
@@ -109,29 +88,17 @@ export function BannerCarousel({
                 backgroundColor: color.bg,
                 width: "100%",
                 height: "100%",
-                boxShadow: shouldExpand
-                  ? "0 4px 15px 0 #000"
-                  : "0 4px 10px 0 rgba(0, 0, 0, 0.50)",
+                boxShadow: shouldExpand ? "0 4px 15px 0 #000" : "0 4px 10px 0 rgba(0, 0, 0, 0.50)",
               }}
               onClick={() => handleCardClick(section.number)}
-              onMouseEnter={() =>
-                !isMobile && setHoveredSection(section.number)
-              }
+              onMouseEnter={() => !isMobile && setHoveredSection(section.number)}
               onMouseLeave={() => !isMobile && setHoveredSection(null)}
             >
               {shouldExpand ? (
                 // Expanded card with chapter list
-                <div
-                  className={`${
-                    isMobile ? "px-6 py-5" : "p-8"
-                  } h-full flex flex-col justify-between`}
-                >
+                <div className={`${isMobile ? "px-6 py-5" : "p-8"} h-full flex flex-col justify-between`}>
                   <div>
-                    <div
-                      className={`${
-                        isMobile ? "text-4xl" : "text-5xl"
-                      } font-bold text-black font-gteesti-display`}
-                    >
+                    <div className={`${isMobile ? "text-4xl" : "text-5xl"} font-bold text-black font-gteesti-display`}>
                       {section.number.toString().padStart(2, "0")}
                     </div>
                     <h3
@@ -144,53 +111,38 @@ export function BannerCarousel({
 
                     {/* Chapter list - show fewer chapters on mobile */}
                     {section.chapters.length > 0 && (
-                      <div
-                        className={`border-t border-black/10 ${
-                          isMobile ? "mt-3" : ""
-                        }`}
-                      >
-                        {section.chapters
-                          .map((ch, chIdx) => {
-                            // Each chapter link goes to its own chapter
-                            const linkHref = `/chapter/${ch.slug}#content`;
+                      <div className={`border-t border-black/10 ${isMobile ? "mt-3" : ""}`}>
+                        {section.chapters.map((ch, chIdx) => {
+                          // Each chapter link goes to its own chapter
+                          const linkHref = `/chapter/${ch.slug}#content`;
 
-                            return (
-                              <Link
-                                key={ch.slug}
-                                href={linkHref}
-                                scroll={false}
-                                onClick={(e) => e.stopPropagation()}
-                                className={`flex items-center gap-2.5 border-b border-black/10 py-1.5 duration-300 hover:bg-black/5 ${
-                                  isMobile ? "text-sm" : "text-base"
-                                } text-black/80 hover:text-black transition-colors group`}
-                              >
-                                <span
-                                  className={`${
-                                    isMobile
-                                      ? "font-mono text-sm"
-                                      : "font-mono text-base"
-                                  }`}
-                                >
-                                  {chIdx + 1}.
-                                </span>
-                                <span className="flex-1 line-clamp-2">
-                                  {ch.title}
-                                </span>
-                                {!isMobile && (
-                                  <ArrowUpRight className="size-4 opacity-0 group-hover:opacity-100 transition-opacity" />
-                                )}
-                              </Link>
-                            );
-                          })}
+                          return (
+                            <Link
+                              key={ch.slug}
+                              href={linkHref}
+                              scroll={false}
+                              onClick={(e) => e.stopPropagation()}
+                              className={`flex items-center gap-2.5 border-b border-black/10 py-1.5 duration-300 hover:bg-black/5 ${
+                                isMobile ? "text-sm" : "text-base"
+                              } text-black/80 hover:text-black transition-colors group`}
+                            >
+                              <span className={`${isMobile ? "font-mono text-sm" : "font-mono text-base"}`}>
+                                {chIdx + 1}.
+                              </span>
+                              <span className="flex-1 line-clamp-2">{ch.title}</span>
+                              {!isMobile && (
+                                <ArrowUpRight className="size-4 opacity-0 group-hover:opacity-100 transition-opacity" />
+                              )}
+                            </Link>
+                          );
+                        })}
                       </div>
                     )}
                   </div>
 
                   {!isMobile && (
                     <Link
-                      href={`/chapter/${firstChapterSlug}${
-                        currentSlug ? "#content" : ""
-                      }`}
+                      href={`/chapter/${firstChapterSlug}${currentSlug ? "#content" : ""}`}
                       scroll={false}
                       onClick={(e) => e.stopPropagation()}
                       className="flex items-center justify-end gap-2 text-black mt-4 hover:gap-3 transition-all"
@@ -216,16 +168,8 @@ export function BannerCarousel({
                 </div>
               ) : (
                 // Collapsed card
-                <div
-                  className={`h-full flex items-start justify-center ${
-                    isMobile ? "pt-5 pl-5" : "pt-8 pl-8"
-                  }`}
-                >
-                  <span
-                    className={`${
-                      isMobile ? "text-3xl" : "text-3xl"
-                    } font-bold text-black/50 transition-colors`}
-                  >
+                <div className={`h-full flex items-start justify-center ${isMobile ? "pt-5 pl-5" : "pt-8 pl-8"}`}>
+                  <span className={`${isMobile ? "text-3xl" : "text-3xl"} font-bold text-black/50 transition-colors`}>
                     {section.number.toString().padStart(2, "0")}
                   </span>
                 </div>

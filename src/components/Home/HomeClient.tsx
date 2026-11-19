@@ -1,16 +1,14 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-
-import { BannerCarousel } from "@/components/BannerCarousel";
-import { Chapter } from "@/lib/markdown";
-import { SectionsStructure } from "@/lib/sections-types";
-
 import arrowLeft from "@/app/assets/images/arrow-left.svg";
-import Image from "next/image";
+import { BannerCarousel } from "@/components/BannerCarousel";
 import { FULL_GUIDE_PDF_URL } from "@/lib/links";
+import type { Chapter } from "@/lib/markdown";
+import type { SectionsStructure } from "@/lib/sections-types";
 
 interface HomeClientProps {
   chapters: Chapter[];
@@ -18,16 +16,10 @@ interface HomeClientProps {
   tocContent: string;
 }
 
-export default function HomeClient({
-  chapters,
-  structure,
-  tocContent,
-}: HomeClientProps) {
+export default function HomeClient({ chapters, structure, tocContent }: HomeClientProps) {
   // Parse the TOC content - extract content after the numbered list
   // Skip everything before the ## heading
-  const contentMatch = tocContent.match(
-    /##\s+(.+?)\n([\s\S]*?)(\[Get started.*?\])/
-  );
+  const contentMatch = tocContent.match(/##\s+(.+?)\n([\s\S]*?)(\[Get started.*?\])/);
   const heading = contentMatch
     ? contentMatch[1].trim()
     : "This guidance offers practical and hands-on tips to get the best results from your AI purchases.";
@@ -74,24 +66,15 @@ export default function HomeClient({
               p-8
             "
         >
-          <h2 className="text-[#353535] text-3xl lg:text-4xl xl:text-5xl font-bold font-gteesti-display">
-            {heading}
-          </h2>
+          <h2 className="text-[#353535] text-3xl lg:text-4xl xl:text-5xl font-bold font-gteesti-display">{heading}</h2>
           <div className="lg:mt-12 mt-8 !space-y-6 lg:!space-y-8 text-xl lg:text-2xl prose prose-xl max-w-none prose-p:my-0">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>
-              {paragraphs.join("\n\n")}
-            </ReactMarkdown>
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>{paragraphs.join("\n\n")}</ReactMarkdown>
           </div>
           <Link
             href="/chapter/01-insights-on-ai-adoption#content"
             className="inline-flex mt-8 py-2 pl-3 pr-8 gap-x-2.5 bg-[#AFCB4E] text-black rounded hover:bg-[#AFCB4E] transition-colors text-lg lg:text-xl uppercase font-bold font-gteesti-pro-display"
           >
-            <Image
-              src={arrowLeft}
-              alt="Arrow left"
-              width={28.2}
-              height={28.2}
-            />
+            <Image src={arrowLeft} alt="Arrow left" width={28.2} height={28.2} />
             <span>Get started</span>
           </Link>
           <p className="mt-6 text-lg lg:text-xl text-[#353535]">

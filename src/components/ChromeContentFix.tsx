@@ -12,14 +12,14 @@ export function ChromeContentFix() {
     // Force Chrome to recalculate layout and ensure content is visible
     const fixContentVisibility = () => {
       const contentElements = document.querySelectorAll(
-        ".print-view-container, .print-content-wrapper, .print-content, .prose"
+        ".print-view-container, .print-content-wrapper, .print-content, .prose",
       );
 
       contentElements.forEach((element) => {
         const htmlElement = element as HTMLElement;
         // Force reflow to ensure Chrome renders the content
         void htmlElement.offsetHeight;
-        
+
         // Ensure visibility styles are applied
         htmlElement.style.display = "block";
         htmlElement.style.visibility = "visible";
@@ -48,4 +48,3 @@ export function ChromeContentFix() {
 
   return null;
 }
-

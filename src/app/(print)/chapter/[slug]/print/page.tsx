@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { ChapterContent } from "@/components/ChapterContent";
-import { CollapsibleInitializer } from "@/components/CollapsibleInitializer";
 import { ChromeContentFix } from "@/components/ChromeContentFix";
+import { CollapsibleInitializer } from "@/components/CollapsibleInitializer";
 import { getAllChapters, getChapterBySlug } from "@/lib/markdown";
 import { getSectionsStructure } from "@/lib/sections";
 import { getChapterInSection, getSectionColor } from "@/lib/sections-types";

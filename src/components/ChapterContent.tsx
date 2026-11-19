@@ -1,11 +1,11 @@
 import React from "react";
 import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
+import remarkGfm from "remark-gfm";
+import procurementPathwaysData from "@/app/data/procurement-pathways.json";
 import { CollapsibleText } from "@/components/CollapsibleText";
 import { CustomTable } from "@/components/CustomTable";
 import ProcurementPathways from "@/components/ProcurementPathways";
-import procurementPathwaysData from "@/app/data/procurement-pathways.json";
 import { processChapterContent, remarkHeadingIds } from "@/lib/chapter-content";
 
 interface ChapterContentProps {
@@ -62,7 +62,7 @@ function wrapItalicWithBackground(node: React.ReactNode, backgroundColor: string
     }
     if (props?.children) {
       const children = React.Children.toArray(props.children).map((child) =>
-        wrapItalicWithBackground(child, backgroundColor)
+        wrapItalicWithBackground(child, backgroundColor),
       );
       return React.cloneElement(node as React.ReactElement<any>, { children });
     }
@@ -71,9 +71,7 @@ function wrapItalicWithBackground(node: React.ReactNode, backgroundColor: string
   if (Array.isArray(node)) {
     return node.map((item, index) => {
       const processed = wrapItalicWithBackground(item, backgroundColor);
-      return React.isValidElement(processed)
-        ? React.cloneElement(processed, { key: `italic-${index}` })
-        : processed;
+      return React.isValidElement(processed) ? React.cloneElement(processed, { key: `italic-${index}` }) : processed;
     });
   }
 
@@ -146,9 +144,7 @@ function renderPre({ children }: any) {
           <tbody>
             <tr>
               <td style={{ ...labelStyle, paddingBottom: "0.75rem" }}>Who</td>
-              <td style={{ ...valueStyle, paddingBottom: "0.75rem" }}>
-                {whoLine.replace(/^-\s*Who:\s*/, "").trim()}
-              </td>
+              <td style={{ ...valueStyle, paddingBottom: "0.75rem" }}>{whoLine.replace(/^-\s*Who:\s*/, "").trim()}</td>
             </tr>
             <tr>
               <td style={labelStyle}>What</td>
@@ -179,14 +175,15 @@ function renderPre({ children }: any) {
   }
 
   if ((icon && lines.length > 0) || (hasHeading && hasBullets)) {
-    const body = lines.slice(hasHeading ? contentStartIndex : 0).join("\n").trim();
+    const body = lines
+      .slice(hasHeading ? contentStartIndex : 0)
+      .join("\n")
+      .trim();
     const bgColor = background === "grey" || background === "gray" ? "#E5E7EB" : "#F5F7E6";
 
     return (
       <div className="my-8 -mx-12 px-12 py-6 relative" style={{ backgroundColor: bgColor }}>
-        {icon && (
-          <img src={`/icons/${icon}.png`} alt="" className="absolute top-6 left-12 w-12 h-12 !shadow-none" />
-        )}
+        {icon && <img src={`/icons/${icon}.png`} alt="" className="absolute top-6 left-12 w-12 h-12 !shadow-none" />}
         <div
           className={`prose prose-sm max-w-none prose-headings:font-gteesti-display prose-headings:mb-4 prose-ul:my-2 prose-ul:list-disc prose-ul:pl-5 prose-li:my-1 prose-li:text-gray-700 prose-li:leading-relaxed prose-p:my-2 prose-p:text-gray-700 prose-p:leading-relaxed prose-a:text-[#23B2A7] prose-a:no-underline hover:prose-a:underline ${
             icon ? "ml-16" : ""
@@ -229,7 +226,7 @@ function isHeaderOnlyTable(children: React.ReactNode): boolean {
         (tr) =>
           React.isValidElement(tr) &&
           tr.type === "tr" &&
-          React.Children.toArray((tr.props as { children?: React.ReactNode }).children).every(isEmptyCell)
+          React.Children.toArray((tr.props as { children?: React.ReactNode }).children).every(isEmptyCell),
       );
     }
     return false;

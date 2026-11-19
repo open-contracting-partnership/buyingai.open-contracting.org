@@ -40,10 +40,7 @@ export function useIntersectionObserver({
         });
 
         // Be more permissive - accept any intersecting element or elements with ratio > 0
-        if (
-          (entry.isIntersecting || entry.intersectionRatio > 0) &&
-          entry.intersectionRatio > maxRatio
-        ) {
+        if ((entry.isIntersecting || entry.intersectionRatio > 0) && entry.intersectionRatio > maxRatio) {
           maxRatio = entry.intersectionRatio;
           mostVisibleEntry = entry;
         }
@@ -71,10 +68,7 @@ export function useIntersectionObserver({
       }
     };
 
-    const observer = new IntersectionObserver(
-      observerCallback,
-      observerOptions
-    );
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
 
     // Wait for DOM to be ready and then observe elements
     const observeElements = () => {

@@ -127,12 +127,9 @@ export function CustomTable({ children }: CustomTableProps) {
     if (titleMatch && titleMatch[1].trim()) {
       const titleText = titleMatch[1].trim().replace(/:\s*$/, ""); // Remove trailing colon
       elements.push(
-        <h3
-          key="title"
-          className="!text-2xl !font-bold !text-black !mb-3 !font-gteesti-display"
-        >
+        <h3 key="title" className="!text-2xl !font-bold !text-black !mb-3 !font-gteesti-display">
           {titleText}
-        </h3>
+        </h3>,
       );
       processableText = text.substring(titleMatch[0].length);
     }
@@ -152,16 +149,12 @@ export function CustomTable({ children }: CustomTableProps) {
 
       // Find where this section's content ends (at the next ** or end of string)
       let endOfContent = processableText.length;
-      const nextSectionMatch = /(?:\*\*|\\\*\\\*)/.exec(
-        processableText.substring(startOfContent)
-      );
+      const nextSectionMatch = /(?:\*\*|\\\*\\\*)/.exec(processableText.substring(startOfContent));
       if (nextSectionMatch) {
         endOfContent = startOfContent + nextSectionMatch.index;
       }
 
-      const content = processableText
-        .substring(startOfContent, endOfContent)
-        .trim();
+      const content = processableText.substring(startOfContent, endOfContent).trim();
       sections.push({ title: sectionTitle, content });
 
       lastIndex = endOfContent;
@@ -171,36 +164,25 @@ export function CustomTable({ children }: CustomTableProps) {
     sections.forEach((section, idx) => {
       // Add section title
       elements.push(
-        <p
-          key={`section-${idx}`}
-          className="!text-base !font-bold !text-black !mt-3 !mb-1"
-        >
+        <p key={`section-${idx}`} className="!text-base !font-bold !text-black !mt-3 !mb-1">
           {section.title}
-        </p>
+        </p>,
       );
 
       // Extract bullets from content
       if (section.content) {
         // Split by - or \- (bullets)
-        const bulletParts = section.content
-          .split(/\s*(?:\\-|-)\s+/)
-          .filter((part) => part.trim().length > 0);
+        const bulletParts = section.content.split(/\s*(?:\\-|-)\s+/).filter((part) => part.trim().length > 0);
 
         if (bulletParts.length > 0) {
           elements.push(
-            <ul
-              key={`ul-${idx}`}
-              className="table-header-bullets !list-disc !pl-0 !my-2 !space-y-1"
-            >
+            <ul key={`ul-${idx}`} className="table-header-bullets !list-disc !pl-0 !my-2 !space-y-1">
               {bulletParts.map((bullet, bulletIdx) => (
-                <li
-                  key={bulletIdx}
-                  className="!text-base !text-black !leading-relaxed"
-                >
+                <li key={bulletIdx} className="!text-base !text-black !leading-relaxed">
                   {bullet.trim()}
                 </li>
               ))}
-            </ul>
+            </ul>,
           );
         }
       }
@@ -214,19 +196,13 @@ export function CustomTable({ children }: CustomTableProps) {
       const flushBullets = () => {
         if (currentBullets.length > 0) {
           elements.push(
-            <ul
-              key={`ul-${elements.length}`}
-              className="table-header-bullets !list-disc !pl-5 !my-2 !space-y-1"
-            >
+            <ul key={`ul-${elements.length}`} className="table-header-bullets !list-disc !pl-5 !my-2 !space-y-1">
               {currentBullets.map((bullet, idx) => (
-                <li
-                  key={idx}
-                  className="!text-base !text-black !leading-relaxed"
-                >
+                <li key={idx} className="!text-base !text-black !leading-relaxed">
                   {bullet}
                 </li>
               ))}
-            </ul>
+            </ul>,
           );
           currentBullets = [];
         }
@@ -236,28 +212,19 @@ export function CustomTable({ children }: CustomTableProps) {
         line = line.trim();
 
         // Skip if this was already processed as title
-        if (
-          titleMatch &&
-          lineIdx === 0 &&
-          line.startsWith(titleMatch[1].trim())
-        ) {
+        if (titleMatch && lineIdx === 0 && line.startsWith(titleMatch[1].trim())) {
           return;
         }
 
         // Check for bold sections
-        const boldMatch = line.match(
-          /^(?:\\\*\\\*|\*\*)([^*]+)(?:\\\*\\\*|\*\*)$/
-        );
+        const boldMatch = line.match(/^(?:\\\*\\\*|\*\*)([^*]+)(?:\\\*\\\*|\*\*)$/);
         if (boldMatch) {
           flushBullets();
           const boldText = boldMatch[1].trim();
           elements.push(
-            <p
-              key={`section-line-${lineIdx}`}
-              className="!text-base !font-bold !text-black !mt-3 !mb-1"
-            >
+            <p key={`section-line-${lineIdx}`} className="!text-base !font-bold !text-black !mt-3 !mb-1">
               {boldText}
-            </p>
+            </p>,
           );
           return;
         }
@@ -273,12 +240,9 @@ export function CustomTable({ children }: CustomTableProps) {
         if (line.length > 0) {
           flushBullets();
           elements.push(
-            <p
-              key={`text-${lineIdx}`}
-              className="!text-base !text-black !leading-relaxed !my-1"
-            >
+            <p key={`text-${lineIdx}`} className="!text-base !text-black !leading-relaxed !my-1">
               {line}
-            </p>
+            </p>,
           );
         }
       });
@@ -286,21 +250,13 @@ export function CustomTable({ children }: CustomTableProps) {
       flushBullets();
     }
 
-    return elements.length > 0 ? (
-      <>{elements}</>
-    ) : (
-      <p className="!text-base !text-black">{text}</p>
-    );
+    return elements.length > 0 ? <>{elements}</> : <p className="!text-base !text-black">{text}</p>;
   };
 
   // Process cell content to handle bullet points and markdown (same logic as parseHeaderMarkdown)
   const processContent = (content: React.ReactNode): React.ReactNode => {
     // If content is a complex React element (not p or text), return as is
-    if (
-      React.isValidElement(content) &&
-      content.type !== "p" &&
-      content.type !== "strong"
-    ) {
+    if (React.isValidElement(content) && content.type !== "p" && content.type !== "strong") {
       return content;
     }
 
@@ -391,15 +347,9 @@ export function CustomTable({ children }: CustomTableProps) {
 
             while ((boldMatch = boldRegex.exec(trimmedBullet)) !== null) {
               if (boldMatch.index > bulletLastIndex) {
-                processedText.push(
-                  trimmedBullet.substring(bulletLastIndex, boldMatch.index)
-                );
+                processedText.push(trimmedBullet.substring(bulletLastIndex, boldMatch.index));
               }
-              processedText.push(
-                <strong key={`bold-${idx}-${boldMatch.index}`}>
-                  {boldMatch[1]}
-                </strong>
-              );
+              processedText.push(<strong key={`bold-${idx}-${boldMatch.index}`}>{boldMatch[1]}</strong>);
               bulletLastIndex = boldMatch.index + boldMatch[0].length;
             }
 
@@ -421,9 +371,7 @@ export function CustomTable({ children }: CustomTableProps) {
           }
         });
 
-        return (
-          <ul className="!list-disc !pl-5 !space-y-1.5 !my-0 !leading-relaxed">{bulletElements}</ul>
-        );
+        return <ul className="!list-disc !pl-5 !space-y-1.5 !my-0 !leading-relaxed">{bulletElements}</ul>;
       }
     }
 
@@ -441,9 +389,7 @@ export function CustomTable({ children }: CustomTableProps) {
             if (match.index > lastIndex) {
               processedText.push(textContent.substring(lastIndex, match.index));
             }
-            processedText.push(
-              <strong key={`bold-${match.index}`}>{match[1]}</strong>
-            );
+            processedText.push(<strong key={`bold-${match.index}`}>{match[1]}</strong>);
             lastIndex = match.index + match[0].length;
           }
 
@@ -479,22 +425,16 @@ export function CustomTable({ children }: CustomTableProps) {
           if (beforeBullets.length > 1) {
             beforeBullets.forEach((bullet, idx) => {
               elements.push(
-                <li
-                  key={`bullet-before-${lastIndex}-${idx}`}
-                  className="!leading-relaxed !text-xs sm:!text-sm"
-                >
+                <li key={`bullet-before-${lastIndex}-${idx}`} className="!leading-relaxed !text-xs sm:!text-sm">
                   {bullet}
-                </li>
+                </li>,
               );
             });
           } else if (beforeText) {
             elements.push(
-              <li
-                key={`bullet-before-${lastIndex}`}
-                className="!leading-relaxed !text-xs sm:!text-sm"
-              >
+              <li key={`bullet-before-${lastIndex}`} className="!leading-relaxed !text-xs sm:!text-sm">
                 {beforeText}
-              </li>
+              </li>,
             );
           }
         }
@@ -508,7 +448,7 @@ export function CustomTable({ children }: CustomTableProps) {
           className="!font-semibold !mt-3 !mb-1.5 !text-black !text-xs sm:!text-sm !leading-normal"
         >
           {sectionTitle}
-        </p>
+        </p>,
       );
 
       lastIndex = match.index + match[0].length;
@@ -532,15 +472,9 @@ export function CustomTable({ children }: CustomTableProps) {
 
             while ((boldMatch = boldRegex.exec(trimmedBullet)) !== null) {
               if (boldMatch.index > bulletLastIndex) {
-                processedText.push(
-                  trimmedBullet.substring(bulletLastIndex, boldMatch.index)
-                );
+                processedText.push(trimmedBullet.substring(bulletLastIndex, boldMatch.index));
               }
-              processedText.push(
-                <strong key={`bold-${idx}-${boldMatch.index}`}>
-                  {boldMatch[1]}
-                </strong>
-              );
+              processedText.push(<strong key={`bold-${idx}-${boldMatch.index}`}>{boldMatch[1]}</strong>);
               bulletLastIndex = boldMatch.index + boldMatch[0].length;
             }
 
@@ -551,13 +485,13 @@ export function CustomTable({ children }: CustomTableProps) {
             elements.push(
               <li key={`bullet-remaining-${idx}`} className="!leading-relaxed !text-xs sm:!text-sm">
                 {processedText}
-              </li>
+              </li>,
             );
           } else {
             elements.push(
               <li key={`bullet-remaining-${idx}`} className="!leading-relaxed !text-xs sm:!text-sm">
                 {trimmedBullet}
-              </li>
+              </li>,
             );
           }
         });
@@ -577,12 +511,9 @@ export function CustomTable({ children }: CustomTableProps) {
           // Flush current bullets
           if (currentBullets.length > 0) {
             grouped.push(
-              <ul
-                key={`ul-${grouped.length}`}
-                className="!list-disc !pl-5 !space-y-1.5 !my-0 !leading-relaxed"
-              >
+              <ul key={`ul-${grouped.length}`} className="!list-disc !pl-5 !space-y-1.5 !my-0 !leading-relaxed">
                 {currentBullets}
-              </ul>
+              </ul>,
             );
             currentBullets = [];
           }
@@ -593,12 +524,9 @@ export function CustomTable({ children }: CustomTableProps) {
       // Flush remaining bullets
       if (currentBullets.length > 0) {
         grouped.push(
-          <ul
-            key={`ul-${grouped.length}`}
-            className="!list-disc !pl-5 !space-y-2"
-          >
+          <ul key={`ul-${grouped.length}`} className="!list-disc !pl-5 !space-y-2">
             {currentBullets}
-          </ul>
+          </ul>,
         );
       }
 
@@ -609,10 +537,7 @@ export function CustomTable({ children }: CustomTableProps) {
   };
 
   // Helper function to render regular tables with multiple column headers
-  const renderRegularTable = (
-    headerCells: React.ReactNode[],
-    bodyRows: React.ReactNode[]
-  ) => {
+  const renderRegularTable = (headerCells: React.ReactNode[], bodyRows: React.ReactNode[]) => {
     // Extract header text from cells
     const headers = headerCells.map((cell) => {
       if (!React.isValidElement(cell)) return "";
@@ -667,10 +592,7 @@ export function CustomTable({ children }: CustomTableProps) {
         className="!my-6 sm:!my-8 !overflow-x-auto -mx-4 sm:mx-0 !border !border-gray-300"
         style={{ borderRadius: "8px 36px 0 0" }}
       >
-        <table
-          className="!w-full !min-w-full !my-0"
-          style={{ borderCollapse: "collapse", borderSpacing: 0 }}
-        >
+        <table className="!w-full !min-w-full !my-0" style={{ borderCollapse: "collapse", borderSpacing: 0 }}>
           <thead className="!bg-[#EDEBED]/50">
             <tr>
               {headers.map((header, idx) => (
@@ -697,18 +619,13 @@ export function CustomTable({ children }: CustomTableProps) {
   if (theadRows.length > 0) {
     const theadRow = theadRows[0];
     if (React.isValidElement(theadRow)) {
-      const theadCells = React.Children.toArray(
-        (theadRow.props as any).children
-      );
+      const theadCells = React.Children.toArray((theadRow.props as any).children);
 
       // Check if there are multiple cells with content in thead (indicating column headers)
       const nonEmptyCells = theadCells.filter((cell) => {
         if (!React.isValidElement(cell)) return false;
         const cellProps = (cell.props as any).children;
-        const cellText =
-          typeof cellProps === "string"
-            ? cellProps.trim()
-            : String(cellProps || "").trim();
+        const cellText = typeof cellProps === "string" ? cellProps.trim() : String(cellProps || "").trim();
         return cellText.length > 0;
       });
 
@@ -718,33 +635,21 @@ export function CustomTable({ children }: CustomTableProps) {
       }
 
       // Check if first cell has content and other cells are empty
-      const firstCellContent = React.isValidElement(theadCells[0])
-        ? (theadCells[0].props as any).children
-        : "";
+      const firstCellContent = React.isValidElement(theadCells[0]) ? (theadCells[0].props as any).children : "";
       const firstCellText =
-        typeof firstCellContent === "string"
-          ? firstCellContent.trim()
-          : String(firstCellContent || "").trim();
+        typeof firstCellContent === "string" ? firstCellContent.trim() : String(firstCellContent || "").trim();
 
       // Check if first cell has content and other cells are empty or mostly empty
       const otherCellsHaveContent = theadCells.slice(1).some((cell) => {
         if (!React.isValidElement(cell)) return false;
         const cellProps = (cell.props as any).children;
-        const cellText =
-          typeof cellProps === "string"
-            ? cellProps.trim()
-            : String(cellProps || "").trim();
+        const cellText = typeof cellProps === "string" ? cellProps.trim() : String(cellProps || "").trim();
         return cellText.length > 0;
       });
 
       // If first cell has content and others are empty, AND no strong tags in first tbody row
       // This is a title-style table where all tbody rows are data
-      if (
-        firstCellText.length > 0 &&
-        !otherCellsHaveContent &&
-        !hasStrongInFirstRow &&
-        tbodyRows.length > 0
-      ) {
+      if (firstCellText.length > 0 && !otherCellsHaveContent && !hasStrongInFirstRow && tbodyRows.length > 0) {
         // Extract raw text from first thead cell
         const rawText = extractRawText(firstCellContent);
 
@@ -773,10 +678,7 @@ export function CustomTable({ children }: CustomTableProps) {
           });
 
           return (
-            <tr
-              key={rowIdx}
-              className="!border-b !border-[#6CBA8C] last:!border-b-0"
-            >
+            <tr key={rowIdx} className="!border-b !border-[#6CBA8C] last:!border-b-0">
               {processedCells}
             </tr>
           );
@@ -788,17 +690,11 @@ export function CustomTable({ children }: CustomTableProps) {
             style={{ borderRadius: "8px 36px 0 0" }}
           >
             {/* Title section - Green rounded top with markdown support */}
-            <div
-              className="!bg-[#92C36F] !px-4 sm:!px-8 !py-4 sm:!py-6"
-              style={{ borderRadius: "8px 36px 0 0" }}
-            >
+            <div className="!bg-[#92C36F] !px-4 sm:!px-8 !py-4 sm:!py-6" style={{ borderRadius: "8px 36px 0 0" }}>
               {parseHeaderMarkdown(rawText)}
             </div>
             {/* Table with data rows only (no column headers) */}
-            <table
-              className="!w-full !min-w-full !border-collapse !my-0"
-              style={{ borderSpacing: 0 }}
-            >
+            <table className="!w-full !min-w-full !border-collapse !my-0" style={{ borderSpacing: 0 }}>
               <tbody className="!bg-white">{processedDataRows}</tbody>
             </table>
           </div>
@@ -891,17 +787,11 @@ export function CustomTable({ children }: CustomTableProps) {
       style={{ borderRadius: "8px 36px 0 0" }}
     >
       {/* Title section - Green rounded top with markdown support */}
-      <div
-        className="!bg-[#92C36F] !px-4 sm:!px-6 !py-3 sm:!py-5"
-        style={{ borderRadius: "8px 36px 0 0" }}
-      >
+      <div className="!bg-[#92C36F] !px-4 sm:!px-6 !py-3 sm:!py-5" style={{ borderRadius: "8px 36px 0 0" }}>
         {parseHeaderMarkdown(rawHeaderText)}
       </div>
       {/* Table with actual headers and data */}
-      <table
-        className="!my-0 !w-full !min-w-full"
-        style={{ borderCollapse: "collapse", borderSpacing: 0 }}
-      >
+      <table className="!my-0 !w-full !min-w-full" style={{ borderCollapse: "collapse", borderSpacing: 0 }}>
         <thead className="!bg-[#EDEBED]">
           <tr>
             {headerCells.map((header, idx) => (
