@@ -10,45 +10,71 @@
     "lineWidth": 119
   },
   "files": {
-    "includes": [
-      "**",
-      // Chapters copied from Google Docs. The site's renderers rely on their Markdown syntax (like * for italics).
-      "!content",
-      // Images displayed with img elements, which set alternative text.
-      "!**/*.svg"
-    ]
-  },
-  "linter": {
-    "rules": {
-      // Otherwise, configuring a rule disables the rules of domains, like React.
-      "preset": "recommended",
-      "complexity": {
-        // The stylesheet overrides Tailwind and Typography styles, and print styles override screen styles.
-        "noImportantStyles": "off"
-      },
-      "correctness": {
-        "useExhaustiveDependencies": {
-          "level": "error",
-          "options": {
-            // Some effects re-run on purpose when the chapter or content changes.
-            "reportUnnecessaryDependencies": false
-          }
-        }
-      },
-      "style": {
-        // The stylesheet orders rules by component, not by specificity.
-        "noDescendingSpecificity": "off"
-      },
-      "suspicious": {
-        // The lists are rendered from static content, which is never reordered.
-        "noArrayIndexKey": "off"
-      }
-    }
+    // Chapters copied from Google Docs, whose Markdown syntax the renderers rely on. Images, displayed with img.
+    "includes": ["**", "!content", "!**/*.svg"]
   },
   "css": {
     "parser": {
-      // Tailwind's @plugin and @theme directives.
       "tailwindDirectives": true
     }
-  }
+  },
+  "overrides": [
+    {
+      "includes": ["src/app/globals.css"],
+      "linter": {
+        "rules": {
+          "complexity": {
+            // Overrides Tailwind and Typography styles, and screen styles in print.
+            "noImportantStyles": "off"
+          },
+          "style": {
+            // Orders rules by component, not by specificity.
+            "noDescendingSpecificity": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["src/components/ChapterContent.tsx", "src/components/CustomTable.tsx"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            // Server components, rendered once at build time, never reconcile their lists.
+            "noArrayIndexKey": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["src/components/ChapterContent.tsx"],
+      "linter": {
+        "rules": {
+          "performance": {
+            // The static export can't optimize images, and Markdown images have no dimensions.
+            "noImgElement": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": [
+        "src/components/ChapterLayout.tsx",
+        "src/components/GlossaryProvider.tsx",
+        "src/hooks/useIntersectionObserver.ts"
+      ],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "useExhaustiveDependencies": {
+              "level": "error",
+              "options": {
+                // Effects re-run when the chapter or content changes.
+                "reportUnnecessaryDependencies": false
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
 }
