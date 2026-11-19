@@ -20,6 +20,8 @@
   },
   "linter": {
     "rules": {
+      // Otherwise, configuring a rule disables the rules of domains, like React.
+      "preset": "recommended",
       "complexity": {
         // The stylesheet overrides Tailwind and Typography styles, and print styles override screen styles.
         "noImportantStyles": "off"
