@@ -30,7 +30,7 @@ const CONTENT_TYPES: Record<string, string> = {
   '.woff2': 'font/woff2',
 };
 
-// Resolve URLs the way GitHub Pages does: "/a/b" serves "a/b", "a/b.html" or "a/b/index.html".
+// Resolve URLs the way Cloudflare Pages does: "/a/b" serves "a/b", "a/b.html" or "a/b/index.html".
 function resolveFile(urlPath: string): string | undefined {
   const base = path.join(OUT_DIR, decodeURIComponent(urlPath));
   if (!base.startsWith(OUT_DIR)) {
