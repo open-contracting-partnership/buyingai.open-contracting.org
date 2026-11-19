@@ -29,27 +29,10 @@ export function RegionProvider({
   children: React.ReactNode;
   autoProcess?: boolean;
 }) {
-  const [region, setRegionState] = useState<Region>(() => {
-    // Always default to US during SSR to avoid hydration mismatch
-    // For print pages, always use US
-    if (typeof window !== "undefined") {
-      // Check if we're on a print page - always use US for print
-      const isPrintPage = window.location.pathname.includes("/print");
-      if (isPrintPage) {
-        return "US";
-      }
+  // Start with the region of the pre-rendered HTML, to hydrate without a mismatch.
+  const [region, setRegionState] = useState<Region>("US");
 
-      const savedRegion = localStorage.getItem("region") as Region | null;
-      if (savedRegion === "US" || savedRegion === "GLOBAL") {
-        return savedRegion;
-      }
-      return "US";
-    }
-    // During SSR, always return US to match client initial state for print pages
-    return "US";
-  });
-
-  // Restore the saved region on mount, except on print pages
+  // Restore the saved region after hydration, except on print pages
   useEffect(() => {
     if (typeof window !== "undefined" && !window.location.pathname.includes("/print")) {
       const savedRegion = localStorage.getItem("region") as Region | null;
