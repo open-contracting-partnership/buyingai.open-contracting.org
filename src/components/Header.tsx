@@ -5,7 +5,7 @@ import clsx from "clsx";
 import { MenuIcon, XIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import facebookIcon from "@/app/assets/images/facebook-icon.svg";
 import linkedinIcon from "@/app/assets/images/linkedin-icon.svg";
 import logo from "@/app/assets/images/logo.svg";
@@ -132,10 +132,10 @@ export default function Header({ chapters }: HeaderProps) {
     }
   };
 
-  const closeSearch = () => {
+  const closeSearch = useCallback(() => {
     setIsSearchOpen(false);
     setSearchQuery("");
-  };
+  }, []);
 
   // Filter chapters based on search query - advanced search
   useEffect(() => {
@@ -210,7 +210,7 @@ export default function Header({ chapters }: HeaderProps) {
     };
     window.addEventListener("keydown", handleEscape);
     return () => window.removeEventListener("keydown", handleEscape);
-  }, [isSearchOpen]);
+  }, [isSearchOpen, closeSearch]);
 
   return (
     <header className="py-7 border-b border-white/10 sticky top-0 z-[9999] bg-[#3D393D]">

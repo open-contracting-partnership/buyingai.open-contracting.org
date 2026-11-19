@@ -49,14 +49,12 @@ export function RegionProvider({
     return "US";
   });
 
-  // Update region on mount if not a print page and different from localStorage
+  // Restore the saved region on mount, except on print pages
   useEffect(() => {
     if (typeof window !== "undefined" && !window.location.pathname.includes("/print")) {
       const savedRegion = localStorage.getItem("region") as Region | null;
       if (savedRegion === "US" || savedRegion === "GLOBAL") {
-        if (savedRegion !== region) {
-          setRegionState(savedRegion);
-        }
+        setRegionState(savedRegion);
       }
     }
   }, []);
