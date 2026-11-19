@@ -152,7 +152,7 @@ export function ChapterLayout({
           // Always keep sticky nav visible on chapter pages
           setShowStickyNav(true);
 
-          lastScrollY = scrollY > 0 ? scrollY : 0;
+          lastScrollY = Math.max(scrollY, 0);
           ticking = false;
         });
         ticking = true;
