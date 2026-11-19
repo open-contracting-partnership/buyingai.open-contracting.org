@@ -6,7 +6,8 @@ import { chromium } from 'playwright-core';
 const OUT_DIR = path.join(process.cwd(), 'out');
 const PDF_DIR = path.join(OUT_DIR, 'pdfs');
 
-// Chrome renders the header in isolation, so it can't load external resources.
+// Chrome renders the header in isolation: it can't load external resources, and it can only use installed fonts.
+// The deploy workflow installs Open Sans from scripts/fonts.
 const LOGO = fs.readFileSync(path.join(process.cwd(), 'src/app/assets/images/logo-grey.svg')).toString('base64');
 const HEADER_TEMPLATE = `
 <div style="width: 100%; margin: 0 15mm; display: flex; justify-content: space-between; align-items: center; font-family: 'Open Sans', Helvetica, Arial, sans-serif; font-size: 8pt; color: #000;">

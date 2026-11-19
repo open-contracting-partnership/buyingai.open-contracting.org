@@ -13,6 +13,11 @@ jobs:
         with:
           node-version: 24
       - run: npm ci
+      - name: Install Open Sans for the PDF page header
+        run: |
+          mkdir -p ~/.local/share/fonts
+          cp scripts/fonts/*.ttf ~/.local/share/fonts/
+          fc-cache -f
       - name: Build
         env:
           NEXT_PUBLIC_SITE_URL: https://buyingai.open-contracting.org
