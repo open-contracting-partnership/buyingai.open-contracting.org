@@ -1,5 +1,5 @@
 // Client-safe types and utilities for sections
-export interface SectionChapter {
+interface SectionChapter {
   slug: string
   title: string
   order: number
@@ -24,7 +24,7 @@ export interface SectionsStructure {
 }
 
 // Color scheme for sections (from yellow-green to teal)
-export const sectionColors = [
+const sectionColors = [
   { bg: '#C8D419', text: '#000000', label: 'bg-[#C8D419] text-black' },     // Section 1 - Yellow-green
   { bg: '#AEC64E', text: '#000000', label: 'bg-[#AEC64E] text-black' },     // Section 2 - Light green
   { bg: '#92BA6C', text: '#000000', label: 'bg-[#92BA6C] text-black' },     // Section 3 - Medium green
@@ -34,15 +34,6 @@ export const sectionColors = [
 
 export function getSectionColor(sectionNumber: number) {
   return sectionColors[sectionNumber - 1] || sectionColors[0]
-}
-
-export function getSectionForChapter(structure: SectionsStructure, slug: string): Section | null {
-  for (const section of structure.sections) {
-    if (section.chapters.some(ch => ch.slug === slug)) {
-      return section
-    }
-  }
-  return null
 }
 
 export function getChapterInSection(structure: SectionsStructure, slug: string): { section: Section; chapterIndex: number } | null {
