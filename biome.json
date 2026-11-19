@@ -21,6 +21,9 @@
             "reportUnnecessaryDependencies": false
           }
         }
+      },
+      "suspicious": {
+        "noArrayIndexKey": "off"
       }
     }
   },
