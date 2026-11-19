@@ -126,31 +126,32 @@ export function BannerCarousel({ structure, currentSlug }: BannerCarouselProps) 
 
                     {/* Chapter list - show fewer chapters on mobile */}
                     {section.chapters.length > 0 && (
-                      <div className={`border-t border-black/10 ${isMobile ? "mt-3" : ""}`}>
+                      <ul className={`border-t border-black/10 ${isMobile ? "mt-3" : ""}`}>
                         {section.chapters.map((ch, chIdx) => {
                           // Each chapter link goes to its own chapter
                           const linkHref = `/chapter/${ch.slug}#content`;
 
                           return (
-                            <Link
-                              key={ch.slug}
-                              href={linkHref}
-                              scroll={false}
-                              className={`flex items-center gap-2.5 border-b border-black/10 py-1.5 duration-300 hover:bg-black/5 ${
-                                isMobile ? "text-sm" : "text-base"
-                              } text-black/80 hover:text-black transition-colors group`}
-                            >
-                              <span className={`${isMobile ? "font-mono text-sm" : "font-mono text-base"}`}>
-                                {chIdx + 1}.
-                              </span>
-                              <span className="flex-1 line-clamp-2">{ch.title}</span>
-                              {!isMobile && (
-                                <ArrowUpRight className="size-4 opacity-0 group-hover:opacity-100 transition-opacity" />
-                              )}
-                            </Link>
+                            <li key={ch.slug}>
+                              <Link
+                                href={linkHref}
+                                scroll={false}
+                                className={`flex items-center gap-2.5 border-b border-black/10 py-1.5 duration-300 hover:bg-black/5 ${
+                                  isMobile ? "text-sm" : "text-base"
+                                } text-black/80 hover:text-black transition-colors group`}
+                              >
+                                <span className={`${isMobile ? "font-mono text-sm" : "font-mono text-base"}`}>
+                                  {chIdx + 1}.
+                                </span>
+                                <span className="flex-1 line-clamp-2">{ch.title}</span>
+                                {!isMobile && (
+                                  <ArrowUpRight className="size-4 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                )}
+                              </Link>
+                            </li>
                           );
                         })}
-                      </div>
+                      </ul>
                     )}
                   </div>
 

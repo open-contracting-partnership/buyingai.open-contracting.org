@@ -71,7 +71,7 @@ export function StickyNavbar({ structure, currentSlug, visible, sidebarVisible, 
         )}
 
         {/* Chapter Segments */}
-        <div className={`flex-1 flex ${isMobile ? "" : "min-w-max"}`}>
+        <ul className={`flex-1 flex ${isMobile ? "" : "min-w-max"}`}>
           {structure.sections.map((section, index) => {
             const color = getSectionColor(section.number);
             const isActive = section.number === currentSectionNumber;
@@ -79,11 +79,9 @@ export function StickyNavbar({ structure, currentSlug, visible, sidebarVisible, 
             const isLast = index === structure.sections.length - 1;
 
             return (
-              <Link
+              <li
                 key={section.number}
-                href={`/chapter/${firstChapterSlug}#content`}
-                scroll={false}
-                className={`flex items-center transition-all duration-300 hover:brightness-95 cursor-pointer ${
+                className={`flex transition-all duration-300 hover:brightness-95 ${
                   isMobile
                     ? "flex-1" // Mobile: todos usan flex-1 para distribuir uniformemente
                     : isActive
@@ -97,34 +95,40 @@ export function StickyNavbar({ structure, currentSlug, visible, sidebarVisible, 
                   width: !isMobile && isActive ? "auto" : undefined,
                 }}
               >
-                <div
-                  className={`flex items-center ${isActive ? "px-2 md:px-6 gap-2 md:gap-4" : "justify-center w-full"}`}
+                <Link
+                  href={`/chapter/${firstChapterSlug}#content`}
+                  scroll={false}
+                  className="flex flex-1 items-center cursor-pointer"
                 >
-                  {/* Section Number */}
-                  <span className="text-black font-medium text-sm md:text-base">
-                    {section.number.toString().padStart(2, "0")}
-                  </span>
+                  <div
+                    className={`flex items-center ${isActive ? "px-2 md:px-6 gap-2 md:gap-4" : "justify-center w-full"}`}
+                  >
+                    {/* Section Number */}
+                    <span className="text-black font-medium text-sm md:text-base">
+                      {section.number.toString().padStart(2, "0")}
+                    </span>
 
-                  {/* Expanded Details (only for active section) */}
-                  {isActive && (
-                    <>
-                      {/* Section Title - hidden on mobile */}
-                      <span className="hidden md:inline text-black font-medium text-base">{section.title}</span>
+                    {/* Expanded Details (only for active section) */}
+                    {isActive && (
+                      <>
+                        {/* Section Title - hidden on mobile */}
+                        <span className="hidden md:inline text-black font-medium text-base">{section.title}</span>
 
-                      {/* Arrow - hidden on mobile */}
-                      <ChevronRightIcon className="hidden md:inline size-6 text-black" />
+                        {/* Arrow - hidden on mobile */}
+                        <ChevronRightIcon className="hidden md:inline size-6 text-black" />
 
-                      {/* Current Chapter - abbreviated on mobile */}
-                      <span className="text-black text-xs md:text-sm truncate max-w-[120px] md:max-w-none">
-                        {section.chapters.find((ch) => ch.slug === currentSlug)?.title || section.chapters[0]?.title}
-                      </span>
-                    </>
-                  )}
-                </div>
-              </Link>
+                        {/* Current Chapter - abbreviated on mobile */}
+                        <span className="text-black text-xs md:text-sm truncate max-w-[120px] md:max-w-none">
+                          {section.chapters.find((ch) => ch.slug === currentSlug)?.title || section.chapters[0]?.title}
+                        </span>
+                      </>
+                    )}
+                  </div>
+                </Link>
+              </li>
             );
           })}
-        </div>
+        </ul>
       </div>
     </nav>
   );

@@ -41,26 +41,38 @@ export default function Footer() {
               </div>
               <div className="md:w-1/3">
                 <h2 className="font-bold text-white font-gteesti-display">Connect with us:</h2>
-                <div className="mt-5 grid grid-cols-2 gap-4 w-1/2 md:translate-x-4 lg:translate-x-6">
-                  <Link href="https://twitter.com/opencontracting" target="_blank">
-                    <Image src={twitterIcon} alt="Twitter" width={26} height={26} />
-                  </Link>
-                  <Link href="https://github.com/open-contracting-partnership/" target="_blank">
-                    <Image src={githubIcon} alt="GitHub" width={26} height={26} />
-                  </Link>
-                  <Link href="https://www.facebook.com/OpenContracting" target="_blank">
-                    <Image src={facebookIcon} alt="Facebook" width={26} height={26} />
-                  </Link>
-                  <Link href="https://soundcloud.com/opencontracting" target="_blank">
-                    <Image src={soundcloudIcon} alt="SoundCloud" width={26} height={26} />
-                  </Link>
-                  <Link href="https://www.linkedin.com/company/open-contracting-partnership" target="_blank">
-                    <Image src={linkedinIcon} alt="LinkedIn" width={26} height={26} />
-                  </Link>
-                  <Link href="https://www.youtube.com/OpenContractingPartnership" target="_blank">
-                    <Image src={youtubeIcon} alt="YouTube" width={26} height={26} />
-                  </Link>
-                </div>
+                <ul className="mt-5 grid grid-cols-2 gap-4 w-1/2 md:translate-x-4 lg:translate-x-6">
+                  <li>
+                    <Link href="https://twitter.com/opencontracting" target="_blank">
+                      <Image src={twitterIcon} alt="Twitter" width={26} height={26} />
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="https://github.com/open-contracting-partnership/" target="_blank">
+                      <Image src={githubIcon} alt="GitHub" width={26} height={26} />
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="https://www.facebook.com/OpenContracting" target="_blank">
+                      <Image src={facebookIcon} alt="Facebook" width={26} height={26} />
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="https://soundcloud.com/opencontracting" target="_blank">
+                      <Image src={soundcloudIcon} alt="SoundCloud" width={26} height={26} />
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="https://www.linkedin.com/company/open-contracting-partnership" target="_blank">
+                      <Image src={linkedinIcon} alt="LinkedIn" width={26} height={26} />
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="https://www.youtube.com/OpenContractingPartnership" target="_blank">
+                      <Image src={youtubeIcon} alt="YouTube" width={26} height={26} />
+                    </Link>
+                  </li>
+                </ul>
               </div>
             </div>
           </div>

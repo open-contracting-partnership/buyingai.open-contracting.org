@@ -271,35 +271,36 @@ export function ChapterLayout({ currentSlug, children, structure }: ChapterLayou
                         </div>
 
                         {/* Section Chapters - Always show all chapters */}
-                        <div className="space-y-1 ml-6 border-l border-black">
+                        <ul className="space-y-1 ml-6 border-l border-black">
                           {section.chapters.map((ch) => {
                             const isActiveChapter = ch.slug === currentSlug || ch.slug === activeSectionId;
                             return (
-                              <Link
-                                key={ch.slug}
-                                href={`/chapter/${ch.slug}#content`}
-                                scroll={false}
-                                data-chapter-slug={ch.slug}
-                                className={`block px-3 py-2 text-sm transition-colors rounded ${
-                                  isActiveChapter
-                                    ? "font-medium"
-                                    : "text-gray-600 hover:bg-gray-50 hover:text-gray-800"
-                                }`}
-                                style={
-                                  isActiveChapter
-                                    ? {
-                                        backgroundColor: hexToRgba(color.bg, 0.19),
-                                      }
-                                    : undefined
-                                }
-                              >
-                                <div className="flex items-center">
-                                  <span>{ch.title}</span>
-                                </div>
-                              </Link>
+                              <li key={ch.slug}>
+                                <Link
+                                  href={`/chapter/${ch.slug}#content`}
+                                  scroll={false}
+                                  data-chapter-slug={ch.slug}
+                                  className={`block px-3 py-2 text-sm transition-colors rounded ${
+                                    isActiveChapter
+                                      ? "font-medium"
+                                      : "text-gray-600 hover:bg-gray-50 hover:text-gray-800"
+                                  }`}
+                                  style={
+                                    isActiveChapter
+                                      ? {
+                                          backgroundColor: hexToRgba(color.bg, 0.19),
+                                        }
+                                      : undefined
+                                  }
+                                >
+                                  <div className="flex items-center">
+                                    <span>{ch.title}</span>
+                                  </div>
+                                </Link>
+                              </li>
                             );
                           })}
-                        </div>
+                        </ul>
                       </div>
                     );
                   })}
