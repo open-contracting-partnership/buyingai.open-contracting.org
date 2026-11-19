@@ -1,6 +1,6 @@
 // Server-side only - loads sections data from filesystem
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 import type { SectionsStructure } from "./sections-types";
 
 let cachedStructure: SectionsStructure | null = null;

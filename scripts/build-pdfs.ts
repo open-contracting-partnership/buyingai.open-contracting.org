@@ -1,6 +1,6 @@
-import fs from "fs";
-import http from "http";
-import path from "path";
+import fs from "node:fs";
+import http from "node:http";
+import path from "node:path";
 import { chromium } from "playwright-core";
 
 const OUT_DIR = path.join(process.cwd(), "out");
