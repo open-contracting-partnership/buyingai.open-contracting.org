@@ -12,6 +12,18 @@
   "files": {
     "includes": ["**", "!content", "!**/*.svg"]
   },
+  "linter": {
+    "rules": {
+      "correctness": {
+        "useExhaustiveDependencies": {
+          "level": "error",
+          "options": {
+            "reportUnnecessaryDependencies": false
+          }
+        }
+      }
+    }
+  },
   "css": {
     "parser": {
       "tailwindDirectives": true

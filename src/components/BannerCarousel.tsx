@@ -32,10 +32,9 @@ export function BannerCarousel({ structure, currentSlug }: BannerCarouselProps) 
 
   // Initialize clicked section to current section on mobile
   useEffect(() => {
-    if (isMobile && clickedSection === null) {
-      setClickedSection(currentSectionNumber);
+    if (isMobile) {
+      setClickedSection((previous) => previous ?? currentSectionNumber);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMobile, currentSectionNumber]);
 
   // Handle click for mobile
