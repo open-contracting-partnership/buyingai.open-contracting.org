@@ -191,7 +191,7 @@ const ProcurementPathways: React.FC<{
           </div>
           <div className="p-3 md:p-4 flex-1" style={{ backgroundColor: category.color }}>
             <p
-              className="text-xs leading-relaxed break-words !m-0"
+              className="text-xs leading-relaxed break-words !m-0 !text-black"
               style={{ wordBreak: "break-word", overflowWrap: "break-word" }}
             >
               {displayText ? parseBoldText(displayText) : ""}
@@ -200,7 +200,7 @@ const ProcurementPathways: React.FC<{
               <button
                 type="button"
                 onClick={() => toggleTextExpansion(textId)}
-                className="mt-2 text-xs font-semibold text-gray-700 hover:text-gray-900 underline"
+                className="mt-2 text-xs font-semibold text-black underline"
               >
                 {isExpanded ? "See less" : "See more"}
               </button>
@@ -232,10 +232,10 @@ const ProcurementPathways: React.FC<{
               <div
                 key={sub.id}
                 className={`flex-1 p-3 md:p-4 ${idx > 0 ? "border-t-2 md:border-t-0 md:border-l-2 border-white" : ""}`}
-                style={{ backgroundColor: category.color, opacity: 0.9 }}
+                style={{ backgroundColor: category.color }}
               >
                 <p
-                  className="text-xs leading-relaxed break-words !m-0"
+                  className="text-xs leading-relaxed break-words !m-0 !text-black"
                   style={{ wordBreak: "break-word", overflowWrap: "break-word" }}
                 >
                   {displayText ? parseBoldText(displayText) : ""}
@@ -244,7 +244,7 @@ const ProcurementPathways: React.FC<{
                   <button
                     type="button"
                     onClick={() => toggleTextExpansion(textId)}
-                    className="mt-2 text-xs font-semibold text-gray-700 hover:text-gray-900 underline"
+                    className="mt-2 text-xs font-semibold text-black underline"
                   >
                     {isExpanded ? "See less" : "See more"}
                   </button>
@@ -325,7 +325,7 @@ const ProcurementPathways: React.FC<{
                       <button
                         type="button"
                         onClick={() => toggleTextExpansion(textId)}
-                        className="mt-2 text-xs font-semibold text-gray-700 hover:text-gray-900 underline"
+                        className="mt-2 text-xs font-semibold text-black underline"
                       >
                         {isTextExpanded ? "See less" : "See more"}
                       </button>
@@ -341,7 +341,7 @@ const ProcurementPathways: React.FC<{
   };
 
   return (
-    <div className="w-full max-w-7xl mx-auto bg-white px-4 md:px-6 lg:px-8 pb-4 md:pb-6">
+    <div className="w-full max-w-7xl mx-auto bg-white text-black px-4 md:px-6 lg:px-8 pb-4 md:pb-6">
       {/* Title */}
       <div className="mb-4 md:mb-6">
         <h2 className="text-lg md:text-xl font-bold !mt-0">{data.title}</h2>
