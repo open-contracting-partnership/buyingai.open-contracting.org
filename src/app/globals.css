@@ -551,3 +551,9 @@ body > div > div {
 .prose ol {
   margin: 1.5rem 0;
 }
+
+/* Print pages, from which the chapter PDFs are generated. */
+.open-sans-only,
+.open-sans-only * {
+  font-family: var(--font-open-sans), Arial, sans-serif !important;
+}
