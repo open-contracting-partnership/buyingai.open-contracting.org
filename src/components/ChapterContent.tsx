@@ -3,7 +3,6 @@ import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 import procurementPathwaysData from "@/app/data/procurement-pathways.json";
-import { CollapsibleText } from "@/components/CollapsibleText";
 import { CustomTable } from "@/components/CustomTable";
 import ProcurementPathways from "@/components/ProcurementPathways";
 import { processChapterContent, remarkHeadingIds } from "@/lib/chapter-content";
@@ -287,11 +286,6 @@ function markdownComponents(highlightColor: string, print: boolean) {
     );
 
   return {
-    collapsiblesection: ({ title, heading, children }: any) => (
-      <CollapsibleText title={title} heading={heading}>
-        {children}
-      </CollapsibleText>
-    ),
     img: ({ src, alt, node, ...props }: any) => {
       const srcString = typeof src === "string" ? src : String(src || "");
       if (!srcString) return null;
