@@ -325,7 +325,7 @@ export function ChapterLayout({ currentSlug, children, structure }: ChapterLayou
       <a
         href={`/pdfs/${currentSlug}.pdf`}
         download={`buyingai-${currentSlug}.pdf`}
-        className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-5 py-3 bg-[#92C36F] text-white rounded-full shadow-lg hover:bg-[#7BA860] transition-all duration-300 hover:shadow-xl no-print cursor-pointer"
+        className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-5 py-3 bg-[#D6E100] text-black rounded-full shadow-lg hover:bg-[#B5C115] transition-all duration-300 hover:shadow-xl no-print cursor-pointer"
         aria-label="Download chapter (PDF)"
       >
         <Download className="size-5" />
