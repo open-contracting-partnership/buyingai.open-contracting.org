@@ -9,10 +9,12 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v6
         with:
           node-version: 24
-      - run: npm ci
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile --ignore-scripts
       - name: Install GT Eesti for the PDF page header
         run: |
           python3 -m venv /tmp/fonts
@@ -23,7 +25,7 @@ jobs:
         env:
           NEXT_PUBLIC_SITE_URL: https://buyingai.open-contracting.org
           NEXT_TELEMETRY_DISABLED: 1
-        run: npm run build
+        run: pnpm run build
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:

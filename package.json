@@ -1,6 +1,7 @@
 {
   "name": "ocp-ai-buying",
   "private": true,
+  "packageManager": "pnpm@11.28.11",
   "scripts": {
     "dev": "npm run build:content && next dev --turbopack",
     "build": "npm run build:content && next build --turbopack && npm run build:pdfs",
