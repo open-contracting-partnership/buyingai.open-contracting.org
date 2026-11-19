@@ -252,18 +252,16 @@ export function ChapterLayout({ currentSlug, children, structure }: ChapterLayou
                           {/* Section Number and Title */}
                           <div className="flex items-center">
                             <span
-                              className={`text-sm font-gteesti-display font-medium mr-2 ${
-                                isActiveSection ? "" : "text-black"
+                              className={`text-sm font-gteesti-display text-black mr-2 ${
+                                isActiveSection ? "font-bold" : "font-medium"
                               }`}
-                              style={isActiveSection ? { color: color.bg } : undefined}
                             >
                               {section.number.toString().padStart(2, "0")}
                             </span>
                             <span
-                              className={`text-sm font-gteesti-display font-medium ${
-                                isActiveSection ? "" : "text-black"
+                              className={`text-sm font-gteesti-display text-black ${
+                                isActiveSection ? "font-bold" : "font-medium"
                               }`}
-                              style={isActiveSection ? { color: color.bg } : undefined}
                             >
                               {section.title}
                             </span>
