@@ -306,7 +306,7 @@ const ProcurementPathways: React.FC<{
 
               return (
                 <div
-                  key={idx}
+                  key={`${item.category_id}/${item.subcategory_id ?? ""}`}
                   className="flex-1 p-2.5 md:p-3 border-b-2 md:border-b-0 md:border-l-2 border-white min-h-[50px] md:min-h-[60px] flex items-start gap-2"
                   style={{ backgroundColor: bgColor }}
                 >
