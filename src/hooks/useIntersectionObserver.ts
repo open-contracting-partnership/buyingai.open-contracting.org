@@ -74,7 +74,9 @@ export function useIntersectionObserver({
     const observeElements = () => {
       const elements = document.querySelectorAll("[data-section-id]");
       logger.debug("Found elements to observe:", elements.length);
-      elements.forEach((el) => observer.observe(el));
+      for (const el of elements) {
+        observer.observe(el);
+      }
     };
 
     // Use setTimeout to ensure DOM is ready
