@@ -20,12 +20,12 @@ export default function Footer() {
             <div className="flex flex-col gap-y-8 md:flex-row md:gap-x-6">
               <div className="md:w-2/3">
                 <div className="border-2 border-[#C8D419] rounded-tl-4xl py-4 px-6 text-white">
-                  <h3 className="font-bold font-gteesti-display leading-tight">
+                  <h2 className="font-bold font-gteesti-display leading-tight">
                     This is a resource by <br />
                     <Link className="underline" href="https://www.open-contracting.org" target="_blank">
                       Open Contracting Partnership
                     </Link>
-                  </h3>
+                  </h2>
                   <p className="mt-3.5 text-xs">
                     We are a global nonprofit organization that supports public sector organizations to get better
                     results from their procurements by opening up and leveraging data, multi-stakeholder collaboration,
@@ -40,7 +40,7 @@ export default function Footer() {
                 </div>
               </div>
               <div className="md:w-1/3">
-                <h3 className="font-bold text-white font-gteesti-display">Connect with us:</h3>
+                <h2 className="font-bold text-white font-gteesti-display">Connect with us:</h2>
                 <div className="mt-5 grid grid-cols-2 gap-4 w-1/2 md:translate-x-4 lg:translate-x-6">
                   <Link href="https://twitter.com/opencontracting" target="_blank">
                     <Image src={twitterIcon} alt="Twitter" width={26} height={26} />

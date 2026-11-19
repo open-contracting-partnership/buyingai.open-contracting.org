@@ -484,9 +484,9 @@ export default function Header({ chapters }: HeaderProps) {
                 <div className="flex items-center gap-4">
                   <Image src={logo} alt="OCP Logo" width={120} height={40} />
                   <div>
-                    <h2 className="text-2xl font-bold bg-gradient-to-r from-[#C8D419] to-[#23B2A7] bg-clip-text text-transparent font-gteesti-display">
+                    <p className="text-2xl font-bold bg-gradient-to-r from-[#C8D419] to-[#23B2A7] bg-clip-text text-transparent font-gteesti-display">
                       Buying AI
-                    </h2>
+                    </p>
                     <p className="text-sm text-white/60 font-gteesti-pro-display">Tips and tools</p>
                   </div>
                 </div>

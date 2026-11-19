@@ -116,13 +116,13 @@ export function BannerCarousel({ structure, currentSlug }: BannerCarouselProps) 
                     <div className={`${isMobile ? "text-4xl" : "text-5xl"} font-bold text-black font-gteesti-display`}>
                       {section.number.toString().padStart(2, "0")}
                     </div>
-                    <h3
+                    <h2
                       className={`${
                         isMobile ? "my-2 text-lg" : "my-2 text-2xl"
                       } font-medium text-black font-gteesti-display`}
                     >
                       {section.title}
-                    </h3>
+                    </h2>
 
                     {/* Chapter list - show fewer chapters on mobile */}
                     {section.chapters.length > 0 && (
