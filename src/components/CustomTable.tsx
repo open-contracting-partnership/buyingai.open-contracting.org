@@ -141,9 +141,7 @@ export function CustomTable({ children }: CustomTableProps) {
     // Match all **text** or \*\*text\*\* patterns
     const sectionRegex = /(?:\*\*|\\\*\\\*)([^*]+?)(?:\*\*|\\\*\\\*)/g;
     let lastIndex = 0;
-    let sectionMatch;
-
-    while ((sectionMatch = sectionRegex.exec(processableText)) !== null) {
+    for (const sectionMatch of processableText.matchAll(sectionRegex)) {
       const sectionTitle = sectionMatch[1].trim();
       const startOfContent = sectionMatch.index + sectionMatch[0].length;
 
@@ -343,9 +341,7 @@ export function CustomTable({ children }: CustomTableProps) {
             const processedText: React.ReactNode[] = [];
             let bulletLastIndex = 0;
             const boldRegex = /\*\*([^*]+?)\*\*/g;
-            let boldMatch;
-
-            while ((boldMatch = boldRegex.exec(trimmedBullet)) !== null) {
+            for (const boldMatch of trimmedBullet.matchAll(boldRegex)) {
               if (boldMatch.index > bulletLastIndex) {
                 processedText.push(trimmedBullet.substring(bulletLastIndex, boldMatch.index));
               }
@@ -383,9 +379,7 @@ export function CustomTable({ children }: CustomTableProps) {
           const processedText: React.ReactNode[] = [];
           let lastIndex = 0;
           const boldRegex = /\*\*([^*]+?)\*\*/g;
-          let match;
-
-          while ((match = boldRegex.exec(textContent)) !== null) {
+          for (const match of textContent.matchAll(boldRegex)) {
             if (match.index > lastIndex) {
               processedText.push(textContent.substring(lastIndex, match.index));
             }
@@ -413,9 +407,7 @@ export function CustomTable({ children }: CustomTableProps) {
     // Updated to handle optional space after hyphen
     const sectionPattern = /\*\*([^*]+?)\*\*\s*-\s*/g;
     let lastIndex = 0;
-    let match;
-
-    while ((match = sectionPattern.exec(textContent)) !== null) {
+    for (const match of textContent.matchAll(sectionPattern)) {
       // Add any text before this section
       if (match.index > lastIndex) {
         const beforeText = textContent.substring(lastIndex, match.index).trim();
@@ -468,9 +460,7 @@ export function CustomTable({ children }: CustomTableProps) {
             const processedText: React.ReactNode[] = [];
             let bulletLastIndex = 0;
             const boldRegex = /\*\*([^*]+?)\*\*/g;
-            let boldMatch;
-
-            while ((boldMatch = boldRegex.exec(trimmedBullet)) !== null) {
+            for (const boldMatch of trimmedBullet.matchAll(boldRegex)) {
               if (boldMatch.index > bulletLastIndex) {
                 processedText.push(trimmedBullet.substring(bulletLastIndex, boldMatch.index));
               }

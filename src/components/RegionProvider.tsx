@@ -181,14 +181,11 @@ function AutoRegionWrapper({ children }: { children: React.ReactNode }) {
           // Use word boundaries for whole word matching, but handle special cases
           const pattern = `\\b${escapedSource}\\b`;
           const regex = new RegExp(pattern, "gi");
-          let match;
-
-          regex.lastIndex = 0;
-          while ((match = regex.exec(text)) !== null) {
+          for (const match of text.matchAll(regex)) {
             const overlaps = replacements.some(
               (m) =>
-                (match!.index >= m.index && match!.index < m.index + m.length) ||
-                (match!.index + match![0].length > m.index && match!.index + match![0].length <= m.index + m.length),
+                (match.index >= m.index && match.index < m.index + m.length) ||
+                (match.index + match[0].length > m.index && match.index + match[0].length <= m.index + m.length),
             );
 
             if (!overlaps) {
@@ -198,11 +195,6 @@ function AutoRegionWrapper({ children }: { children: React.ReactNode }) {
                 replacement: targetTerm,
                 length: match[0].length,
               });
-            }
-
-            // Prevent infinite loops
-            if (match[0].length === 0) {
-              regex.lastIndex++;
             }
           }
         });

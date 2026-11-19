@@ -148,10 +148,9 @@ const ProcurementPathways: React.FC<{
     const parts: React.ReactNode[] = [];
     const regex = /\*\*(.*?)\*\*/g;
     let lastIndex = 0;
-    let match;
     let hasBold = false;
 
-    while ((match = regex.exec(text)) !== null) {
+    for (const match of text.matchAll(regex)) {
       hasBold = true;
       // Add text before the bold
       if (match.index > lastIndex) {
@@ -163,7 +162,7 @@ const ProcurementPathways: React.FC<{
           {match[1]}
         </strong>,
       );
-      lastIndex = regex.lastIndex;
+      lastIndex = match.index + match[0].length;
     }
 
     // Add remaining text

@@ -88,9 +88,7 @@ function renderTitleMarkdown(title: string): React.ReactNode {
   const parts: React.ReactNode[] = [];
   const italicRegex = /\*([^*]+)\*/g;
   let lastIndex = 0;
-  let match;
-
-  while ((match = italicRegex.exec(title)) !== null) {
+  for (const match of title.matchAll(italicRegex)) {
     // Add text before the italic
     if (match.index > lastIndex) {
       parts.push(title.substring(lastIndex, match.index));

@@ -147,16 +147,11 @@ function AutoGlossaryWrapper({ children }: { children: React.ReactNode }) {
           const escapedTerm = escapeRegex(term.Term);
           const pattern = `\\b${escapedTerm}\\b`;
           const regex = new RegExp(pattern, "gi");
-          let match;
-
-          // Find all matches in this text node
-          // Reset lastIndex to avoid regex state issues between iterations
-          regex.lastIndex = 0;
-          while ((match = regex.exec(text)) !== null) {
+          for (const match of text.matchAll(regex)) {
             const overlaps = matches.some(
               (m) =>
-                (match!.index >= m.index && match!.index < m.index + m.length) ||
-                (match!.index + match![0].length > m.index && match!.index + match![0].length <= m.index + m.length),
+                (match.index >= m.index && match.index < m.index + m.length) ||
+                (match.index + match[0].length > m.index && match.index + match[0].length <= m.index + m.length),
             );
 
             if (!overlaps) {
@@ -166,11 +161,6 @@ function AutoGlossaryWrapper({ children }: { children: React.ReactNode }) {
                 length: match[0].length,
               });
               hasMatches = true;
-            }
-
-            // Prevent infinite loops with zero-length matches
-            if (match[0].length === 0) {
-              regex.lastIndex++;
             }
           }
         });

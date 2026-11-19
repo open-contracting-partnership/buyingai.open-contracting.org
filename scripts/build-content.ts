@@ -166,9 +166,7 @@ function buildGlossary() {
     // Parse CSV line (handles quoted fields with commas)
     const regex = /(?:,|\n|^)("(?:[^"]|"")*"|[^",\n]*|(?:\n|$))/g;
     const fields: string[] = [];
-    let match;
-
-    while ((match = regex.exec(line)) !== null) {
+    for (const match of line.matchAll(regex)) {
       let field = match[1];
       // Remove quotes and unescape double quotes
       if (field.startsWith('"') && field.endsWith('"')) {
