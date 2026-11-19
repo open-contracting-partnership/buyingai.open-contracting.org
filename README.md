@@ -1,130 +1,59 @@
-# Buying GenAI - eBook Website
+# BuyingAI: Tips and tools for public procurement
 
-A Next.js website that renders markdown content as an interactive ebook with chapter navigation.
+The website at <https://buyingai.open-contracting.org>: a Next.js static site that renders the guidance's Markdown chapters, and a PDF of each chapter.
 
-## Project Structure
+## Getting started
 
-```
-ocp-ai-buying/
-├── content/              # Markdown files for book chapters
-│   ├── 00-toc.md
-│   ├── 01-introduction.md
-│   ├── 02-gen-ai-adoption-in-government.md
-│   └── ...
-├── src/
-│   ├── app/
-│   │   ├── page.tsx                    # Home page (table of contents)
-│   │   ├── chapter/[slug]/page.tsx     # Dynamic chapter pages
-│   │   └── ...
-│   └── lib/
-│       └── markdown.ts                  # Utilities for reading markdown files
-└── package.json
-```
-
-## Getting Started
+Install [Node](https://nodejs.org) 24 and [pnpm](https://pnpm.io). To build the PDFs, install [Google Chrome](https://www.google.com/chrome/).
 
 Install dependencies:
 
 ```bash
-npm install
+pnpm install
 ```
 
-Run the development server:
+Generate the chapters structure and glossary from `content/`:
 
 ```bash
-npm run dev
+pnpm exec tsx scripts/build-content.ts
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to view the site.
-
-## Adding or Editing Content
-
-1. Place markdown files in the `content/` directory
-2. Name files with a numeric prefix for ordering: `01-chapter-name.md`, `02-next-chapter.md`, etc.
-3. Start each file with a heading (`# Title`) - this will be used as the chapter title
-4. The site automatically generates:
-   - A table of contents on the home page
-   - Individual URLs for each chapter (`/chapter/01-chapter-name`)
-   - Previous/Next navigation between chapters
-
-## Markdown from Google Docs
-
-When exporting markdown from Google Docs, you may need to:
-- Clean up extra line breaks
-- Fix image links
-- Ensure headings use proper markdown syntax (`#`, `##`, etc.)
-
-## Building for Production
+Run the development server, and open <http://localhost:3000>:
 
 ```bash
-npm run build
-npm start
+pnpm exec next dev --turbopack
 ```
 
-## Figma Integration
+## Build
 
-To fetch the latest design data from Figma:
+Generate the content, build the static site to `out/`, and print each chapter's print page to `out/pdfs/`:
 
-1. **Get your Figma credentials:**
-   - Personal Access Token: [Figma Account Settings](https://www.figma.com/settings) → Generate new token
-   - File Key: From your Figma URL `figma.com/file/FILE_KEY/...`
+```bash
+pnpm exec tsx scripts/build-content.ts
+pnpm exec next build --turbopack
+pnpm exec tsx scripts/build-pdfs.ts
+```
 
-2. **Create `.env` file:**
-   ```bash
-   FIGMA_ACCESS_TOKEN=your_token_here
-   FIGMA_FILE_KEY=your_file_key_here
-   FIGMA_PROJECT_ID=your_project_id_here  # Optional, for listing files
-   ```
+The PDFs' page header uses GT Eesti Text if it's installed. Otherwise, it falls back to Helvetica or Arial. The deploy workflow installs it with `scripts/install-fonts.py`.
 
-3. **Fetch Figma data:**
-   
-   **List all files in a project:**
-   ```bash
-   npm run figma:fetch -- --list-files PROJECT_ID
-   # Or set FIGMA_PROJECT_ID in .env and run:
-   npm run figma:fetch -- --list-files
-   ```
-   
-   **List all pages in a file:**
-   ```bash
-   npm run figma:fetch -- --list-pages
-   ```
-   
-   **Fetch a specific page:**
-   ```bash
-   npm run figma:fetch -- --page PAGE_ID
-   ```
-   
-   **Fetch entire file:**
-   ```bash
-   npm run figma:fetch
-   ```
-   
-   **Fetch specific nodes by ID:**
-   ```bash
-   npm run figma:fetch -- --nodes NODE_ID1 NODE_ID2
-   ```
-   
-   **Tips:**
-   - To get page IDs: Run `--list-pages` first
-   - To get a node ID: Right-click on a frame/component in Figma → "Copy link" → The node ID is the part after `?node-id=` (e.g., `123:456`)
-   - To get a project ID: Open your Figma project → Check the URL → `figma.com/files/PROJECT_ID/...`
+The deploy workflow builds the site on each push to `main`, and pushes `out/` to the `gh-pages` branch, which Cloudflare Pages serves.
 
-**Output:**
-- Project files list: `figma-api-data/project-files.json`
-- Pages list: `figma-api-data/pages-list.json`
-- Specific page: `figma-api-data/page-{name}.json`
-- Entire file: `figma-api-data/figma-file.json`
-- Specific nodes: `figma-api-data/figma-nodes.json`
+## Content
 
-You can customize the script in `scripts/fetch-figma.ts` to extract specific design tokens, colors, typography, etc.
+`content/00-toc.md` sets the sections and the order of chapters. `content/glossary.csv` sets the glossary terms.
 
-## Tech Stack
+Each other file in `content/` is a chapter: `NN-slug.md`, served at `/chapter/NN-slug`. It starts with a `# Title` heading.
 
-- **Next.js 15** - React framework with App Router
-- **TypeScript** - Type safety
-- **Tailwind CSS** - Styling
-- **react-markdown** - Markdown rendering
-- **remark-gfm** - GitHub Flavored Markdown support
-- **@tailwindcss/typography** - Prose styling for markdown content
-# ocp-ai-buying
+Chapters can use:
+
+- `#### **Title {.collapsible}**` or `* **Title: {.collapsible}**` to collapse the content that follows, on the website
+- `{#id}` at the end of a heading, to set its ID
+- A fenced code block with `- Who:` and `- What:` lines, for the box at the start of a chapter
+- A fenced code block with `icon` and `background` front matter, or with a heading and bullets, for a callout box
+- `[PROCUREMENT_PATHWAYS]`, for the table in `src/app/data/procurement-pathways.json`
+
+When copying Markdown from Google Docs, check line breaks, image links and headings.
+
+## License
+
+The code is licensed under the MIT License, and the content under CC BY 4.0. See [LICENSE.md](LICENSE.md).

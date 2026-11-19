@@ -25,7 +25,10 @@ jobs:
         env:
           NEXT_PUBLIC_SITE_URL: https://buyingai.open-contracting.org
           NEXT_TELEMETRY_DISABLED: 1
-        run: pnpm run build
+        run: |
+          pnpm exec tsx scripts/build-content.ts
+          pnpm exec next build --turbopack
+          pnpm exec tsx scripts/build-pdfs.ts
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:

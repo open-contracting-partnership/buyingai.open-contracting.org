@@ -2,14 +2,6 @@
   "name": "ocp-ai-buying",
   "private": true,
   "packageManager": "pnpm@11.28.11",
-  "scripts": {
-    "dev": "npm run build:content && next dev --turbopack",
-    "build": "npm run build:content && next build --turbopack && npm run build:pdfs",
-    "start": "next start",
-    "figma:fetch": "tsx scripts/fetch-figma.ts",
-    "build:content": "tsx scripts/build-content.ts",
-    "build:pdfs": "tsx scripts/build-pdfs.ts"
-  },
   "dependencies": {
     "@next/third-parties": "^16.0.1",
     "@radix-ui/react-popover": "^1.1.15",
