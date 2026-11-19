@@ -108,21 +108,13 @@ export default async function ChapterPage({ params }: PageProps) {
     notFound();
   }
 
-  const allChapters = getAllChapters().filter((ch) => ch.slug !== "00-toc");
   const { previous, next } = getAdjacentChapters(slug);
   const structure = getSectionsStructure();
   const currentSection = getChapterInSection(structure, slug)?.section;
   const sectionColor = getSectionColor(currentSection?.number ?? 1);
 
   return (
-    <ChapterLayout
-      currentSlug={slug}
-      allChapters={allChapters}
-      chapterOrder={chapter.order}
-      totalChapters={allChapters.length}
-      structure={structure}
-      chapterTitle={chapter.title}
-    >
+    <ChapterLayout currentSlug={slug} structure={structure}>
       <div className="max-w-3xl mx-auto">
         <article className="bg-white rounded-lg shadow-sm p-4 sm:p-8 pt-12 lg:p-12 mb-8">
           <ChapterContent content={chapter.content} highlightColor={sectionColor.bg} />

@@ -5,8 +5,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import { logger } from "@/lib/logger";
-import type { Chapter } from "@/lib/markdown";
-import { getChapterInSection, getSectionColor, type SectionsStructure } from "@/lib/sections-types";
+import { getSectionColor, type SectionsStructure } from "@/lib/sections-types";
 import { SectionMarker } from "./SectionMarker";
 import { StickyNavbar } from "./StickyNavbar";
 
@@ -20,27 +19,11 @@ function hexToRgba(hex: string, opacity: number): string {
 
 interface ChapterLayoutProps {
   currentSlug: string;
-  allChapters: Chapter[];
   children: React.ReactNode;
-  chapterOrder: number;
-  totalChapters: number;
   structure: SectionsStructure;
-  chapterTitle?: string;
-  chapterContent?: React.ReactNode;
 }
 
-export function ChapterLayout({
-  currentSlug,
-  allChapters,
-  children,
-  chapterOrder,
-  totalChapters,
-  structure,
-  chapterTitle,
-  chapterContent,
-}: ChapterLayoutProps) {
-  // Always initialize as false to avoid hydration mismatch
-  const [scrolled, setScrolled] = useState(false);
+export function ChapterLayout({ currentSlug, children, structure }: ChapterLayoutProps) {
   // Always show sticky nav on chapter pages (start with true)
   const [showStickyNav, setShowStickyNav] = useState(true);
   // Always start with false to avoid hydration mismatch, will be set correctly in useEffect
@@ -76,16 +59,11 @@ export function ChapterLayout({
     logger.debug("Active section ID:", activeSectionId);
   }, [activeSectionId]);
 
-  const currentChapterInfo = getChapterInSection(structure, currentSlug);
-  const currentSection = currentChapterInfo?.section;
-  const sectionColor = currentSection ? getSectionColor(currentSection.number) : getSectionColor(1);
-
   // Check for hash on mount and scroll to position
   useEffect(() => {
     const hash = window.location.hash;
     if (hash) {
       // Set states immediately for navbar/sidebar visibility
-      setScrolled(true);
       setShowStickyNav(true);
 
       // Scroll to element (accounting for sticky header and navbar)
@@ -133,34 +111,6 @@ export function ChapterLayout({
 
     window.addEventListener("hashchange", handleHashChange);
     return () => window.removeEventListener("hashchange", handleHashChange);
-  }, []);
-
-  useEffect(() => {
-    let lastScrollY = window.scrollY;
-    let ticking = false;
-
-    const handleScroll = () => {
-      const scrollY = window.scrollY;
-      // No banner, so scrolled state triggers earlier
-      setScrolled(scrollY > 50);
-
-      // Show/hide navbar based on scroll direction (no banner threshold)
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          const scrollDirection = scrollY > lastScrollY ? "down" : "up";
-
-          // Always keep sticky nav visible on chapter pages
-          setShowStickyNav(true);
-
-          lastScrollY = Math.max(scrollY, 0);
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const toggleSidebar = () => {
@@ -217,9 +167,6 @@ export function ChapterLayout({
       }
     }
   }, [currentSlug]);
-
-  const currentChapter = allChapters.find((ch) => ch.slug === currentSlug);
-  const displayTitle = chapterTitle || currentChapter?.title || "Chapter";
 
   return (
     <div className="min-h-screen bg-[#EFEEEF]">
