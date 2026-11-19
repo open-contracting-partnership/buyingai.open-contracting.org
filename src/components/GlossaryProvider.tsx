@@ -60,7 +60,7 @@ function useGlossary() {
 }
 
 // Componente del Tooltip
-function Tooltip({ term, definition, position }: TooltipState) {
+function Tooltip({ definition, position }: TooltipState) {
   const tooltipRef = useRef<HTMLDivElement>(null);
   const [adjustedPosition, setAdjustedPosition] = useState(position);
 
@@ -181,7 +181,7 @@ function AutoGlossaryWrapper({ children }: { children: React.ReactNode }) {
             span.className = "glossary-term cursor-help bg-[#c8d419] rounded-full px-1 py-0.5";
             span.textContent = text.substring(match.index, match.index + match.length);
 
-            span.addEventListener("mouseenter", (e) => {
+            span.addEventListener("mouseenter", () => {
               const rect = span.getBoundingClientRect();
               showTooltip(match.term.Term, match.term.Definition, rect.left, rect.bottom + 5);
             });

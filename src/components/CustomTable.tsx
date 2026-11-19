@@ -491,7 +491,7 @@ export function CustomTable({ children }: CustomTableProps) {
       const grouped: React.ReactNode[] = [];
       let currentBullets: React.ReactElement[] = [];
 
-      elements.forEach((element, idx) => {
+      elements.forEach((element) => {
         if (React.isValidElement(element) && element.type === "li") {
           currentBullets.push(element);
         } else {

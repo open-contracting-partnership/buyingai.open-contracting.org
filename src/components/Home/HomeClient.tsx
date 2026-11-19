@@ -7,16 +7,14 @@ import remarkGfm from "remark-gfm";
 import arrowLeft from "@/app/assets/images/arrow-left.svg";
 import { BannerCarousel } from "@/components/BannerCarousel";
 import { FULL_GUIDE_PDF_URL } from "@/lib/links";
-import type { Chapter } from "@/lib/markdown";
 import type { SectionsStructure } from "@/lib/sections-types";
 
 interface HomeClientProps {
-  chapters: Chapter[];
   structure: SectionsStructure;
   tocContent: string;
 }
 
-export default function HomeClient({ chapters, structure, tocContent }: HomeClientProps) {
+export default function HomeClient({ structure, tocContent }: HomeClientProps) {
   // Parse the TOC content - extract content after the numbered list
   // Skip everything before the ## heading
   const contentMatch = tocContent.match(/##\s+(.+?)\n([\s\S]*?)(\[Get started.*?\])/);
