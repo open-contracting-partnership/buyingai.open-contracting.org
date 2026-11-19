@@ -615,7 +615,7 @@ export default function Header({ chapters }: HeaderProps) {
       {/* Mobile Search Modal */}
       {isSearchOpen && (
         <div className="fixed inset-0 z-[60] md:hidden">
-          <div className="absolute inset-0 bg-black/50" onClick={closeSearch} />
+          <div className="absolute inset-0 bg-black/50" onClick={closeSearch} aria-hidden="true" />
           <div className="absolute top-0 left-0 right-0 bg-white p-6 shadow-lg animate-in slide-in-from-top duration-300">
             <div className="flex flex-col gap-0 bg-white rounded-lg border border-gray-300 overflow-hidden">
               <div className="flex items-center gap-3 px-4 py-3">

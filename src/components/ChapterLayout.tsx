@@ -235,11 +235,7 @@ export function ChapterLayout({
       <div className="flex relative">
         {/* Overlay for mobile when sidebar is open */}
         {isMounted && sidebarVisible && (
-          <div
-            className="fixed inset-0 bg-black/50 z-40 lg:hidden"
-            onClick={toggleSidebar}
-            aria-label="Close sidebar overlay"
-          />
+          <div className="fixed inset-0 bg-black/50 z-40 lg:hidden" onClick={toggleSidebar} aria-hidden="true" />
         )}
 
         {/* Sidebar - Fixed on mobile, sticky on desktop */}
