@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { ChapterContent } from "@/components/ChapterContent";
 import { ChromeContentFix } from "@/components/ChromeContentFix";
 import { CollapsibleInitializer } from "@/components/CollapsibleInitializer";
-import { getAllChapters, getChapterBySlug } from "@/lib/markdown";
+import { getAllSlugs, getChapterBySlug } from "@/lib/markdown";
 import { getSectionsStructure } from "@/lib/sections";
 import { getChapterInSection, getSectionColor } from "@/lib/sections-types";
 
@@ -13,9 +13,7 @@ interface PageProps {
 }
 
 export async function generateStaticParams() {
-  return getAllChapters().map((chapter) => ({
-    slug: chapter.slug,
-  }));
+  return getAllSlugs().map((slug) => ({ slug }));
 }
 
 // The title becomes the generated PDF's title.

@@ -70,17 +70,13 @@ function buildChaptersStructure() {
       const slug = findMatchingSlug(chapterTitle);
 
       if (slug) {
-        // Extract the actual order from the filename
-        const orderMatch = slug.match(/^(\d+)/);
-        const actualOrder = orderMatch ? parseInt(orderMatch[1], 10) : chapterOrder + 1;
-
+        // The order is the chapter's position in the TOC, not its filename's number, which is part of its URL.
+        chapterOrder += 1;
         currentSection.chapters.push({
           slug,
           title: chapterTitle,
-          order: actualOrder,
+          order: chapterOrder,
         });
-
-        chapterOrder = actualOrder;
       }
     }
   }

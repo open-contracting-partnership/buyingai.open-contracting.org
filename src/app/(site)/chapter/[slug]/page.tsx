@@ -6,7 +6,7 @@ import { ChapterContent } from "@/components/ChapterContent";
 import { ChapterLayout } from "@/components/ChapterLayout";
 import { CollapsibleInitializer } from "@/components/CollapsibleInitializer";
 import { SITE_URL } from "@/lib/links";
-import { getAdjacentChapters, getAllChapters, getChapterBySlug } from "@/lib/markdown";
+import { getAdjacentChapters, getAllSlugs, getChapterBySlug } from "@/lib/markdown";
 import { getSectionsStructure } from "@/lib/sections";
 import { getChapterInSection, getSectionColor } from "@/lib/sections-types";
 
@@ -46,10 +46,7 @@ interface PageProps {
 
 // Generate static paths for all chapters
 export async function generateStaticParams() {
-  const chapters = getAllChapters();
-  return chapters.map((chapter) => ({
-    slug: chapter.slug,
-  }));
+  return getAllSlugs().map((slug) => ({ slug }));
 }
 
 // Generate metadata for each chapter

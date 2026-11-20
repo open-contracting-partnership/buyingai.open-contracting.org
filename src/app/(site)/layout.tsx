@@ -53,7 +53,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   // Get chapters at build time
-  const chapters = getAllChapters().filter((ch) => ch.slug !== "00-toc");
+  const chapters = getAllChapters();
 
   return (
     <html lang="en">

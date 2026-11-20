@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { getSectionsStructure } from "./sections";
 
 export interface Chapter {
   slug: string;
@@ -14,49 +15,36 @@ export interface ChapterContent extends Chapter {
 
 const contentDirectory = path.join(process.cwd(), "content");
 
-// Get all chapters from the content directory
-export function getAllChapters(): Chapter[] {
-  const files = fs.readdirSync(contentDirectory);
-
-  const chapters = files
+// The slugs of all Markdown files in content/, including those not in the TOC, like 00-toc.
+export function getAllSlugs(): string[] {
+  return fs
+    .readdirSync(contentDirectory)
     .filter((file) => file.endsWith(".md"))
-    .map((filename) => {
-      const slug = filename.replace(/\.md$/, "");
-      const content = fs.readFileSync(path.join(contentDirectory, filename), "utf8");
-
-      // Extract title from first heading
-      const titleMatch = content.match(/^#\s+(.+)$/m);
-      const title = titleMatch ? titleMatch[1].trim() : slug;
-
-      // Extract order from filename prefix (e.g., "01-" => 1)
-      const orderMatch = filename.match(/^(\d+)/);
-      const order = orderMatch ? parseInt(orderMatch[1], 10) : 999;
-
-      return {
-        slug,
-        title,
-        order,
-        filename,
-      };
-    })
-    .sort((a, b) => a.order - b.order);
-
-  return chapters;
+    .map((file) => file.replace(/\.md$/, ""));
 }
 
-// Get a single chapter by slug
+// The chapters in content/00-toc.md, in its order.
+export function getAllChapters(): Chapter[] {
+  return getSectionsStructure()
+    .sections.flatMap((section) => section.chapters)
+    .map((chapter) => getChapterBySlug(chapter.slug))
+    .filter((chapter) => chapter !== null)
+    .map(({ content: _content, ...chapter }) => chapter);
+}
+
+// Get a single chapter by slug. Its order is 0 if it isn't in the TOC.
 export function getChapterBySlug(slug: string): ChapterContent | null {
   try {
-    const filePath = path.join(contentDirectory, `${slug}.md`);
-    const content = fs.readFileSync(filePath, "utf8");
+    const content = fs.readFileSync(path.join(contentDirectory, `${slug}.md`), "utf8");
 
     // Extract title from first heading
     const titleMatch = content.match(/^#\s+(.+)$/m);
     const title = titleMatch ? titleMatch[1].trim() : slug;
 
-    // Extract order from filename prefix
-    const orderMatch = slug.match(/^(\d+)/);
-    const order = orderMatch ? parseInt(orderMatch[1], 10) : 999;
+    const order =
+      getSectionsStructure()
+        .sections.flatMap((section) => section.chapters)
+        .find((chapter) => chapter.slug === slug)?.order ?? 0;
 
     return {
       slug,
