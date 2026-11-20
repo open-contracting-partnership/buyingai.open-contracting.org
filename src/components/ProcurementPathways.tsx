@@ -341,10 +341,10 @@ const ProcurementPathways: React.FC<{
   };
 
   return (
-    <div className="w-full max-w-7xl mx-auto bg-white px-4 md:px-6 lg:px-8 py-4 md:py-6">
+    <div className="w-full max-w-7xl mx-auto bg-white px-4 md:px-6 lg:px-8 pb-4 md:pb-6">
       {/* Title */}
       <div className="mb-4 md:mb-6">
-        <h2 className="text-lg md:text-xl font-bold">{data.title}</h2>
+        <h2 className="text-lg md:text-xl font-bold !mt-0">{data.title}</h2>
       </div>
 
       {/* Main Category Headers */}
