@@ -24,6 +24,11 @@ interface ChapterLayoutProps {
 }
 
 export function ChapterLayout({ currentSlug, children, structure }: ChapterLayoutProps) {
+  // Number the saved PDF by the chapter's position in the TOC, so that downloads sort in reading order.
+  const order = structure.sections.flatMap((section) => section.chapters).find((ch) => ch.slug === currentSlug)?.order;
+  const downloadName = order
+    ? `buyingai-${order.toString().padStart(2, "0")}-${currentSlug.replace(/^\d+-/, "")}.pdf`
+    : `buyingai-${currentSlug}.pdf`;
   // Always show sticky nav on chapter pages (start with true)
   const [showStickyNav, setShowStickyNav] = useState(true);
   // Always start with false to avoid hydration mismatch, will be set correctly in useEffect
@@ -324,7 +329,7 @@ export function ChapterLayout({ currentSlug, children, structure }: ChapterLayou
 
       <a
         href={`/pdfs/${currentSlug}.pdf`}
-        download={`buyingai-${currentSlug}.pdf`}
+        download={downloadName}
         className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-5 py-3 bg-[#D6E100] text-black rounded-full shadow-lg hover:bg-[#B5C115] transition-all duration-300 hover:shadow-xl no-print cursor-pointer"
         aria-label="Download chapter (PDF)"
       >
