@@ -64,7 +64,7 @@ Don’t have an institutional AI strategy? Check out these resources:
  - The World Economic Forum has a [framework](https://www.weforum.org/publications/a-framework-for-developing-a-national-artificial-intelligence-strategy/) for developing national AI strategies.
 
 Many countries already have national or subnational AI strategies. For example: 
- - The [European appraoch to artificial intelligence](https://digital-strategy.ec.europa.eu/en/policies/european-approach-artificial-intelligence) (European Commission) 
+ - The [European approach to artificial intelligence](https://digital-strategy.ec.europa.eu/en/policies/european-approach-artificial-intelligence) (European Commission) 
  - [Artificial Intelligence 4.0 programme](https://julkaisut.valtioneuvosto.fi/bitstream/handle/10024/164468/TEM_2022_63.pdf?sequence=1&isAllowed=y) (Finland)
  - [Department of Homeland Security Artificial Intelligence (AI) Strategy](https://www.dhs.gov/sites/default/files/2025-09/25_0926_cio_dhs_ai_strategy_for_omb_m-25-21_508.pdf) (United States) 
  - [Artificial Intelligence (AI) Action Plan](https://www.industry.gov.au/publications/australias-artificial-intelligence-action-plan) (Australia)
