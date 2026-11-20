@@ -1,0 +1,9 @@
+:HL["/_next/static/chunks/33mqkxtg8mdek.css","style"]
+:HL["/_next/static/media/48eea41d8317494f-s.p.0wiir8udbzjvx.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/icons/lightbulb.png","image"]
+5:[["children",{"s":"__PAGE__","h":128}]]
+4:[["children",{"s":"print","h":48,"c":"$Q5"}]]
+3:[["children",{"s":{"n":"slug","t":"d","k":"01-insights-on-ai-adoption","s":[]},"h":112,"c":"$Q4"}]]
+2:[["children",{"s":"chapter","h":112,"c":"$Q3"}]]
+1:[["children",{"s":"(print)","h":112,"c":"$Q2"}]]
+0:{"b":"obQ6l4olaYTM6va45jEq8","t":{"t":{"s":"","h":80,"c":"$Q1"}}}

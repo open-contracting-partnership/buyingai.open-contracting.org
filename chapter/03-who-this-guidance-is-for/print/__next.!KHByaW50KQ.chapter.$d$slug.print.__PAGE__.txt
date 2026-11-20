@@ -1,0 +1,47 @@
+6:"$Sreact.fragment"
+8:"/_next/static/chunks/0xx9zai3f7mrt.js"
+9:"/_next/static/chunks/1p-6rv1s7gwa0.js"
+a:"ChromeContentFix"
+b:I[60665,["$8","$9"],"$a"]
+c:"CollapsibleInitializer"
+d:I[47049,["$8","$9"],"$c"]
+e:"/_next/static/chunks/0_0g-et1hv2kd.js"
+f:I[76925,["$e"],"OutletBoundary"]
+10:"$Sreact.suspense"
+14:"ViewportBoundary"
+15:I[76925,["$e"],"$14"]
+16:"MetadataBoundary"
+17:I[76925,["$e"],"$16"]
+18:I[76134,["$e"],"IconMark"]
+7:T542,prose prose-slate max-w-none
+  prose-headings:font-bold prose-headings:font-gteesti-display
+  prose-h1:text-4xl prose-h1:mb-6 prose-h1:mt-0
+  prose-h2:text-3xl prose-h2:mb-4 prose-h2:mt-8
+  prose-h3:text-2xl prose-h3:mb-3 prose-h3:mt-6
+  prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-4 prose-p:text-base
+  prose-a:text-[#17736B] prose-a:underline prose-a:font-medium
+  prose-strong:text-gray-900 prose-strong:font-semibold
+  prose-ul:my-4 prose-ul:list-disc prose-ul:pl-6
+  prose-ol:my-4 prose-ol:list-decimal prose-ol:pl-6
+  prose-li:text-gray-700 prose-li:mb-2
+  prose-blockquote:border-l-4 prose-blockquote:border-[#D6E100] prose-blockquote:pl-4 prose-blockquote:italic
+  prose-code:bg-transparent prose-code:p-0
+  prose-img:rounded-lg prose-img:shadow-md
+  prose-hr:border-gray-200 prose-hr:my-8
+  prose-table:border-collapse prose-table:border prose-table:border-gray-300 prose-table:my-4 sm:prose-table:my-6
+  prose-th:border prose-th:border-gray-300 prose-th:px-2 sm:prose-th:px-4 prose-th:py-1.5 sm:prose-th:py-2 prose-th:text-left prose-th:font-medium prose-th:text-xs sm:prose-th:text-sm
+  prose-td:border prose-td:border-gray-300 prose-td:px-2 sm:prose-td:px-4 prose-td:py-1.5 sm:prose-td:py-2 prose-td:text-xs sm:prose-td:text-sm
+  prose-pre:bg-transparent prose-pre:p-0 prose-pre:m-0 prose-pre:overflow-visible print-prose13:X
+5:[["children",{"s":"__PAGE__","h":128,"d":{"r":["$","$6","c",{"children":[["$","div",null,{"className":"min-h-screen bg-white print-view-container","style":{"display":"block","visibility":"visible","opacity":1},"children":[["$","main",null,{"className":"print-content-wrapper px-8 py-8 max-w-4xl mx-auto","style":"$5:0:1:d:r:props:children:0:props:style","children":["$","article",null,{"className":"print-content","style":"$5:0:1:d:r:props:children:0:props:style","children":["$","div",null,{"className":"$7","children":[["$","$6","markdown-0",{"children":[["$","h1","h1-0",{"className":" font-gteesti-display","style":{"scrollMarginTop":"200px"},"children":"Who this guidance is for"}],"\n",["$","p","p-0",{"children":["This guidance was created for ",["$","strong","strong-0",{"children":"procurement officers"}],", who are accompanying the purchasing process and want to understand AI technology, how procuring AI is different, and what to pay attention to during the procurement process."]}],"\n",["$","p","p-1",{"children":"In addition, this guidance can also support:"}],"\n",["$","ul","ul-0",{"children":["\n",["$","li","li-0",{"children":[["$","strong","strong-0",{"children":"Project teams,"}]," from departments or agencies who want to buy AI technology and are coordinating the overall process from needs identification through implementation, and who want to understand how to get the best results from their purchase."]}],"\n",["$","li","li-1",{"children":[["$","strong","strong-0",{"children":"IT and data teams"}],", who are collaborating with procurement and project teams on AI procurements."]}],"\n",["$","li","li-2",{"children":[["$","strong","strong-0",{"children":"Public sector leaders,"}]," who oversee supporting organizational readiness for AI."]}],"\n"]}]]}]]}]}]}],["$","$Lb",null,{}],["$","$Ld",null,{}]]}],[["$","script","script-0",{"src":"/_next/static/chunks/1p-6rv1s7gwa0.js","async":true}]],["$","$Lf",null,{"children":["$","$10",null,{"name":"Next.MetadataOutlet","children":"$@11"}]}]]}],"p":"$@12","v":null,"s":"$13"}}]]
+4:[["children",{"s":"print","h":48,"c":"$Q5"}]]
+3:[["children",{"s":{"n":"slug","t":"d","k":"03-who-this-guidance-is-for","s":[]},"h":112,"c":"$Q4"}]]
+2:[["children",{"s":"chapter","h":112,"c":"$Q3"}]]
+1:[["children",{"s":"(print)","h":112,"c":"$Q2"}]]
+0:{"t":{"t":{"s":"","h":80,"c":"$Q1"},"h":{"r":["$","$6","h",{"children":[null,["$","$L15",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]}],["$","$L17",null,{"children":[["$","div",null,{"hidden":true,"children":["$","$10",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"Who this guidance is for - Buying AI"}],["$","link","1",{"rel":"icon","href":"/favicon.ico?favicon.3r671jri8cvbu.ico","sizes":"32x32","type":"image/x-icon"}],["$","$L18","2",{}]]}]}],null]}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}],"p":"$@19","v":null,"s":"$13"}},"a":"$@1a","u":"$@1b","b":"obQ6l4olaYTM6va45jEq8"}
+11:null
+1b:true
+13:300
+13:C
+1a:0
+19:"$undefined"
+12:"$undefined"

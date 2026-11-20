@@ -1,0 +1,22 @@
+1:"$Sreact.fragment"
+2:"/_next/static/chunks/1xtyz3trh76e8.js"
+3:I[85496,["$2"],""]
+5:I[13032,["$2"],"default"]
+6:I[57174,["$2"],"default"]
+9:I[76925,["$2"],"OutletBoundary"]
+a:"$Sreact.suspense"
+c:"ViewportBoundary"
+d:I[76925,["$2"],"$c"]
+f:"MetadataBoundary"
+10:I[76925,["$2"],"$f"]
+12:I[47228,[],"default",1]
+:HL["/_next/static/chunks/33mqkxtg8mdek.css","style"]
+7:X
+8:[["children",{"s":"__PAGE__","h":512,"d":{"r":["$","$1","c",{"children":[null,null,["$","$L9",null,{"children":["$","$a",null,{"name":"Next.MetadataOutlet","children":"$@b"}]}]]}],"p":false,"v":null}}]]
+4:[["children",{"s":"/_not-found","h":512,"d":{"r":["$","$1","c",{"children":[null,["$","$L5",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L6",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],"p":false,"v":"$7"},"c":"$Q8"}]]
+0:{"P":null,"c":["","_not-found"],"q":"","i":false,"t":{"t":{"s":"","h":528,"d":{"r":["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/chunks/33mqkxtg8mdek.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}],["$","script","script-0",{"src":"/_next/static/chunks/1xtyz3trh76e8.js","async":true,"nonce":"$undefined"}]],["$","html",null,{"lang":"en","children":["$","body",null,{"className":"antialiased min-h-screen !bg-[#F2F3F4] text-black font-gteesti-text","children":["$","main",null,{"className":"w-11/12 max-w-3xl mx-auto py-24","children":[["$","h1",null,{"className":"text-4xl font-bold font-gteesti-display","children":"Page not found"}],["$","p",null,{"className":"mt-6 text-lg","children":"The page you're looking for doesn't exist."}],["$","p",null,{"className":"mt-6 text-lg","children":["$","$L3",null,{"href":"/","className":"underline","children":"Go to the home page"}]}]]}]}]}]]}],"p":false,"v":null},"c":"$Q4"},"h":{"r":["$","$1","h",{"children":[["$","meta",null,{"name":"robots","content":"noindex"}],["$","$Ld",null,{"children":"$Le"}],["$","$L10",null,{"children":[["$","div",null,{"hidden":true,"children":["$","$a",null,{"name":"Next.Metadata","children":"$L11"}]}],null]}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}],"p":false,"v":null}},"m":"$undefined","G":["$12",[]],"S":true,"r":"$undefined","s":"$undefined","a":"$undefined","l":"$undefined","p":"$undefined","d":"$undefined","b":"obQ6l4olaYTM6va45jEq8"}
+7:C
+e:[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]
+13:I[76134,["$2"],"IconMark"]
+b:null
+11:[["$","title","0",{"children":"Page not found - BuyingAI: Tips and tools for public procurement"}],["$","link","1",{"rel":"icon","href":"/favicon.ico?favicon.3r671jri8cvbu.ico","sizes":"32x32","type":"image/x-icon"}],["$","$L13","2",{}]]
