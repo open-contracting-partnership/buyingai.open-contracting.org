@@ -248,7 +248,7 @@ function AutoGlossaryWrapper({ children }: { children: React.ReactNode }) {
       }
     };
 
-    // Función auxiliar para escapar caracteres especiales en regex
+    // Escape the special characters of regular expressions.
     function escapeRegex(str: string): string {
       return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     }
