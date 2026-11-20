@@ -1,3 +1,4 @@
+# ruff: noqa: INP001
 """Install the GT Eesti Text web fonts as desktop fonts, for the PDF page header. Requires fonttools and brotli."""
 
 from pathlib import Path

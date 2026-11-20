@@ -1,3 +1,0 @@
-# To override the shared lint workflow.
-[tool.ruff.lint.extend-per-file-ignores]
-"scripts/*" = ["INP001"]  # implicit-namespace-package
