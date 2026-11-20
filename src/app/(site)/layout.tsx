@@ -8,6 +8,7 @@ import glossaryData from "@/app/data/glossary.json";
 import Footer from "@/components/Footer";
 import { GlossaryProvider } from "@/components/GlossaryProvider";
 import { RegionProvider } from "@/components/RegionProvider";
+import { SITE_URL } from "@/lib/links";
 import { getAllChapters } from "@/lib/markdown";
 
 const ibmPlexSans = IBM_Plex_Sans({
@@ -15,10 +16,8 @@ const ibmPlexSans = IBM_Plex_Sans({
   subsets: ["latin"],
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ocp-ai-buying.netlify.app";
-
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  metadataBase: new URL(SITE_URL),
   title: "BuyingAI: Tips and tools for public procurement",
   description:
     "This guide by Open Contracting Partnership offers practical guidance and hands-on tips to get the best results from your AI purchases.",
@@ -26,7 +25,7 @@ export const metadata: Metadata = {
     title: "BuyingAI: Tips and tools for public procurement",
     description:
       "This guide by Open Contracting Partnership offers practical guidance and hands-on tips to get the best results from your AI purchases.",
-    url: siteUrl,
+    url: SITE_URL,
     siteName: "Open Contracting Partnership",
     images: [
       {

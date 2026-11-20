@@ -5,6 +5,7 @@ import type React from "react";
 import { ChapterContent } from "@/components/ChapterContent";
 import { ChapterLayout } from "@/components/ChapterLayout";
 import { CollapsibleInitializer } from "@/components/CollapsibleInitializer";
+import { SITE_URL } from "@/lib/links";
 import { getAdjacentChapters, getAllChapters, getChapterBySlug } from "@/lib/markdown";
 import { getSectionsStructure } from "@/lib/sections";
 import { getChapterInSection, getSectionColor } from "@/lib/sections-types";
@@ -62,8 +63,7 @@ export async function generateMetadata({ params }: PageProps) {
     };
   }
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ocp-ai-buying.netlify.app";
-  const chapterUrl = `${siteUrl}/chapter/${slug}`;
+  const chapterUrl = `${SITE_URL}/chapter/${slug}`;
 
   // Extract description from chapter content (first paragraph or first 160 chars)
   let description = `Read ${chapter.title} - Buying AI guide by Open Contracting Partnership.`;
