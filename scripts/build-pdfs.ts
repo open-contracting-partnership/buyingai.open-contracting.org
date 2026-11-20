@@ -1,7 +1,7 @@
 import fs from "node:fs";
-import http from "node:http";
 import path from "node:path";
 import { chromium } from "playwright-core";
+import { serve } from "./serve";
 
 const OUT_DIR = path.join(process.cwd(), "out");
 const PDF_DIR = path.join(OUT_DIR, "pdfs");
@@ -17,42 +17,6 @@ const HEADER_TEMPLATE = `
   </div>
   <img src="data:image/svg+xml;base64,${LOGO}" style="height: 10mm;">
 </div>`;
-
-const CONTENT_TYPES: Record<string, string> = {
-  ".css": "text/css",
-  ".html": "text/html; charset=utf-8",
-  ".js": "text/javascript",
-  ".json": "application/json",
-  ".otf": "font/otf",
-  ".png": "image/png",
-  ".svg": "image/svg+xml",
-  ".txt": "text/plain; charset=utf-8",
-  ".woff2": "font/woff2",
-};
-
-// Resolve URLs the way Cloudflare Pages does: "/a/b" serves "a/b", "a/b.html" or "a/b/index.html".
-function resolveFile(urlPath: string): string | undefined {
-  const base = path.join(OUT_DIR, decodeURIComponent(urlPath));
-  if (!base.startsWith(OUT_DIR)) {
-    return undefined;
-  }
-  return [base, `${base}.html`, path.join(base, "index.html")].find(
-    (candidate) => fs.existsSync(candidate) && fs.statSync(candidate).isFile(),
-  );
-}
-
-function serve(): Promise<http.Server> {
-  const server = http.createServer((req, res) => {
-    const file = resolveFile(new URL(req.url ?? "/", "http://localhost").pathname);
-    if (!file) {
-      res.writeHead(404).end();
-      return;
-    }
-    res.writeHead(200, { "Content-Type": CONTENT_TYPES[path.extname(file)] ?? "application/octet-stream" });
-    fs.createReadStream(file).pipe(res);
-  });
-  return new Promise((resolve) => server.listen(0, "127.0.0.1", () => resolve(server)));
-}
 
 async function main() {
   const slugs = fs
