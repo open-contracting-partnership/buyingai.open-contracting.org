@@ -2,6 +2,11 @@
   "name": "ocp-ai-buying",
   "private": true,
   "packageManager": "pnpm@11.28.11",
+  "postcss": {
+    "plugins": {
+      "@tailwindcss/postcss": {}
+    }
+  },
   "dependencies": {
     "@next/third-parties": "^16.0.1",
     "@radix-ui/react-popover": "^1.1.15",
