@@ -15,14 +15,6 @@ export interface ChapterContent extends Chapter {
 
 const contentDirectory = path.join(process.cwd(), "content");
 
-// The slugs of all Markdown files in content/, including those not in the TOC, like 00-toc.
-export function getAllSlugs(): string[] {
-  return fs
-    .readdirSync(contentDirectory)
-    .filter((file) => file.endsWith(".md"))
-    .map((file) => file.replace(/\.md$/, ""));
-}
-
 // The chapters in content/00-toc.md, in its order.
 export function getAllChapters(): Chapter[] {
   return getSectionsStructure()
