@@ -1,0 +1,10 @@
+name: Lint
+on: [push, pull_request]
+jobs:
+  lint:
+    uses: open-contracting/.github/.github/workflows/lint.yml@main
+    permissions:
+      contents: read
+    with:
+      # Biome formats JSON files.
+      ocds-noindent: "yes"
