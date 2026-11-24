@@ -61,7 +61,7 @@ Omit `PA11Y_SUPPRESS_KNOWN_WARNINGS` to review all warnings, including the known
 
 `content/00-toc.md` sets the sections and the order of chapters. `content/glossary.csv` sets the glossary terms.
 
-Each other file in `content/` is a chapter: `NN-slug.md`, served at `/chapter/NN-slug` if it's in `00-toc.md`. It starts with a `# Title` heading. Its line in `00-toc.md` must start like its slug, without the number. The number is only part of the URL, so a new chapter takes the next unused number, wherever it goes in `00-toc.md`.
+Each other file in `content/` is a chapter: `slug.md`, served at `/chapter/slug` if it's in `00-toc.md`. It starts with a `# Title` heading. Its line in `00-toc.md` must start like its slug. The original chapters' slugs start with a number (`NN-slug.md`), which is only part of their URLs; new chapters don't need one.
 
 Chapters can use:
 
