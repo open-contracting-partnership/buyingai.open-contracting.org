@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { getSectionsStructure } from "./sections";
 
-export interface Chapter {
+interface Chapter {
   slug: string;
   title: string;
   order: number;
@@ -13,15 +13,25 @@ export interface ChapterContent extends Chapter {
   content: string;
 }
 
+export interface ChapterInSection extends Chapter {
+  sectionNumber: number;
+  sectionTitle: string;
+}
+
 const contentDirectory = path.join(process.cwd(), "content");
 
 // The chapters in content/00-toc.md, in its order.
-export function getAllChapters(): Chapter[] {
-  return getSectionsStructure()
-    .sections.flatMap((section) => section.chapters)
-    .map((chapter) => getChapterBySlug(chapter.slug))
-    .filter((chapter) => chapter !== null)
-    .map(({ content: _content, ...chapter }) => chapter);
+export function getAllChapters(): ChapterInSection[] {
+  return getSectionsStructure().sections.flatMap((section) =>
+    section.chapters
+      .map((chapter) => getChapterBySlug(chapter.slug))
+      .filter((chapter) => chapter !== null)
+      .map(({ content: _content, ...chapter }) => ({
+        ...chapter,
+        sectionNumber: section.number,
+        sectionTitle: section.title,
+      })),
+  );
 }
 
 // Get a single chapter by slug. Its order is 0 if it isn't in the TOC.

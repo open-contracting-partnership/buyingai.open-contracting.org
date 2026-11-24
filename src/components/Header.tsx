@@ -18,6 +18,8 @@ interface Chapter {
   title: string;
   order: number;
   filename: string;
+  sectionNumber: number;
+  sectionTitle: string;
 }
 
 interface HeaderProps {
@@ -280,7 +282,7 @@ export default function Header({ chapters }: HeaderProps) {
                               {renderTitleMarkdown(chapter.title)}
                             </div>
                             <div className="text-xs text-gray-500 mt-1">
-                              Chapter {chapter.order.toString().padStart(2, "0")}
+                              {chapter.sectionNumber.toString().padStart(2, "0")} {chapter.sectionTitle}
                             </div>
                           </Link>
                         ))}
@@ -673,7 +675,7 @@ export default function Header({ chapters }: HeaderProps) {
                     >
                       <div className="text-sm font-medium text-gray-900">{renderTitleMarkdown(chapter.title)}</div>
                       <div className="text-xs text-gray-500 mt-1">
-                        Chapter {chapter.order.toString().padStart(2, "0")}
+                        {chapter.sectionNumber.toString().padStart(2, "0")} {chapter.sectionTitle}
                       </div>
                     </Link>
                   ))}
