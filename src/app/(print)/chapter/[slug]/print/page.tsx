@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { ChapterContent } from "@/components/ChapterContent";
+import { plainText } from "@/components/ChapterTitle";
 import { ChromeContentFix } from "@/components/ChromeContentFix";
 import { CollapsibleInitializer } from "@/components/CollapsibleInitializer";
 import { getAllChapters, getChapterBySlug } from "@/lib/markdown";
@@ -23,7 +24,7 @@ export async function generateMetadata({ params }: PageProps) {
   if (!chapter) {
     return {};
   }
-  return { title: `${chapter.title.replace(/[*_]/g, "")} - Buying AI` };
+  return { title: `${plainText(chapter.title)} - Buying AI` };
 }
 
 export default async function PrintPage({ params }: PageProps) {

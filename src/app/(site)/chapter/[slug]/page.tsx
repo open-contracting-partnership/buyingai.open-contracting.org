@@ -1,42 +1,14 @@
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import type React from "react";
 import { ChapterContent } from "@/components/ChapterContent";
 import { ChapterLayout } from "@/components/ChapterLayout";
+import { ChapterTitle, plainText } from "@/components/ChapterTitle";
 import { CollapsibleInitializer } from "@/components/CollapsibleInitializer";
 import { SITE_URL } from "@/lib/links";
 import { getAdjacentChapters, getAllChapters, getChapterBySlug } from "@/lib/markdown";
 import { getSectionsStructure } from "@/lib/sections";
 import { getChapterInSection, getSectionColor } from "@/lib/sections-types";
-
-// Helper function to render markdown in navigation titles (handles italics)
-function renderTitleMarkdown(title: string): React.ReactNode {
-  // Split by italic markers (* or _)
-  const parts: React.ReactNode[] = [];
-  const italicRegex = /\*([^*]+)\*/g;
-  let lastIndex = 0;
-  for (const match of title.matchAll(italicRegex)) {
-    // Add text before the italic
-    if (match.index > lastIndex) {
-      parts.push(title.substring(lastIndex, match.index));
-    }
-    // Add italic text with green background
-    parts.push(
-      <span key={match.index} className="bg-green-200 px-1 py-0.5 rounded not-italic">
-        {match[1]}
-      </span>,
-    );
-    lastIndex = match.index + match[0].length;
-  }
-
-  // Add remaining text
-  if (lastIndex < title.length) {
-    parts.push(title.substring(lastIndex));
-  }
-
-  return parts.length > 0 ? parts : title;
-}
 
 interface PageProps {
   params: Promise<{
@@ -62,18 +34,25 @@ export async function generateMetadata({ params }: PageProps) {
 
   const chapterUrl = `${SITE_URL}/chapter/${slug}`;
 
-  // Extract description from chapter content (first paragraph or first 160 chars)
-  let description = `Read ${chapter.title} - Buying AI guide by Open Contracting Partnership.`;
-  const firstParagraph = chapter.content.split("\n\n").find((p) => p.trim().length > 50 && !p.trim().startsWith("#"));
-  if (firstParagraph) {
-    description = `${firstParagraph.trim().replace(/\n/g, " ").substring(0, 160)}...`;
+  const title = plainText(chapter.title);
+
+  // The Who/What box's "What" line, or else the first paragraph.
+  const what = chapter.content.match(/^- What:(.+)$/m)?.[1];
+  const firstParagraph = chapter.content
+    .split("\n\n")
+    .find((p) => p.trim().length > 50 && !p.trim().startsWith("#") && !p.trim().startsWith("```"));
+  let description = plainText(
+    what ?? firstParagraph ?? `Read ${title} - Buying AI guide by Open Contracting Partnership.`,
+  );
+  if (description.length > 160) {
+    description = `${description.substring(0, description.lastIndexOf(" ", 159))}…`;
   }
 
   return {
-    title: `${chapter.title} - Buying AI`,
+    title: `${title} - Buying AI`,
     description,
     openGraph: {
-      title: `${chapter.title} - Buying AI`,
+      title: `${title} - Buying AI`,
       description,
       url: chapterUrl,
       siteName: "Open Contracting Partnership",
@@ -82,7 +61,7 @@ export async function generateMetadata({ params }: PageProps) {
           url: "/images/og-image.png", // Ruta de la imagen OG - coloca tu imagen en public/og-image.png
           width: 1200,
           height: 630,
-          alt: chapter.title,
+          alt: title,
         },
       ],
       locale: "en_US",
@@ -90,7 +69,7 @@ export async function generateMetadata({ params }: PageProps) {
     },
     twitter: {
       card: "summary_large_image",
-      title: `${chapter.title} - Buying AI`,
+      title: `${title} - Buying AI`,
       description,
       images: ["/images/og-image.png"], // Ruta de la imagen OG - coloca tu imagen en public/og-image.png
     },
@@ -129,7 +108,9 @@ export default async function ChapterPage({ params }: PageProps) {
                 className="flex items-center gap-2 text-gray-600 hover:text-black transition-colors group"
               >
                 <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-                <span className="text-sm">{renderTitleMarkdown(previous.title)}</span>
+                <span className="text-sm">
+                  <ChapterTitle title={previous.title} />
+                </span>
               </Link>
             )}
           </div>
@@ -140,7 +121,9 @@ export default async function ChapterPage({ params }: PageProps) {
                 scroll={false}
                 className="flex items-center gap-2 text-gray-600 hover:text-black transition-colors group"
               >
-                <span className="text-sm">{renderTitleMarkdown(next.title)}</span>
+                <span className="text-sm">
+                  <ChapterTitle title={next.title} />
+                </span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
             )}

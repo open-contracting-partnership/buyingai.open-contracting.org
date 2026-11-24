@@ -11,6 +11,7 @@ import linkedinIcon from "@/app/assets/images/linkedin-icon.svg";
 import logo from "@/app/assets/images/logo.svg";
 import twitterIcon from "@/app/assets/images/twitter-icon.svg";
 import { FULL_GUIDE_PDF_URL } from "@/lib/links";
+import { ChapterTitle, plainText } from "./ChapterTitle";
 import { useRegion } from "./RegionProvider";
 
 interface Chapter {
@@ -86,33 +87,6 @@ function GlobeIcon({ className }: { className?: string }) {
   );
 }
 
-// Helper function to render markdown in titles (handles italics with green background)
-function renderTitleMarkdown(title: string): React.ReactNode {
-  const parts: React.ReactNode[] = [];
-  const italicRegex = /\*([^*]+)\*/g;
-  let lastIndex = 0;
-  for (const match of title.matchAll(italicRegex)) {
-    // Add text before the italic
-    if (match.index > lastIndex) {
-      parts.push(title.substring(lastIndex, match.index));
-    }
-    // Add italic text with green background
-    parts.push(
-      <span key={match.index} className="bg-green-200 px-1 py-0.5 rounded not-italic">
-        {match[1]}
-      </span>,
-    );
-    lastIndex = match.index + match[0].length;
-  }
-
-  // Add remaining text
-  if (lastIndex < title.length) {
-    parts.push(title.substring(lastIndex));
-  }
-
-  return parts.length > 0 ? parts : title;
-}
-
 export default function Header({ chapters }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -146,7 +120,7 @@ export default function Header({ chapters }: HeaderProps) {
       const queryWords = query.split(/\s+/).filter(Boolean);
 
       const filtered = chapters.filter((chapter) => {
-        const titleLower = chapter.title.toLowerCase();
+        const titleLower = plainText(chapter.title).toLowerCase();
 
         // Exact match
         if (titleLower === query) return true;
@@ -162,8 +136,8 @@ export default function Header({ chapters }: HeaderProps) {
 
       // Sort by relevance: exact matches first, then by position of match
       const sorted = filtered.sort((a, b) => {
-        const aTitle = a.title.toLowerCase();
-        const bTitle = b.title.toLowerCase();
+        const aTitle = plainText(a.title).toLowerCase();
+        const bTitle = plainText(b.title).toLowerCase();
 
         // Exact match gets highest priority
         if (aTitle === query) return -1;
@@ -177,7 +151,7 @@ export default function Header({ chapters }: HeaderProps) {
           return aIndex - bIndex;
         }
 
-        return a.title.localeCompare(b.title);
+        return aTitle.localeCompare(bTitle);
       });
 
       setFilteredChapters(sorted);
@@ -279,7 +253,7 @@ export default function Header({ chapters }: HeaderProps) {
                             className="block px-4 py-3 hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-b-0"
                           >
                             <div className="text-sm font-medium text-gray-900">
-                              {renderTitleMarkdown(chapter.title)}
+                              <ChapterTitle title={chapter.title} />
                             </div>
                             <div className="text-xs text-gray-500 mt-1">
                               {chapter.sectionNumber.toString().padStart(2, "0")} {chapter.sectionTitle}
@@ -673,7 +647,9 @@ export default function Header({ chapters }: HeaderProps) {
                       }}
                       className="block px-4 py-3 hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-b-0"
                     >
-                      <div className="text-sm font-medium text-gray-900">{renderTitleMarkdown(chapter.title)}</div>
+                      <div className="text-sm font-medium text-gray-900">
+                        <ChapterTitle title={chapter.title} />
+                      </div>
                       <div className="text-xs text-gray-500 mt-1">
                         {chapter.sectionNumber.toString().padStart(2, "0")} {chapter.sectionTitle}
                       </div>
