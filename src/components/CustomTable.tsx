@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import React from "react";
 import { nodeText, renderBold } from "@/lib/react-text";
 
@@ -13,6 +14,17 @@ interface ElementProps {
 
 function propsOf(element: React.ReactElement): ElementProps {
   return element.props as ElementProps;
+}
+
+const FRAME_CLASS = "!my-6 sm:!my-8 !overflow-x-auto -mx-4 sm:mx-0 !border !border-gray-300";
+const FRAME_STYLE = { borderRadius: "8px 36px 0 0" };
+const CELL_CLASS = "!pl-3 sm:!pl-6 !pr-2 sm:!pr-4 !py-3 sm:!py-4 !text-xs sm:!text-sm !text-left !align-top !bg-white";
+const HEADER_CELL_CLASS =
+  "!pl-3 sm:!pl-6 !pr-2 sm:!pr-4 !py-3 sm:!py-4 !bg-[#EDEBED]/50 !text-left !font-semibold !text-xs sm:!text-sm !text-black !align-top !leading-normal";
+
+// The text of a cell element.
+function cellText(cell: React.ReactNode): string {
+  return React.isValidElement(cell) ? nodeText(propsOf(cell).children) : "";
 }
 
 /**
@@ -449,188 +461,94 @@ export function CustomTable({ children }: CustomTableProps) {
     return content;
   };
 
-  // Helper function to render regular tables with multiple column headers
-  const renderRegularTable = (headerCells: React.ReactNode[], bodyRows: React.ReactNode[]) => {
-    // Extract header text from cells
-    const headers = headerCells.map((cell) => {
-      if (!React.isValidElement(cell)) return "";
-      const cellProps = propsOf(cell).children;
-
-      // Handle different types of children content
-      if (typeof cellProps === "string") {
-        return cellProps;
-      }
-      if (Array.isArray(cellProps)) {
-        return cellProps.map((c) => (typeof c === "string" ? c : "")).join("");
-      }
-      if (React.isValidElement(cellProps)) {
-        const nestedProps = propsOf(cellProps).children;
-        return String(nestedProps || "");
-      }
-
-      return String(cellProps || "");
-    });
-
-    // Process body rows with proper cell styling
-    const processedRows = bodyRows.map((row, rowIdx) => {
+  // Style the body rows, with borders around every cell, or between rows and columns only.
+  const renderRows = (rows: React.ReactNode[], grid: boolean) =>
+    rows.map((row, rowIdx) => {
       if (!React.isValidElement(row)) return row;
-
-      const rowProps = row.props as { children?: React.ReactNode };
-      const cells = React.Children.toArray(rowProps.children);
-
-      const processedCells = cells.map((cell, cellIdx) => {
-        if (!React.isValidElement(cell)) return cell;
-
-        const cellProps = cell.props as { children?: React.ReactNode };
-
-        return (
-          <td
-            key={cellIdx}
-            className={`!pl-3 sm:!pl-6 !pr-2 sm:!pr-4 !py-3 sm:!py-4 !text-xs sm:!text-sm !text-left !align-top !bg-white !border !border-[#6CBA8C] !leading-relaxed`}
-          >
-            {processContent(cellProps.children)}
-          </td>
-        );
-      });
-
+      const cells = React.Children.toArray(propsOf(row).children);
       return (
-        <tr key={rowIdx} className="!border !border-[#6CBA8C]">
-          {processedCells}
+        <tr
+          key={rowIdx}
+          className={grid ? "!border !border-[#6CBA8C]" : "!border-b !border-[#6CBA8C] last:!border-b-0"}
+        >
+          {cells.map((cell, cellIdx) => {
+            if (!React.isValidElement(cell)) return cell;
+            const divider = grid
+              ? "!border !border-[#6CBA8C]"
+              : cellIdx === cells.length - 1
+                ? ""
+                : "!border-r !border-[#6CBA8C]";
+            return (
+              <td key={cellIdx} className={clsx(CELL_CLASS, divider, "!leading-relaxed")}>
+                {processContent(propsOf(cell).children)}
+              </td>
+            );
+          })}
         </tr>
       );
     });
 
+  // A table with column headers in its thead.
+  const renderRegularTable = (headerCells: React.ReactNode[], bodyRows: React.ReactNode[]) => {
+    const headers = headerCells.map(cellText);
     return (
-      <div
-        className="!my-6 sm:!my-8 !overflow-x-auto -mx-4 sm:mx-0 !border !border-gray-300"
-        style={{ borderRadius: "8px 36px 0 0" }}
-      >
+      <div className={FRAME_CLASS} style={FRAME_STYLE}>
         <table className="!w-full !min-w-full !my-0" style={{ borderCollapse: "collapse", borderSpacing: 0 }}>
           <thead className="!bg-[#EDEBED]/50">
             <tr>
               {headers.map((header, idx) => (
                 <th
                   key={idx}
-                  className={`!pl-3 sm:!pl-6 !pr-2 sm:!pr-4 !py-3 sm:!py-4 !bg-[#EDEBED]/50 !text-left !font-semibold !text-xs sm:!text-sm !text-black !border-b !border-gray-300 !align-top !leading-normal ${
-                    idx < headers.length - 1 ? "!border-r !border-gray-300" : ""
-                  }`}
+                  className={clsx(
+                    HEADER_CELL_CLASS,
+                    "!border-b !border-gray-300",
+                    idx < headers.length - 1 && "!border-r !border-gray-300",
+                  )}
                 >
                   {header || `Header ${idx + 1}`}
                 </th>
               ))}
             </tr>
           </thead>
-          <tbody className="!bg-white">{processedRows}</tbody>
+          <tbody className="!bg-white">{renderRows(bodyRows, true)}</tbody>
         </table>
       </div>
     );
   };
 
-  // Check if this is a regular table with thead headers (not the special merged format)
-  // Regular table: thead has actual column headers (not title/subtitle)
-  const theadRows = React.Children.toArray(theadProps.children);
-  if (theadRows.length > 0) {
-    const theadRow = theadRows[0];
-    if (React.isValidElement(theadRow)) {
-      const theadCells = React.Children.toArray(propsOf(theadRow).children);
+  // A table with a green title bar, from the first cell of its thead.
+  const renderTitledTable = (title: string, titleClassName: string, table: React.ReactNode) => (
+    <div className={FRAME_CLASS} style={FRAME_STYLE}>
+      <div className={titleClassName} style={FRAME_STYLE}>
+        {parseHeaderMarkdown(title)}
+      </div>
+      {table}
+    </div>
+  );
 
-      // Check if there are multiple cells with content in thead (indicating column headers)
-      const nonEmptyCells = theadCells.filter((cell) => {
-        if (!React.isValidElement(cell)) return false;
-        const cellProps = propsOf(cell).children;
-        const cellText = typeof cellProps === "string" ? cellProps.trim() : String(cellProps || "").trim();
-        return cellText.length > 0;
-      });
+  const theadRow = React.Children.toArray(theadProps.children)[0];
+  const theadCells = React.isValidElement(theadRow) ? React.Children.toArray(propsOf(theadRow).children) : [];
+  const title = cellText(theadCells[0]);
 
-      // If there are 2+ non-empty cells in thead, it's a regular table
-      if (nonEmptyCells.length >= 2) {
-        return renderRegularTable(theadCells, tbodyRows);
-      }
+  // Two or more headers in the thead: a regular table.
+  if (theadCells.filter((cell) => cellText(cell).trim()).length >= 2) {
+    return renderRegularTable(theadCells, tbodyRows);
+  }
 
-      // Check if first cell has content and other cells are empty
-      const firstCellContent = React.isValidElement(theadCells[0]) ? propsOf(theadCells[0]).children : "";
-      const firstCellText =
-        typeof firstCellContent === "string" ? firstCellContent.trim() : String(firstCellContent || "").trim();
-
-      // Check if first cell has content and other cells are empty or mostly empty
-      const otherCellsHaveContent = theadCells.slice(1).some((cell) => {
-        if (!React.isValidElement(cell)) return false;
-        const cellProps = propsOf(cell).children;
-        const cellText = typeof cellProps === "string" ? cellProps.trim() : String(cellProps || "").trim();
-        return cellText.length > 0;
-      });
-
-      // If first cell has content and others are empty, AND no strong tags in first tbody row
-      // This is a title-style table where all tbody rows are data
-      if (firstCellText.length > 0 && !otherCellsHaveContent && !hasStrongInFirstRow && tbodyRows.length > 0) {
-        // Extract raw text from first thead cell
-        const rawText = nodeText(firstCellContent);
-
-        // All tbody rows are data rows (no headers row)
-        // Process all rows as data
-        const processedDataRows = tbodyRows.map((row, rowIdx) => {
-          if (!React.isValidElement(row)) return row;
-          const rowProps = row.props as { children?: React.ReactNode };
-          const cells = React.Children.toArray(rowProps.children);
-
-          const processedCells = cells.map((cell, cellIdx) => {
-            if (!React.isValidElement(cell)) return cell;
-            const cellProps = cell.props as { children?: React.ReactNode };
-            const isLastCell = cellIdx === cells.length - 1;
-
-            return (
-              <td
-                key={cellIdx}
-                className={`!pl-3 sm:!pl-6 !pr-2 sm:!pr-4 !py-3 sm:!py-4 !text-xs sm:!text-sm !text-left !align-top !bg-white !leading-relaxed ${
-                  !isLastCell ? "!border-r !border-[#6CBA8C]" : ""
-                }`}
-              >
-                {processContent(cellProps.children)}
-              </td>
-            );
-          });
-
-          return (
-            <tr key={rowIdx} className="!border-b !border-[#6CBA8C] last:!border-b-0">
-              {processedCells}
-            </tr>
-          );
-        });
-
-        return (
-          <div
-            className="!my-6 sm:!my-8 !overflow-x-auto -mx-4 sm:mx-0 !border !border-gray-300"
-            style={{ borderRadius: "8px 36px 0 0" }}
-          >
-            {/* Title section - Green rounded top with markdown support */}
-            <div className="!bg-[#92C36F] !px-4 sm:!px-8 !py-4 sm:!py-6" style={{ borderRadius: "8px 36px 0 0" }}>
-              {parseHeaderMarkdown(rawText)}
-            </div>
-            {/* Table with data rows only (no column headers) */}
-            <table className="!w-full !min-w-full !border-collapse !my-0" style={{ borderSpacing: 0 }}>
-              <tbody className="!bg-white">{processedDataRows}</tbody>
-            </table>
-          </div>
-        );
-      }
-    }
+  // Only a title in the thead, and no headers in the first body row: a title, and data rows.
+  if (title.trim() && !hasStrongInFirstRow && tbodyRows.length > 0) {
+    return renderTitledTable(
+      title,
+      "!bg-[#92C36F] !px-4 sm:!px-8 !py-4 sm:!py-6",
+      <table className="!w-full !min-w-full !border-collapse !my-0" style={{ borderSpacing: 0 }}>
+        <tbody className="!bg-white">{renderRows(tbodyRows, false)}</tbody>
+      </table>,
+    );
   }
 
   // If no strong tags in first row, this is not our special table format
   if (!hasStrongInFirstRow) {
     return null;
-  }
-
-  // Extract title from thead
-  const theadRow = theadRows[0];
-  let rawHeaderText = "";
-
-  if (React.isValidElement(theadRow)) {
-    const theadCells = React.Children.toArray(propsOf(theadRow).children);
-    if (theadCells.length > 0 && React.isValidElement(theadCells[0])) {
-      const cellContent = propsOf(theadCells[0]).children;
-      rawHeaderText = nodeText(cellContent);
-    }
   }
 
   // Extract actual column headers from first tbody row
@@ -662,63 +580,21 @@ export function CustomTable({ children }: CustomTableProps) {
 
   const headerCells = firstRowCells.map((cell) => extractStrongText(cell));
 
-  // Get remaining data rows (skip first row which was headers)
-  const dataRows = tbodyRows.slice(1);
-
-  // Process data rows to apply proper styling
-  const processedDataRows = dataRows.map((row, rowIdx) => {
-    if (!React.isValidElement(row)) return row;
-
-    const rowProps = row.props as { children?: React.ReactNode };
-    const cells = React.Children.toArray(rowProps.children);
-
-    const processedCells = cells.map((cell, cellIdx) => {
-      if (!React.isValidElement(cell)) return cell;
-
-      const cellProps = cell.props as { children?: React.ReactNode };
-
-      return (
-        <td
-          key={cellIdx}
-          className={`!pl-3 sm:!pl-6 !pr-2 sm:!pr-4 !py-3 sm:!py-4 !text-xs sm:!text-sm !text-left !align-top !bg-white !border !border-[#6CBA8C] !leading-relaxed`}
-        >
-          {processContent(cellProps.children)}
-        </td>
-      );
-    });
-
-    return (
-      <tr key={rowIdx} className="!border !border-[#6CBA8C]">
-        {processedCells}
-      </tr>
-    );
-  });
-
-  return (
-    <div
-      className="!my-6 sm:!my-8 !overflow-x-auto -mx-4 sm:mx-0 !border !border-gray-300"
-      style={{ borderRadius: "8px 36px 0 0" }}
-    >
-      {/* Title section - Green rounded top with markdown support */}
-      <div className="!bg-[#92C36F] !px-4 sm:!px-6 !py-3 sm:!py-5" style={{ borderRadius: "8px 36px 0 0" }}>
-        {parseHeaderMarkdown(rawHeaderText)}
-      </div>
-      {/* Table with actual headers and data */}
-      <table className="!my-0 !w-full !min-w-full" style={{ borderCollapse: "collapse", borderSpacing: 0 }}>
-        <thead className="!bg-[#EDEBED]">
-          <tr>
-            {headerCells.map((header, idx) => (
-              <th
-                key={idx}
-                className={`!pl-3 sm:!pl-6 !pr-2 sm:!pr-4 !py-3 sm:!py-4 !bg-[#EDEBED]/50 !text-left !font-semibold !text-xs sm:!text-sm !text-black !border !border-gray-300 !border-b-0 !align-top !leading-normal`}
-              >
-                {header}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody className="!bg-white">{processedDataRows}</tbody>
-      </table>
-    </div>
+  // A title, column headers from the first body row, and data rows.
+  return renderTitledTable(
+    title,
+    "!bg-[#92C36F] !px-4 sm:!px-6 !py-3 sm:!py-5",
+    <table className="!my-0 !w-full !min-w-full" style={{ borderCollapse: "collapse", borderSpacing: 0 }}>
+      <thead className="!bg-[#EDEBED]">
+        <tr>
+          {headerCells.map((header, idx) => (
+            <th key={idx} className={clsx(HEADER_CELL_CLASS, "!border !border-gray-300 !border-b-0")}>
+              {header}
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <tbody className="!bg-white">{renderRows(tbodyRows.slice(1), true)}</tbody>
+    </table>,
   );
 }
