@@ -87,12 +87,128 @@ function GlobeIcon({ className }: { className?: string }) {
   );
 }
 
+function SearchIcon({
+  size,
+  stroke = "currentColor",
+  className,
+}: {
+  size: number;
+  stroke?: string;
+  className?: string;
+}) {
+  return (
+    <svg
+      aria-hidden="true"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={stroke}
+      strokeWidth="2"
+      className={className}
+    >
+      <circle cx="11" cy="11" r="8" />
+      <path d="m21 21-4.35-4.35" />
+    </svg>
+  );
+}
+
+function openShareWindow(share: string) {
+  window.open(share, "_blank", "noopener,noreferrer");
+}
+
+const SHARE_TARGETS = [
+  {
+    name: "Twitter",
+    icon: twitterIcon,
+    share: () => {
+      const share = new URL("https://twitter.com/intent/tweet");
+      share.searchParams.set("url", window.location.href);
+      if (document.title) share.searchParams.set("text", document.title);
+      openShareWindow(share.toString());
+    },
+  },
+  {
+    name: "LinkedIn",
+    icon: linkedinIcon,
+    share: () =>
+      openShareWindow(
+        `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`,
+      ),
+  },
+  {
+    name: "Facebook",
+    icon: facebookIcon,
+    share: () =>
+      openShareWindow(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`),
+  },
+];
+
+function ShareButtons({ iconSize, className }: { iconSize: number; className: string }) {
+  return SHARE_TARGETS.map(({ name, icon, share }) => (
+    <button key={name} type="button" onClick={share} aria-label={`Share on ${name}`} className={className}>
+      <Image src={icon} alt={name} width={iconSize} height={iconSize} />
+    </button>
+  ));
+}
+
+const REGIONS = [
+  { region: "US", label: "United States", icon: <USFlagIcon className="w-5 h-3.5 shrink-0" /> },
+  { region: "GLOBAL", label: "Global", icon: <GlobeIcon className="w-5 h-5 shrink-0" /> },
+] as const;
+
+function RegionButtons({
+  className,
+  inactiveClassName,
+  labelClassName,
+  onSelect,
+}: {
+  className: string;
+  inactiveClassName: string;
+  labelClassName: string;
+  onSelect?: () => void;
+}) {
+  const { region: currentRegion, setRegion } = useRegion();
+  return REGIONS.map(({ region, label, icon }) => (
+    <button
+      key={region}
+      type="button"
+      onClick={() => {
+        setRegion(region);
+        onSelect?.();
+      }}
+      className={clsx(className, region === currentRegion ? "bg-white/20 text-white" : inactiveClassName)}
+    >
+      {icon}
+      <span className={labelClassName}>{label}</span>
+    </button>
+  ));
+}
+
+function SearchResults({ chapters, onSelect }: { chapters: Chapter[]; onSelect: () => void }) {
+  return chapters.map((chapter) => (
+    <Link
+      key={chapter.slug}
+      href={`/chapter/${chapter.slug}#content`}
+      onClick={onSelect}
+      className="block px-4 py-3 hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-b-0"
+    >
+      <div className="text-sm font-medium text-gray-900">
+        <ChapterTitle title={chapter.title} />
+      </div>
+      <div className="text-xs text-gray-500 mt-1">
+        {chapter.sectionNumber.toString().padStart(2, "0")} {chapter.sectionTitle}
+      </div>
+    </Link>
+  ));
+}
+
 export default function Header({ chapters }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredChapters, setFilteredChapters] = useState<Chapter[]>([]);
-  const { region, setRegion } = useRegion();
+  const { region } = useRegion();
   const [isRegionPopoverOpen, setIsRegionPopoverOpen] = useState(false);
   const desktopSearchInputRef = useRef<HTMLInputElement>(null);
   const mobileSearchInputRef = useRef<HTMLInputElement>(null);
@@ -207,19 +323,7 @@ export default function Header({ chapters }: HeaderProps) {
                   isSearchOpen ? "w-[400px] opacity-100" : "w-0 opacity-0"
                 }`}
               >
-                <svg
-                  aria-hidden="true"
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="#9CA3AF"
-                  strokeWidth="2"
-                  className="shrink-0"
-                >
-                  <circle cx="11" cy="11" r="8" />
-                  <path d="m21 21-4.35-4.35" />
-                </svg>
+                <SearchIcon size={18} stroke="#9CA3AF" className="shrink-0" />
                 <input
                   ref={desktopSearchInputRef}
                   type="text"
@@ -245,21 +349,7 @@ export default function Header({ chapters }: HeaderProps) {
                   {searchQuery && filteredChapters.length > 0 && (
                     <div className="absolute top-full left-0 mt-2 w-[400px] bg-white rounded-lg shadow-2xl border border-gray-200 overflow-hidden z-[10000] animate-in fade-in slide-in-from-top-2 duration-200">
                       <div className="max-h-[400px] overflow-y-auto">
-                        {filteredChapters.map((chapter) => (
-                          <Link
-                            key={chapter.slug}
-                            href={`/chapter/${chapter.slug}#content`}
-                            onClick={closeSearch}
-                            className="block px-4 py-3 hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-b-0"
-                          >
-                            <div className="text-sm font-medium text-gray-900">
-                              <ChapterTitle title={chapter.title} />
-                            </div>
-                            <div className="text-xs text-gray-500 mt-1">
-                              {chapter.sectionNumber.toString().padStart(2, "0")} {chapter.sectionTitle}
-                            </div>
-                          </Link>
-                        ))}
+                        <SearchResults chapters={filteredChapters} onSelect={closeSearch} />
                       </div>
                     </div>
                   )}
@@ -278,18 +368,7 @@ export default function Header({ chapters }: HeaderProps) {
                   className="p-2 hover:bg-white/10 rounded transition-all text-white"
                   aria-label="Search"
                 >
-                  <svg
-                    aria-hidden="true"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <circle cx="11" cy="11" r="8" />
-                    <path d="m21 21-4.35-4.35" />
-                  </svg>
+                  <SearchIcon size={24} />
                 </button>
               )}
             </div>
@@ -323,47 +402,7 @@ export default function Header({ chapters }: HeaderProps) {
                       Share
                     </p>
                     <div className="flex items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const url = typeof window !== "undefined" ? window.location.href : "";
-                          const text = typeof document !== "undefined" ? document.title : "";
-                          const share = new URL("https://twitter.com/intent/tweet");
-                          share.searchParams.set("url", url);
-                          if (text) share.searchParams.set("text", text);
-                          window.open(share.toString(), "_blank", "noopener,noreferrer");
-                        }}
-                        aria-label="Share on Twitter"
-                        className="p-2 hover:bg-white/10 rounded-lg transition-colors"
-                      >
-                        <Image src={twitterIcon} alt="Twitter" width={24} height={24} />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const url = typeof window !== "undefined" ? window.location.href : "";
-                          const share = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
-                            url,
-                          )}`;
-                          window.open(share, "_blank", "noopener,noreferrer");
-                        }}
-                        aria-label="Share on LinkedIn"
-                        className="p-2 hover:bg-white/10 rounded-lg transition-colors"
-                      >
-                        <Image src={linkedinIcon} alt="LinkedIn" width={24} height={24} />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const url = typeof window !== "undefined" ? window.location.href : "";
-                          const share = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
-                          window.open(share, "_blank", "noopener,noreferrer");
-                        }}
-                        aria-label="Share on Facebook"
-                        className="p-2 hover:bg-white/10 rounded-lg transition-colors"
-                      >
-                        <Image src={facebookIcon} alt="Facebook" width={24} height={24} />
-                      </button>
+                      <ShareButtons iconSize={24} className="p-2 hover:bg-white/10 rounded-lg transition-colors" />
                     </div>
                   </div>
                   <Popover.Arrow className="fill-[#3D393D]" />
@@ -391,34 +430,12 @@ export default function Header({ chapters }: HeaderProps) {
                     <p className="text-xs font-semibold text-white/60 uppercase tracking-wide font-gteesti-display mb-1">
                       Region
                     </p>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setRegion("US");
-                        setIsRegionPopoverOpen(false);
-                      }}
-                      className={clsx(
-                        "flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-left",
-                        region === "US" ? "bg-white/20 text-white" : "hover:bg-white/10 text-white/80",
-                      )}
-                    >
-                      <USFlagIcon className="w-5 h-3.5 shrink-0" />
-                      <span className="text-sm">United States</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setRegion("GLOBAL");
-                        setIsRegionPopoverOpen(false);
-                      }}
-                      className={clsx(
-                        "flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-left",
-                        region === "GLOBAL" ? "bg-white/20 text-white" : "hover:bg-white/10 text-white/80",
-                      )}
-                    >
-                      <GlobeIcon className="w-5 h-5 shrink-0" />
-                      <span className="text-sm">Global</span>
-                    </button>
+                    <RegionButtons
+                      className="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-left"
+                      inactiveClassName="hover:bg-white/10 text-white/80"
+                      labelClassName="text-sm"
+                      onSelect={() => setIsRegionPopoverOpen(false)}
+                    />
                   </div>
                   <Popover.Arrow className="fill-[#3D393D]" />
                 </Popover.Content>
@@ -473,18 +490,7 @@ export default function Header({ chapters }: HeaderProps) {
                   onClick={toggleSearch}
                   className="flex items-center gap-3 px-4 py-3 bg-white/5 hover:bg-white/10 rounded-lg transition-colors text-white text-left w-full"
                 >
-                  <svg
-                    aria-hidden="true"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <circle cx="11" cy="11" r="8" />
-                    <path d="m21 21-4.35-4.35" />
-                  </svg>
+                  <SearchIcon size={20} />
                   <span className="text-white">Search</span>
                 </button>
 
@@ -494,32 +500,11 @@ export default function Header({ chapters }: HeaderProps) {
                     Region
                   </p>
                   <div className="px-2 flex flex-col gap-2">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setRegion("US");
-                      }}
-                      className={clsx(
-                        "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-left w-full",
-                        region === "US" ? "bg-white/20 text-white" : "bg-white/5 hover:bg-white/10 text-white/80",
-                      )}
-                    >
-                      <USFlagIcon className="w-5 h-3.5 shrink-0" />
-                      <span className="text-white">United States</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setRegion("GLOBAL");
-                      }}
-                      className={clsx(
-                        "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-left w-full",
-                        region === "GLOBAL" ? "bg-white/20 text-white" : "bg-white/5 hover:bg-white/10 text-white/80",
-                      )}
-                    >
-                      <GlobeIcon className="w-5 h-5 shrink-0" />
-                      <span className="text-white">Global</span>
-                    </button>
+                    <RegionButtons
+                      className="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-left w-full"
+                      inactiveClassName="bg-white/5 hover:bg-white/10 text-white/80"
+                      labelClassName="text-white"
+                    />
                   </div>
                 </div>
 
@@ -529,45 +514,10 @@ export default function Header({ chapters }: HeaderProps) {
                     Share
                   </p>
                   <div className="px-2 flex items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const url = typeof window !== "undefined" ? window.location.href : "";
-                        const text = typeof document !== "undefined" ? document.title : "";
-                        const share = new URL("https://twitter.com/intent/tweet");
-                        share.searchParams.set("url", url);
-                        if (text) share.searchParams.set("text", text);
-                        window.open(share.toString(), "_blank", "noopener,noreferrer");
-                      }}
-                      aria-label="Share on Twitter"
+                    <ShareButtons
+                      iconSize={20}
                       className="p-3 bg-white/5 hover:bg-white/10 rounded-lg transition-colors"
-                    >
-                      <Image src={twitterIcon} alt="Twitter" width={20} height={20} />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const url = typeof window !== "undefined" ? window.location.href : "";
-                        const share = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
-                        window.open(share, "_blank", "noopener,noreferrer");
-                      }}
-                      aria-label="Share on LinkedIn"
-                      className="p-3 bg-white/5 hover:bg-white/10 rounded-lg transition-colors"
-                    >
-                      <Image src={linkedinIcon} alt="LinkedIn" width={20} height={20} />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const url = typeof window !== "undefined" ? window.location.href : "";
-                        const share = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
-                        window.open(share, "_blank", "noopener,noreferrer");
-                      }}
-                      aria-label="Share on Facebook"
-                      className="p-3 bg-white/5 hover:bg-white/10 rounded-lg transition-colors"
-                    >
-                      <Image src={facebookIcon} alt="Facebook" width={20} height={20} />
-                    </button>
+                    />
                   </div>
                 </div>
 
@@ -603,18 +553,7 @@ export default function Header({ chapters }: HeaderProps) {
           <div className="absolute top-0 left-0 right-0 bg-white p-6 shadow-lg animate-in slide-in-from-top duration-300">
             <div className="flex flex-col gap-0 bg-white rounded-lg border border-gray-300 overflow-hidden">
               <div className="flex items-center gap-3 px-4 py-3">
-                <svg
-                  aria-hidden="true"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="#9CA3AF"
-                  strokeWidth="2"
-                >
-                  <circle cx="11" cy="11" r="8" />
-                  <path d="m21 21-4.35-4.35" />
-                </svg>
+                <SearchIcon size={20} stroke="#9CA3AF" />
                 <input
                   ref={mobileSearchInputRef}
                   type="text"
@@ -637,24 +576,13 @@ export default function Header({ chapters }: HeaderProps) {
               {/* Mobile search results */}
               {searchQuery && filteredChapters.length > 0 && (
                 <div className="max-h-[400px] overflow-y-auto border-t border-gray-200">
-                  {filteredChapters.map((chapter) => (
-                    <Link
-                      key={chapter.slug}
-                      href={`/chapter/${chapter.slug}#content`}
-                      onClick={() => {
-                        closeSearch();
-                        setIsMenuOpen(false);
-                      }}
-                      className="block px-4 py-3 hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-b-0"
-                    >
-                      <div className="text-sm font-medium text-gray-900">
-                        <ChapterTitle title={chapter.title} />
-                      </div>
-                      <div className="text-xs text-gray-500 mt-1">
-                        {chapter.sectionNumber.toString().padStart(2, "0")} {chapter.sectionTitle}
-                      </div>
-                    </Link>
-                  ))}
+                  <SearchResults
+                    chapters={filteredChapters}
+                    onSelect={() => {
+                      closeSearch();
+                      setIsMenuOpen(false);
+                    }}
+                  />
                 </div>
               )}
               {searchQuery && filteredChapters.length === 0 && (
