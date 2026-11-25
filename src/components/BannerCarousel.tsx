@@ -4,6 +4,7 @@ import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
+import { useIsMobile } from "@/hooks/useIsMobile";
 import { getSectionColor, type SectionsStructure } from "@/lib/sections-types";
 
 interface BannerCarouselProps {
@@ -13,22 +14,12 @@ interface BannerCarouselProps {
 export function BannerCarousel({ structure }: BannerCarouselProps) {
   const [hoveredSection, setHoveredSection] = useState<number | null>(null);
   const [clickedSection, setClickedSection] = useState<number | null>(null);
-  const [isMobile, setIsMobile] = useState(false);
+  const isMobile = useIsMobile();
   const containerRef = useRef<HTMLDivElement>(null);
   const focusSectionRef = useRef<number | null>(null);
 
   // The first section is open initially.
   const initialSection = 1;
-
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
 
   // On mobile, the clicked section is open.
   useEffect(() => {

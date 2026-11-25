@@ -10,6 +10,7 @@ import facebookIcon from "@/app/assets/images/facebook-icon.svg";
 import linkedinIcon from "@/app/assets/images/linkedin-icon.svg";
 import logo from "@/app/assets/images/logo.svg";
 import twitterIcon from "@/app/assets/images/twitter-icon.svg";
+import { useIsMobile } from "@/hooks/useIsMobile";
 import { FULL_GUIDE_PDF_URL } from "@/lib/links";
 import { ChapterTitle, plainText } from "./ChapterTitle";
 import { useRegion } from "./RegionProvider";
@@ -212,6 +213,7 @@ export default function Header({ chapters }: HeaderProps) {
   const [isRegionPopoverOpen, setIsRegionPopoverOpen] = useState(false);
   const desktopSearchInputRef = useRef<HTMLInputElement>(null);
   const mobileSearchInputRef = useRef<HTMLInputElement>(null);
+  const isMobile = useIsMobile();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -281,17 +283,10 @@ export default function Header({ chapters }: HeaderProps) {
     if (isSearchOpen) {
       // Small delay to ensure DOM is updated
       setTimeout(() => {
-        // Check if we're on mobile (screen width < 768px)
-        const isMobileView = window.innerWidth < 768;
-
-        if (isMobileView && mobileSearchInputRef.current) {
-          mobileSearchInputRef.current.focus();
-        } else if (!isMobileView && desktopSearchInputRef.current) {
-          desktopSearchInputRef.current.focus();
-        }
+        (isMobile ? mobileSearchInputRef : desktopSearchInputRef).current?.focus();
       }, 150);
     }
-  }, [isSearchOpen]);
+  }, [isSearchOpen, isMobile]);
 
   // Close search on Escape key
   useEffect(() => {

@@ -4,6 +4,7 @@ import { Download } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
+import { useIsMobile } from "@/hooks/useIsMobile";
 import { logger } from "@/lib/logger";
 import { getChapterInSection, getSectionColor, type SectionsStructure } from "@/lib/sections-types";
 import { SectionMarker } from "./SectionMarker";
@@ -50,19 +51,16 @@ export function ChapterLayout({ currentSlug, children, structure }: ChapterLayou
   const sidebarRef = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLElement>(null);
 
-  // Set mounted state and initial sidebar visibility after hydration
+  const isMobile = useIsMobile();
+
   useEffect(() => {
     setIsMounted(true);
-    const handleResize = () => {
-      setSidebarVisible(window.innerWidth >= 768);
-    };
-
-    // Set initial visibility based on viewport
-    handleResize();
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  // Show the sidebar on desktop, and hide it on mobile.
+  useEffect(() => {
+    setSidebarVisible(!isMobile);
+  }, [isMobile]);
 
   // Use intersection observer hook
   const activeSectionId = useIntersectionObserver({

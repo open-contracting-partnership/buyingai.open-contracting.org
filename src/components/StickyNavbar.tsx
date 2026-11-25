@@ -1,8 +1,8 @@
 "use client";
 
+import clsx from "clsx";
 import { ChevronRightIcon } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { getChapterInSection, getSectionColor, type SectionsStructure } from "@/lib/sections-types";
 
 interface StickyNavbarProps {
@@ -14,17 +14,6 @@ interface StickyNavbarProps {
 }
 
 export function StickyNavbar({ structure, currentSlug, visible, sidebarVisible, onToggleSidebar }: StickyNavbarProps) {
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
   const current = getChapterInSection(structure, currentSlug);
   const currentSectionNumber = current?.section.number ?? 1;
 
@@ -40,8 +29,8 @@ export function StickyNavbar({ structure, currentSlug, visible, sidebarVisible, 
     >
       {/* Chapter Indicator Bar */}
       <div className="h-[60px] flex overflow-x-auto overflow-y-hidden scrollbar-hide">
-        {/* Sidebar Space - Only when sidebar is visible */}
-        {sidebarVisible && !isMobile && <div className="w-[366px] bg-transparent flex-shrink-0">&nbsp;</div>}
+        {/* Sidebar Space - Only when sidebar is visible, on desktop */}
+        {sidebarVisible && <div className="hidden md:block w-[366px] bg-transparent flex-shrink-0">&nbsp;</div>}
 
         {/* Show Sidebar Button - Only when sidebar is hidden */}
         {!sidebarVisible && (
@@ -70,7 +59,7 @@ export function StickyNavbar({ structure, currentSlug, visible, sidebarVisible, 
         )}
 
         {/* Chapter Segments */}
-        <ul className={`flex-1 flex ${isMobile ? "" : "min-w-max"}`}>
+        <ul className="flex-1 flex md:min-w-max">
           {structure.sections.map((section, index) => {
             const color = getSectionColor(section.number);
             const isActive = section.number === currentSectionNumber;
@@ -80,19 +69,13 @@ export function StickyNavbar({ structure, currentSlug, visible, sidebarVisible, 
             return (
               <li
                 key={section.number}
-                className={`flex transition-all duration-300 hover:brightness-95 ${
-                  isMobile
-                    ? "flex-1" // Mobile: todos usan flex-1 para distribuir uniformemente
-                    : isActive
-                      ? "md:flex-1 flex-shrink-0"
-                      : "flex-shrink-0"
-                } ${isLast && isMobile ? "rounded-tr-[8px] rounded-br-[8px]" : ""}`}
-                style={{
-                  backgroundColor: color.bg,
-                  // Desktop: mantiene comportamiento original con minWidth
-                  minWidth: !isMobile ? (isActive ? "420px" : "50px") : undefined,
-                  width: !isMobile && isActive ? "auto" : undefined,
-                }}
+                // On mobile, the sections share the width. On desktop, the active section is wider.
+                className={clsx(
+                  "flex flex-1 transition-all duration-300 hover:brightness-95",
+                  isActive ? "md:min-w-[420px]" : "md:flex-none md:min-w-[50px]",
+                  isLast && "max-md:rounded-tr-[8px] max-md:rounded-br-[8px]",
+                )}
+                style={{ backgroundColor: color.bg }}
               >
                 <Link
                   href={`/chapter/${firstChapterSlug}#content`}
