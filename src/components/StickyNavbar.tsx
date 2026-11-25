@@ -3,7 +3,7 @@
 import { ChevronRightIcon } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { getSectionColor, type SectionsStructure } from "@/lib/sections-types";
+import { getChapterInSection, getSectionColor, type SectionsStructure } from "@/lib/sections-types";
 
 interface StickyNavbarProps {
   structure: SectionsStructure;
@@ -25,9 +25,8 @@ export function StickyNavbar({ structure, currentSlug, visible, sidebarVisible, 
     window.addEventListener("resize", checkMobile);
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
-  // Find current section based on current slug
-  const currentSectionNumber =
-    structure.sections.find((section) => section.chapters.some((ch) => ch.slug === currentSlug))?.number || 1;
+  const current = getChapterInSection(structure, currentSlug);
+  const currentSectionNumber = current?.section.number ?? 1;
 
   return (
     <nav
@@ -119,7 +118,7 @@ export function StickyNavbar({ structure, currentSlug, visible, sidebarVisible, 
 
                         {/* Current Chapter - abbreviated on mobile */}
                         <span className="text-black text-xs md:text-sm truncate max-w-[120px] md:max-w-none">
-                          {section.chapters.find((ch) => ch.slug === currentSlug)?.title || section.chapters[0]?.title}
+                          {current?.chapter.title ?? section.chapters[0]?.title}
                         </span>
                       </>
                     )}

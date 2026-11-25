@@ -8,20 +8,17 @@ import { getSectionColor, type SectionsStructure } from "@/lib/sections-types";
 
 interface BannerCarouselProps {
   structure: SectionsStructure;
-  currentSlug?: string;
 }
 
-export function BannerCarousel({ structure, currentSlug }: BannerCarouselProps) {
+export function BannerCarousel({ structure }: BannerCarouselProps) {
   const [hoveredSection, setHoveredSection] = useState<number | null>(null);
   const [clickedSection, setClickedSection] = useState<number | null>(null);
   const [isMobile, setIsMobile] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const focusSectionRef = useRef<number | null>(null);
 
-  // Find current section based on current slug (if provided)
-  const currentSectionNumber = currentSlug
-    ? structure.sections.find((section) => section.chapters.some((ch) => ch.slug === currentSlug))?.number || 1
-    : 1;
+  // The first section is open initially.
+  const initialSection = 1;
 
   useEffect(() => {
     const checkMobile = () => {
@@ -33,12 +30,12 @@ export function BannerCarousel({ structure, currentSlug }: BannerCarouselProps) 
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  // Initialize clicked section to current section on mobile
+  // On mobile, the clicked section is open.
   useEffect(() => {
     if (isMobile) {
-      setClickedSection((previous) => previous ?? currentSectionNumber);
+      setClickedSection((previous) => previous ?? initialSection);
     }
-  }, [isMobile, currentSectionNumber]);
+  }, [isMobile]);
 
   const openSection = (sectionNumber: number, event: React.MouseEvent) => {
     if (isMobile) {
@@ -68,12 +65,15 @@ export function BannerCarousel({ structure, currentSlug }: BannerCarouselProps) 
     >
       {structure.sections.map((section, idx) => {
         const color = getSectionColor(section.number);
-        const isCurrentSection = section.number === currentSectionNumber;
         const isHovered = hoveredSection === section.number;
         const isClicked = clickedSection === section.number;
 
-        // Mobile: use clicked state; Desktop: use hover state, fallback to current section
-        const shouldExpand = isMobile ? isClicked : hoveredSection !== null ? isHovered : isCurrentSection;
+        // Mobile: use clicked state; Desktop: use hover state, fallback to the initial section
+        const shouldExpand = isMobile
+          ? isClicked
+          : hoveredSection !== null
+            ? isHovered
+            : section.number === initialSection;
 
         // Responsive widths: mobile 320px expanded, 100px collapsed
         const baseWidth = isMobile ? (shouldExpand ? 320 : 100) : shouldExpand ? 400 : 120;
@@ -157,7 +157,7 @@ export function BannerCarousel({ structure, currentSlug }: BannerCarouselProps) 
 
                   {!isMobile && (
                     <Link
-                      href={`/chapter/${firstChapterSlug}${currentSlug ? "#content" : ""}`}
+                      href={`/chapter/${firstChapterSlug}`}
                       scroll={false}
                       className="flex items-center justify-end gap-2 text-black mt-4 hover:gap-3 transition-all"
                     >

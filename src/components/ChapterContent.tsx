@@ -44,6 +44,10 @@ const IMAGE_STYLE: React.CSSProperties = {
   objectFit: "contain",
 };
 
+function imageLoading(print: boolean) {
+  return print ? {} : ({ loading: "lazy", decoding: "async", fetchPriority: "high" } as const);
+}
+
 // Replace <em> and <i> with a non-italic span highlighted in the section's color.
 function wrapItalicWithBackground(node: React.ReactNode, backgroundColor: string): React.ReactNode {
   if (!node || typeof node === "string") {
@@ -270,8 +274,6 @@ function renderCellContent(content: React.ReactNode): React.ReactNode {
 }
 
 function markdownComponents(highlightColor: string, print: boolean): Components {
-  const imageLoading = print ? {} : ({ loading: "lazy", decoding: "async", fetchPriority: "high" } as const);
-
   const heading =
     (Tag: "h1" | "h2" | "h3" | "h4" | "h5" | "h6") =>
     ({ children, className, id, node, ...props }: React.ComponentProps<"h1"> & ExtraProps) => (
@@ -296,7 +298,7 @@ function markdownComponents(highlightColor: string, print: boolean): Components 
           {...props}
           className="rounded-lg shadow-md"
           style={IMAGE_STYLE}
-          {...imageLoading}
+          {...imageLoading(print)}
         />
       );
     },
@@ -376,7 +378,7 @@ export function ChapterContent({ content, highlightColor, print = false }: Chapt
               alt={part.alt}
               className="rounded-lg shadow-md my-4"
               style={IMAGE_STYLE}
-              {...(print ? {} : { loading: "lazy", decoding: "async", fetchPriority: "high" })}
+              {...imageLoading(print)}
             />
           );
         }

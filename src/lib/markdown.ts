@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { getSectionsStructure } from "./sections";
+import { getChapterInSection } from "./sections-types";
 
 interface Chapter {
   slug: string;
@@ -43,10 +44,7 @@ export function getChapterBySlug(slug: string): ChapterContent | null {
     const titleMatch = content.match(/^#\s+(.+)$/m);
     const title = titleMatch ? titleMatch[1].trim() : slug;
 
-    const order =
-      getSectionsStructure()
-        .sections.flatMap((section) => section.chapters)
-        .find((chapter) => chapter.slug === slug)?.order ?? 0;
+    const order = getChapterInSection(getSectionsStructure(), slug)?.chapter.order ?? 0;
 
     return {
       slug,

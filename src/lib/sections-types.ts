@@ -1,5 +1,5 @@
 // Client-safe types and utilities for sections
-interface SectionChapter {
+export interface SectionChapter {
   slug: string;
   title: string;
   order: number;
@@ -39,11 +39,11 @@ export function getSectionColor(sectionNumber: number) {
 export function getChapterInSection(
   structure: SectionsStructure,
   slug: string,
-): { section: Section; chapterIndex: number } | null {
+): { section: Section; chapter: SectionChapter } | null {
   for (const section of structure.sections) {
-    const chapterIndex = section.chapters.findIndex((ch) => ch.slug === slug);
-    if (chapterIndex !== -1) {
-      return { section, chapterIndex };
+    const chapter = section.chapters.find((ch) => ch.slug === slug);
+    if (chapter) {
+      return { section, chapter };
     }
   }
   return null;

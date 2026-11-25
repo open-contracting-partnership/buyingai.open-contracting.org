@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import { logger } from "@/lib/logger";
-import { getSectionColor, type SectionsStructure } from "@/lib/sections-types";
+import { getChapterInSection, getSectionColor, type SectionsStructure } from "@/lib/sections-types";
 import { SectionMarker } from "./SectionMarker";
 import { StickyNavbar } from "./StickyNavbar";
 
@@ -17,6 +17,18 @@ function hexToRgba(hex: string, opacity: number): string {
   return `rgba(${r}, ${g}, ${b}, ${opacity})`;
 }
 
+// Scroll to the URL's fragment, below the sticky header (117px) and navbar (60px), with a margin.
+function scrollToHash() {
+  const hash = window.location.hash;
+  const targetElement = hash && document.getElementById(hash.substring(1));
+  if (targetElement) {
+    window.scrollTo({
+      top: targetElement.getBoundingClientRect().top + window.pageYOffset - 200,
+      behavior: "smooth",
+    });
+  }
+}
+
 interface ChapterLayoutProps {
   currentSlug: string;
   children: React.ReactNode;
@@ -25,7 +37,7 @@ interface ChapterLayoutProps {
 
 export function ChapterLayout({ currentSlug, children, structure }: ChapterLayoutProps) {
   // Number the saved PDF by the chapter's position in the TOC, so that downloads sort in reading order.
-  const order = structure.sections.flatMap((section) => section.chapters).find((ch) => ch.slug === currentSlug)?.order;
+  const order = getChapterInSection(structure, currentSlug)?.chapter.order;
   const downloadName = order
     ? `buyingai-${order.toString().padStart(2, "0")}-${currentSlug.replace(/^\d+-/, "")}.pdf`
     : `buyingai-${currentSlug}.pdf`;
@@ -66,56 +78,17 @@ export function ChapterLayout({ currentSlug, children, structure }: ChapterLayou
 
   // Check for hash on mount and scroll to position
   useEffect(() => {
-    const hash = window.location.hash;
-    if (hash) {
-      // Set states immediately for navbar/sidebar visibility
+    if (window.location.hash) {
       setShowStickyNav(true);
-
-      // Scroll to element (accounting for sticky header and navbar)
-      const scrollToElement = () => {
-        const elementId = hash.substring(1); // Remove the #
-        const targetElement = document.getElementById(elementId);
-        if (targetElement) {
-          // Header height (117px) + Sticky navbar height (60px) = 177px
-          // Add extra padding (23px) for better visibility = 200px
-          const offset = 200;
-          const elementPosition = targetElement.getBoundingClientRect().top;
-          const offsetPosition = elementPosition + window.pageYOffset - offset;
-
-          window.scrollTo({
-            top: offsetPosition,
-            behavior: "smooth",
-          });
-        }
-      };
-
-      // Small delay to ensure page is rendered before smooth scroll
-      setTimeout(scrollToElement, 100);
+      // Wait for the page to render.
+      setTimeout(scrollToHash, 100);
     }
   }, [currentSlug]);
 
   // Handle hash changes (e.g., when clicking anchor links)
   useEffect(() => {
-    const handleHashChange = () => {
-      const hash = window.location.hash;
-      if (hash) {
-        const elementId = hash.substring(1);
-        const targetElement = document.getElementById(elementId);
-        if (targetElement) {
-          const offset = 200;
-          const elementPosition = targetElement.getBoundingClientRect().top;
-          const offsetPosition = elementPosition + window.pageYOffset - offset;
-
-          window.scrollTo({
-            top: offsetPosition,
-            behavior: "smooth",
-          });
-        }
-      }
-    };
-
-    window.addEventListener("hashchange", handleHashChange);
-    return () => window.removeEventListener("hashchange", handleHashChange);
+    window.addEventListener("hashchange", scrollToHash);
+    return () => window.removeEventListener("hashchange", scrollToHash);
   }, []);
 
   const toggleSidebar = () => {
