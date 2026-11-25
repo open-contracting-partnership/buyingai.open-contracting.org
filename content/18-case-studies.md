@@ -1,5 +1,10 @@
 # Case studies
 
+```
+- Who: Procurement teams
+- What: How Australia, the United States, Chile and Italy bought AI: what worked, what was harder and the lessons learned
+```
+
 ![][image1]
 
 ## Supporting AI-readiness in Australia 
