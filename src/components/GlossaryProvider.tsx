@@ -3,6 +3,7 @@
 import type React from "react";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { logger } from "@/lib/logger";
+import { findTerms, forEachTextNode } from "@/lib/text-terms";
 
 interface GlossaryTerm {
   Term: string;
@@ -111,147 +112,59 @@ function AutoGlossaryWrapper({ children }: { children: React.ReactNode }) {
   const isProcessingRef = useRef(false);
 
   useEffect(() => {
-    const processTextNodes = (node: Node) => {
-      // Si ya procesamos este nodo, saltar
-      if (processedNodesRef.current.has(node)) return;
+    const glossaryTerms = terms.map((term) => ({ term: term.Term, value: term }));
 
-      // Si es un nodo de texto
-      if (node.nodeType === Node.TEXT_NODE && node.textContent) {
-        const text = node.textContent;
+    const processTextNodes = (root: Node) => {
+      forEachTextNode(root, ["glossary-term", "no-glossary"], (node) => {
+        const text = node.textContent ?? "";
         const parent = node.parentElement;
-
-        // No procesar si ya es un término del glosario o está en elementos especiales
-        if (
-          parent?.classList.contains("glossary-term") ||
-          parent?.classList.contains("no-glossary") ||
-          parent?.tagName === "SCRIPT" ||
-          parent?.tagName === "STYLE" ||
-          parent?.tagName === "CODE" ||
-          parent?.tagName === "PRE"
-        ) {
+        if (processedNodesRef.current.has(node) || !parent) {
           return;
         }
 
-        // Buscar términos en el texto
-        const sortedTerms = [...terms].sort((a, b) => b.Term.length - a.Term.length);
-        let hasMatches = false;
-        const matches: Array<{
-          index: number;
-          term: GlossaryTerm;
-          length: number;
-        }> = [];
+        const matches = findTerms(text, glossaryTerms);
+        if (matches.length === 0) {
+          return;
+        }
 
-        sortedTerms.forEach((term) => {
-          // Escape special regex characters and create case-insensitive pattern
-          // The "gi" flag makes it case-insensitive (matches "Bias", "bias", "BIAS", etc.)
-          const escapedTerm = escapeRegex(term.Term);
-          const pattern = `\\b${escapedTerm}\\b`;
-          const regex = new RegExp(pattern, "gi");
-          for (const match of text.matchAll(regex)) {
-            const overlaps = matches.some(
-              (m) =>
-                (match.index >= m.index && match.index < m.index + m.length) ||
-                (match.index + match[0].length > m.index && match.index + match[0].length <= m.index + m.length),
-            );
+        const fragment = document.createDocumentFragment();
+        let lastIndex = 0;
 
-            if (!overlaps) {
-              matches.push({
-                index: match.index,
-                term: term,
-                length: match[0].length,
-              });
-              hasMatches = true;
-            }
+        for (const match of matches) {
+          if (match.index > lastIndex) {
+            fragment.appendChild(document.createTextNode(text.substring(lastIndex, match.index)));
           }
-        });
 
-        if (hasMatches && parent) {
-          matches.sort((a, b) => a.index - b.index);
-          const fragment = document.createDocumentFragment();
-          let lastIndex = 0;
-
-          matches.forEach((match) => {
-            // Texto antes del match
-            if (match.index > lastIndex) {
-              fragment.appendChild(document.createTextNode(text.substring(lastIndex, match.index)));
-            }
-
-            // Crear elemento para el término
-            const span = document.createElement("span");
-            span.className = "glossary-term cursor-help bg-[#d6e100] text-black rounded-full px-1 py-0.5";
-            span.textContent = text.substring(match.index, match.index + match.length);
-
-            span.addEventListener("mouseenter", () => {
-              const rect = span.getBoundingClientRect();
-              showTooltip(match.term.Term, match.term.Definition, rect.left, rect.bottom + 5);
-            });
-
-            span.addEventListener("mouseleave", () => {
-              hideTooltip();
-            });
-
-            fragment.appendChild(span);
-            lastIndex = match.index + match.length;
+          const span = document.createElement("span");
+          span.className = "glossary-term cursor-help bg-[#d6e100] text-black rounded-full px-1 py-0.5";
+          span.textContent = text.substring(match.index, match.index + match.length);
+          span.addEventListener("mouseenter", () => {
+            const rect = span.getBoundingClientRect();
+            showTooltip(match.value.Term, match.value.Definition, rect.left, rect.bottom + 5);
           });
+          span.addEventListener("mouseleave", hideTooltip);
 
-          // Texto restante
-          if (lastIndex < text.length) {
-            fragment.appendChild(document.createTextNode(text.substring(lastIndex)));
-          }
-
-          // Mark the original node as processed before replacing
-          processedNodesRef.current.add(node);
-
-          // Replace the node with the fragment
-          try {
-            parent.replaceChild(fragment, node);
-
-            // Mark all new nodes in the fragment as processed to avoid re-processing
-            // Note: fragment.childNodes is empty after replaceChild, so we need to get nodes from parent
-            const insertedNodes = Array.from(parent.childNodes).filter(
-              (n) => !processedNodesRef.current.has(n) && n !== node,
-            );
-            insertedNodes.forEach((newNode) => {
-              processedNodesRef.current.add(newNode);
-              if (newNode.nodeType === Node.ELEMENT_NODE) {
-                // Also mark text nodes inside
-                newNode.childNodes.forEach((child) => {
-                  processedNodesRef.current.add(child);
-                });
-              }
-            });
-          } catch (error) {
-            // If replaceChild fails (e.g., node was already removed), skip
-            logger.warn("GlossaryProvider: Failed to replace node", error);
-          }
-        }
-      }
-      // Si es un elemento, procesar sus hijos
-      else if (node.nodeType === Node.ELEMENT_NODE) {
-        const element = node as Element;
-
-        // No procesar elementos especiales
-        if (
-          element.classList.contains("no-glossary") ||
-          element.tagName === "SCRIPT" ||
-          element.tagName === "STYLE" ||
-          element.tagName === "CODE" ||
-          element.tagName === "PRE"
-        ) {
-          return;
+          fragment.appendChild(span);
+          lastIndex = match.index + match.length;
         }
 
-        // Procesar hijos
-        Array.from(node.childNodes).forEach((child) => {
-          processTextNodes(child);
-        });
-      }
+        if (lastIndex < text.length) {
+          fragment.appendChild(document.createTextNode(text.substring(lastIndex)));
+        }
+
+        const insertedNodes = Array.from(fragment.childNodes);
+        try {
+          parent.replaceChild(fragment, node);
+          // Don't process the new text nodes again.
+          for (const insertedNode of insertedNodes) {
+            processedNodesRef.current.add(insertedNode);
+          }
+        } catch (error) {
+          // The node was already removed.
+          logger.warn("GlossaryProvider: Failed to replace node", error);
+        }
+      });
     };
-
-    // Escape the special characters of regular expressions.
-    function escapeRegex(str: string): string {
-      return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    }
 
     // Process content after React hydration is complete
     const processContent = () => {

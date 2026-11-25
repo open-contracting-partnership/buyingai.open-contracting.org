@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import type React from "react";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import termsData from "@/app/data/terms.json";
+import { findTerms, forEachTextNode } from "@/lib/text-terms";
 
 type Region = "US" | "GLOBAL";
 
@@ -118,126 +119,28 @@ function AutoRegionWrapper({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    const processTextNodes = (node: Node) => {
-      // Process text nodes
-      if (node.nodeType === Node.TEXT_NODE && node.textContent) {
-        const text = node.textContent;
-        const parent = node.parentElement;
+    // Replace the other region's terms with this region's.
+    const regionTerms = terms.map((mapping) =>
+      region === "US" ? { term: mapping.GLOBAL, value: mapping.US } : { term: mapping.US, value: mapping.GLOBAL },
+    );
 
-        // Skip special elements
-        if (
-          parent?.classList.contains("no-region-replace") ||
-          parent?.classList.contains("glossary-term") ||
-          parent?.tagName === "SCRIPT" ||
-          parent?.tagName === "STYLE" ||
-          parent?.tagName === "CODE" ||
-          parent?.tagName === "PRE" ||
-          parent?.tagName === "INPUT" ||
-          parent?.tagName === "TEXTAREA"
-        ) {
+    const processTextNodes = (root: Node) => {
+      forEachTextNode(root, ["no-region-replace", "glossary-term"], (node) => {
+        const text = node.textContent ?? "";
+        const matches = findTerms(text, regionTerms);
+        if (matches.length === 0) {
           return;
         }
 
-        // Build replacement map: both directions (US -> GLOBAL and GLOBAL -> US)
-        const replacements: Array<{
-          index: number;
-          original: string;
-          replacement: string;
-          length: number;
-        }> = [];
-
-        // Sort terms by length (longest first) to handle compound terms
-        const sortedTerms = [...terms].sort(
-          (a, b) => Math.max(b.US.length, b.GLOBAL.length) - Math.max(a.US.length, a.GLOBAL.length),
-        );
-
-        sortedTerms.forEach((termMapping) => {
-          // If region is US, we want to replace GLOBAL terms with US terms
-          // If region is GLOBAL, we want to replace US terms with GLOBAL terms
-          const sourceTerm = region === "US" ? termMapping.GLOBAL : termMapping.US;
-          const targetTerm = region === "US" ? termMapping.US : termMapping.GLOBAL;
-
-          // Escape special regex characters
-          const escapedSource = escapeRegex(sourceTerm);
-          // Use word boundaries for whole word matching, but handle special cases
-          const pattern = `\\b${escapedSource}\\b`;
-          const regex = new RegExp(pattern, "gi");
-          for (const match of text.matchAll(regex)) {
-            const overlaps = replacements.some(
-              (m) =>
-                (match.index >= m.index && match.index < m.index + m.length) ||
-                (match.index + match[0].length > m.index && match.index + match[0].length <= m.index + m.length),
-            );
-
-            if (!overlaps) {
-              replacements.push({
-                index: match.index,
-                original: match[0],
-                replacement: targetTerm,
-                length: match[0].length,
-              });
-            }
-          }
-        });
-
-        if (replacements.length > 0 && parent) {
-          // Sort by index
-          replacements.sort((a, b) => a.index - b.index);
-
-          // Build the new text with replacements
-          let newText = "";
-          let lastIndex = 0;
-
-          replacements.forEach((replacement) => {
-            // Text before the match
-            if (replacement.index > lastIndex) {
-              newText += text.substring(lastIndex, replacement.index);
-            }
-
-            // Add replacement text
-            newText += replacement.replacement;
-
-            lastIndex = replacement.index + replacement.length;
-          });
-
-          // Remaining text
-          if (lastIndex < text.length) {
-            newText += text.substring(lastIndex);
-          }
-
-          // Replace the text node content
-          node.textContent = newText;
+        let newText = "";
+        let lastIndex = 0;
+        for (const match of matches) {
+          newText += text.substring(lastIndex, match.index) + match.value;
+          lastIndex = match.index + match.length;
         }
-      }
-      // Process element nodes
-      else if (node.nodeType === Node.ELEMENT_NODE) {
-        const element = node as Element;
-
-        // Skip special elements
-        if (
-          element.classList.contains("no-region-replace") ||
-          element.classList.contains("glossary-term") ||
-          element.tagName === "SCRIPT" ||
-          element.tagName === "STYLE" ||
-          element.tagName === "CODE" ||
-          element.tagName === "PRE" ||
-          element.tagName === "INPUT" ||
-          element.tagName === "TEXTAREA"
-        ) {
-          return;
-        }
-
-        // Process children
-        Array.from(node.childNodes).forEach((child) => {
-          processTextNodes(child);
-        });
-      }
+        node.textContent = newText + text.substring(lastIndex);
+      });
     };
-
-    // Helper function to escape regex special characters
-    function escapeRegex(str: string): string {
-      return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    }
 
     // Process the content with a delay to ensure React hydration is complete
     // Use requestIdleCallback if available, otherwise use setTimeout with longer delay
