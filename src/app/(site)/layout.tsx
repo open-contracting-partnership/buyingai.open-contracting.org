@@ -10,41 +10,31 @@ import { GlossaryProvider } from "@/components/GlossaryProvider";
 import { RegionProvider } from "@/components/RegionProvider";
 import { SITE_URL } from "@/lib/links";
 import { getAllChapters } from "@/lib/markdown";
+import { OG_IMAGE, OPEN_GRAPH } from "@/lib/metadata";
 
 const ibmPlexSans = IBM_Plex_Sans({
   variable: "--font-ibm-plex-sans",
   subsets: ["latin"],
 });
 
+const title = "BuyingAI: Tips and tools for public procurement";
+const description =
+  "This guide by Open Contracting Partnership offers practical guidance and hands-on tips to get the best results from your AI purchases.";
+
+// Next.js fills in the Twitter card's title, description and image from openGraph.
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "BuyingAI: Tips and tools for public procurement",
-  description:
-    "This guide by Open Contracting Partnership offers practical guidance and hands-on tips to get the best results from your AI purchases.",
+  title,
+  description,
   openGraph: {
-    title: "BuyingAI: Tips and tools for public procurement",
-    description:
-      "This guide by Open Contracting Partnership offers practical guidance and hands-on tips to get the best results from your AI purchases.",
+    ...OPEN_GRAPH,
+    title,
+    description,
     url: SITE_URL,
-    siteName: "Open Contracting Partnership",
-    images: [
-      {
-        url: "/images/og-image.png", // Ruta de la imagen OG - coloca tu imagen en public/og-image.png
-        width: 1200,
-        height: 630,
-        alt: "Open Contracting Partnership",
-      },
-    ],
-    locale: "en_US",
+    images: [{ ...OG_IMAGE, alt: "Open Contracting Partnership" }],
     type: "website",
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "BuyingAI: Tips and tools for public procurement",
-    description:
-      "This guide by Open Contracting Partnership offers practical guidance and hands-on tips to get the best results from your AI purchases.",
-    images: ["/images/og-image.png"], // Ruta de la imagen OG - coloca tu imagen en public/og-image.png
-  },
+  twitter: { card: "summary_large_image" },
 };
 
 export default function RootLayout({

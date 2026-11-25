@@ -7,6 +7,7 @@ import { ChapterTitle, plainText } from "@/components/ChapterTitle";
 import { CollapsibleInitializer } from "@/components/CollapsibleInitializer";
 import { SITE_URL } from "@/lib/links";
 import { getAdjacentChapters, getAllChapters, getChapterBySlug } from "@/lib/markdown";
+import { OG_IMAGE, OPEN_GRAPH } from "@/lib/metadata";
 import { getSectionsStructure } from "@/lib/sections";
 import { getChapterInSection, getSectionColor } from "@/lib/sections-types";
 
@@ -32,8 +33,6 @@ export async function generateMetadata({ params }: PageProps) {
     };
   }
 
-  const chapterUrl = `${SITE_URL}/chapter/${slug}`;
-
   const title = plainText(chapter.title);
 
   // The Who/What box's "What" line, or else the first paragraph.
@@ -48,31 +47,20 @@ export async function generateMetadata({ params }: PageProps) {
     description = `${description.substring(0, description.lastIndexOf(" ", 159))}…`;
   }
 
+  const pageTitle = `${title} - Buying AI`;
+
   return {
-    title: `${title} - Buying AI`,
+    title: pageTitle,
     description,
     openGraph: {
-      title: `${title} - Buying AI`,
+      ...OPEN_GRAPH,
+      title: pageTitle,
       description,
-      url: chapterUrl,
-      siteName: "Open Contracting Partnership",
-      images: [
-        {
-          url: "/images/og-image.png", // Ruta de la imagen OG - coloca tu imagen en public/og-image.png
-          width: 1200,
-          height: 630,
-          alt: title,
-        },
-      ],
-      locale: "en_US",
+      url: `${SITE_URL}/chapter/${slug}`,
+      images: [{ ...OG_IMAGE, alt: title }],
       type: "article",
     },
-    twitter: {
-      card: "summary_large_image",
-      title: `${title} - Buying AI`,
-      description,
-      images: ["/images/og-image.png"], // Ruta de la imagen OG - coloca tu imagen en public/og-image.png
-    },
+    twitter: { card: "summary_large_image" },
   };
 }
 
