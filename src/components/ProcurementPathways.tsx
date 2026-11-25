@@ -56,6 +56,67 @@ interface ProcurementData {
   rows: Row[];
 }
 
+const CATEGORY_ICONS: Record<string, LucideIcon> = {
+  "off-the-shelf": ShoppingCart,
+  customize: Wrench,
+  build: Building2,
+};
+
+const ROW_ICONS: Record<string, LucideIcon> = {
+  "type-of-ai": Sparkles,
+  "customization-level": Settings,
+  "purchase-type": FileText,
+  "commercial-model": DollarSign,
+  "commercial-risks": AlertTriangle,
+  "procurement-methods": ClipboardList,
+};
+
+const ITEM_ICONS: Record<string, LucideIcon> = {
+  "shopping-cart": ShoppingCart,
+  settings: Settings,
+  cloud: Cloud,
+  cpu: Cpu,
+  flask: FlaskConical,
+};
+
+const ITEM_BACKGROUND_COLORS: Record<string, string> = {
+  "off-the-shelf": "#FEFCE8",
+  customize: "#F0FDF4",
+  build: "#ECFEFF",
+};
+
+// The text, truncated to maxLength characters with a "See more" toggle, unless `expanded`.
+function TruncatedText({
+  text,
+  maxLength,
+  expanded,
+  className,
+}: {
+  text: string;
+  maxLength: number;
+  expanded: boolean;
+  className: string;
+}) {
+  const [open, setOpen] = useState(false);
+  const truncatable = text.length > maxLength && !expanded;
+  return (
+    <>
+      <p className={className} style={{ wordBreak: "break-word", overflowWrap: "break-word" }}>
+        {renderBold(truncatable && !open ? `${text.substring(0, maxLength)}...` : text, "font-bold")}
+      </p>
+      {truncatable && (
+        <button
+          type="button"
+          onClick={() => setOpen(!open)}
+          className="mt-2 text-xs font-semibold text-black underline"
+        >
+          {open ? "See less" : "See more"}
+        </button>
+      )}
+    </>
+  );
+}
+
 // `expanded` shows all rows and full texts, without toggles, for print.
 const ProcurementPathways: React.FC<{
   data: ProcurementData;
@@ -64,66 +125,6 @@ const ProcurementPathways: React.FC<{
   // Initialize with rows that have expandedByDefault = true
   const initialExpanded = new Set(data.rows.filter((row) => row.expandedByDefault).map((row) => row.id));
   const [expandedRows, setExpandedRows] = useState<Set<string>>(initialExpanded);
-  const [expandedTexts, setExpandedTexts] = useState<Set<string>>(new Set<string>());
-
-  // Map category IDs to icons
-  const getCategoryIcon = (categoryId: string): LucideIcon => {
-    switch (categoryId) {
-      case "off-the-shelf":
-        return ShoppingCart;
-      case "customize":
-        return Wrench;
-      case "build":
-        return Building2;
-      default:
-        return FileText;
-    }
-  };
-
-  // Map row titles to icons
-  const getRowIcon = (rowId: string): LucideIcon => {
-    switch (rowId) {
-      case "type-of-ai":
-        return Sparkles;
-      case "customization-level":
-        return Settings;
-      case "purchase-type":
-        return FileText;
-      case "commercial-model":
-        return DollarSign;
-      case "commercial-risks":
-        return AlertTriangle;
-      case "procurement-methods":
-        return ClipboardList;
-      default:
-        return FileText;
-    }
-  };
-
-  // Map item icons
-  const getItemIcon = (iconName?: string): LucideIcon | null => {
-    if (!iconName) return null;
-    const iconMap: Record<string, LucideIcon> = {
-      "shopping-cart": ShoppingCart,
-      settings: Settings,
-      cloud: Cloud,
-      cpu: Cpu,
-      flask: FlaskConical,
-    };
-    return iconMap[iconName] || null;
-  };
-
-  const toggleTextExpansion = (textId: string) => {
-    setExpandedTexts((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(textId)) {
-        newSet.delete(textId);
-      } else {
-        newSet.add(textId);
-      }
-      return newSet;
-    });
-  };
 
   const toggleRow = (rowId: string) => {
     setExpandedRows((prev) => {
@@ -138,16 +139,11 @@ const ProcurementPathways: React.FC<{
   };
 
   const renderCategoryHeader = (category: Category) => {
-    const CategoryIcon = getCategoryIcon(category.id);
+    const CategoryIcon = CATEGORY_ICONS[category.id] ?? FileText;
     const maxLength = 150; // Character limit before showing "See more"
+    const textClassName = "text-xs leading-relaxed break-words !m-0 !text-black";
 
     if (!category.subcategories) {
-      const description = category.description || "";
-      const textId = `category-${category.id}`;
-      const isExpanded = expanded || expandedTexts.has(textId);
-      const needsTruncation = description.length > maxLength;
-      const displayText = needsTruncation && !isExpanded ? `${description.substring(0, maxLength)}...` : description;
-
       return (
         <div className="flex flex-col h-full">
           <div
@@ -158,21 +154,12 @@ const ProcurementPathways: React.FC<{
             <span className="whitespace-nowrap">{category.name}</span>
           </div>
           <div className="p-3 md:p-4 flex-1" style={{ backgroundColor: category.color }}>
-            <p
-              className="text-xs leading-relaxed break-words !m-0 !text-black"
-              style={{ wordBreak: "break-word", overflowWrap: "break-word" }}
-            >
-              {renderBold(displayText, "font-bold")}
-            </p>
-            {needsTruncation && !expanded && (
-              <button
-                type="button"
-                onClick={() => toggleTextExpansion(textId)}
-                className="mt-2 text-xs font-semibold text-black underline"
-              >
-                {isExpanded ? "See less" : "See more"}
-              </button>
-            )}
+            <TruncatedText
+              text={category.description || ""}
+              maxLength={maxLength}
+              expanded={expanded}
+              className={textClassName}
+            />
           </div>
         </div>
       );
@@ -188,54 +175,28 @@ const ProcurementPathways: React.FC<{
           <span className="break-words">{category.name}</span>
         </div>
         <div className="flex flex-col md:flex-row flex-1">
-          {category.subcategories.map((sub, idx) => {
-            const description = sub.description || "";
-            const textId = `subcategory-${sub.id}`;
-            const isExpanded = expanded || expandedTexts.has(textId);
-            const needsTruncation = description.length > maxLength;
-            const displayText =
-              needsTruncation && !isExpanded ? `${description.substring(0, maxLength)}...` : description;
-
-            return (
-              <div
-                key={sub.id}
-                className={`flex-1 p-3 md:p-4 ${idx > 0 ? "border-t-2 md:border-t-0 md:border-l-2 border-white" : ""}`}
-                style={{ backgroundColor: category.color }}
-              >
-                <p
-                  className="text-xs leading-relaxed break-words !m-0 !text-black"
-                  style={{ wordBreak: "break-word", overflowWrap: "break-word" }}
-                >
-                  {renderBold(displayText, "font-bold")}
-                </p>
-                {needsTruncation && !expanded && (
-                  <button
-                    type="button"
-                    onClick={() => toggleTextExpansion(textId)}
-                    className="mt-2 text-xs font-semibold text-black underline"
-                  >
-                    {isExpanded ? "See less" : "See more"}
-                  </button>
-                )}
-              </div>
-            );
-          })}
+          {category.subcategories.map((sub, idx) => (
+            <div
+              key={sub.id}
+              className={`flex-1 p-3 md:p-4 ${idx > 0 ? "border-t-2 md:border-t-0 md:border-l-2 border-white" : ""}`}
+              style={{ backgroundColor: category.color }}
+            >
+              <TruncatedText
+                text={sub.description || ""}
+                maxLength={maxLength}
+                expanded={expanded}
+                className={textClassName}
+              />
+            </div>
+          ))}
         </div>
       </div>
     );
   };
 
-  const getBackgroundColor = (categoryId: string): string => {
-    if (categoryId === "off-the-shelf") return "#FEFCE8";
-    if (categoryId === "customize") return "#F0FDF4";
-    if (categoryId === "build") return "#ECFEFF";
-    return "#F9FAFB";
-  };
-
   const renderExpandableRow = (row: Row) => {
     const isExpanded = expanded || expandedRows.has(row.id);
-    const RowIcon = getRowIcon(row.id);
-    const maxLength = 120; // Character limit before showing "See more"
+    const RowIcon = ROW_ICONS[row.id] ?? FileText;
     const RowHeader = expanded ? "div" : "button";
 
     return (
@@ -262,42 +223,22 @@ const ProcurementPathways: React.FC<{
 
         {isExpanded && (
           <div className="flex flex-col md:flex-row border-t border-gray-200">
-            {row.items.map((item, idx) => {
-              const bgColor = getBackgroundColor(item.category_id);
-              const ItemIcon = getItemIcon(item.icon);
-              const content = item.content || "";
-              const textId = `item-${row.id}-${idx}`;
-              const isTextExpanded = expanded || expandedTexts.has(textId);
-              const needsTruncation = content.length > maxLength;
-              const displayText =
-                needsTruncation && !isTextExpanded ? `${content.substring(0, maxLength)}...` : content;
-
+            {row.items.map((item) => {
+              const ItemIcon = item.icon ? ITEM_ICONS[item.icon] : undefined;
               return (
                 <div
                   key={`${item.category_id}/${item.subcategory_id ?? ""}`}
                   className="flex-1 p-2.5 md:p-3 border-b-2 md:border-b-0 md:border-l-2 border-white min-h-[50px] md:min-h-[60px] flex items-start gap-2"
-                  style={{ backgroundColor: bgColor }}
+                  style={{ backgroundColor: ITEM_BACKGROUND_COLORS[item.category_id] ?? "#F9FAFB" }}
                 >
                   {ItemIcon && <ItemIcon className="w-4 h-4 text-gray-600 flex-shrink-0 mt-0.5" />}
                   <div className="w-full min-w-0">
-                    <p
+                    <TruncatedText
+                      text={item.content || ""}
+                      maxLength={120}
+                      expanded={expanded}
                       className="text-xs leading-relaxed break-words m-0"
-                      style={{
-                        wordBreak: "break-word",
-                        overflowWrap: "break-word",
-                      }}
-                    >
-                      {renderBold(displayText, "font-bold")}
-                    </p>
-                    {needsTruncation && !expanded && (
-                      <button
-                        type="button"
-                        onClick={() => toggleTextExpansion(textId)}
-                        className="mt-2 text-xs font-semibold text-black underline"
-                      >
-                        {isTextExpanded ? "See less" : "See more"}
-                      </button>
-                    )}
+                    />
                   </div>
                 </div>
               );
