@@ -2,22 +2,14 @@ import { notFound } from "next/navigation";
 import { ChapterContent } from "@/components/ChapterContent";
 import { plainText } from "@/components/ChapterTitle";
 import { CollapsibleInitializer } from "@/components/CollapsibleInitializer";
-import { getAllChapters, getChapterBySlug } from "@/lib/markdown";
-import { getSectionsStructure } from "@/lib/sections";
-import { getChapterInSection, getSectionColor } from "@/lib/sections-types";
-
-interface PageProps {
-  params: Promise<{
-    slug: string;
-  }>;
-}
+import { type ChapterPageProps, getChapterBySlug, getChapterColor, getChapterParams } from "@/lib/markdown";
 
 export async function generateStaticParams() {
-  return getAllChapters().map((chapter) => ({ slug: chapter.slug }));
+  return getChapterParams();
 }
 
 // The title becomes the generated PDF's title.
-export async function generateMetadata({ params }: PageProps) {
+export async function generateMetadata({ params }: ChapterPageProps) {
   const { slug } = await params;
   const chapter = getChapterBySlug(slug);
   if (!chapter) {
@@ -26,7 +18,7 @@ export async function generateMetadata({ params }: PageProps) {
   return { title: `${plainText(chapter.title)} - Buying AI` };
 }
 
-export default async function PrintPage({ params }: PageProps) {
+export default async function PrintPage({ params }: ChapterPageProps) {
   const { slug } = await params;
   const chapter = getChapterBySlug(slug);
 
@@ -34,8 +26,7 @@ export default async function PrintPage({ params }: PageProps) {
     notFound();
   }
 
-  const currentSection = getChapterInSection(getSectionsStructure(), slug)?.section;
-  const sectionColor = getSectionColor(currentSection?.number ?? 1);
+  const sectionColor = getChapterColor(slug);
 
   return (
     <div className="min-h-screen bg-white print-view-container">

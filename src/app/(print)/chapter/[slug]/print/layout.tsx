@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import "@/app/globals.css";
+import { SITE_TITLE } from "@/lib/metadata";
 
 export const metadata: Metadata = {
-  title: "BuyingAI: Tips and tools for public procurement",
+  title: SITE_TITLE,
 };
 
 export default function PrintLayout({ children }: { children: ReactNode }) {

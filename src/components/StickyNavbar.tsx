@@ -3,7 +3,12 @@
 import clsx from "clsx";
 import { ChevronRightIcon } from "lucide-react";
 import Link from "next/link";
-import { getChapterInSection, getSectionColor, type SectionsStructure } from "@/lib/sections-types";
+import {
+  formatSectionNumber,
+  getChapterInSection,
+  getSectionColor,
+  type SectionsStructure,
+} from "@/lib/sections-types";
 
 interface StickyNavbarProps {
   structure: SectionsStructure;
@@ -87,7 +92,7 @@ export function StickyNavbar({ structure, currentSlug, visible, sidebarVisible, 
                   >
                     {/* Section Number */}
                     <span className="text-black font-medium text-sm md:text-base">
-                      {section.number.toString().padStart(2, "0")}
+                      {formatSectionNumber(section.number)}
                     </span>
 
                     {/* Expanded Details (only for active section) */}

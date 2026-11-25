@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { chromium } from "playwright-core";
+import { SITE_TITLE } from "../src/lib/metadata";
 import { serve } from "./serve";
 
 const OUT_DIR = path.join(process.cwd(), "out");
@@ -12,7 +13,7 @@ const LOGO = fs.readFileSync(path.join(process.cwd(), "src/app/assets/images/log
 const HEADER_TEMPLATE = `
 <div style="width: 100%; margin: 0 15mm; display: flex; justify-content: space-between; align-items: center; font-family: 'GT Eesti Text', Helvetica, Arial, sans-serif; font-size: 8pt; color: #000;">
   <div>
-    <div style="font-weight: bold;">BuyingAI: Tips and tools for public procurement</div>
+    <div style="font-weight: bold;">${SITE_TITLE}</div>
     <div>Open Contracting Partnership 2025. More at: buyingai.open-contracting.org</div>
   </div>
   <img src="data:image/svg+xml;base64,${LOGO}" style="height: 10mm;">

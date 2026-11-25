@@ -32,6 +32,11 @@ const sectionColors = [
   { bg: "#23B2A7", text: "#000000", label: "bg-[#23B2A7] text-black" }, // Section 5 - Teal
 ];
 
+// A section's number, as two digits.
+export function formatSectionNumber(sectionNumber: number) {
+  return sectionNumber.toString().padStart(2, "0");
+}
+
 export function getSectionColor(sectionNumber: number) {
   return sectionColors[sectionNumber - 1] || sectionColors[0];
 }

@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { getSectionsStructure } from "./sections";
-import { getChapterInSection } from "./sections-types";
+import { getChapterInSection, getSectionColor } from "./sections-types";
 
 interface Chapter {
   slug: string;
@@ -20,6 +20,20 @@ export interface ChapterInSection extends Chapter {
 }
 
 const contentDirectory = path.join(process.cwd(), "content");
+
+export interface ChapterPageProps {
+  params: Promise<{ slug: string }>;
+}
+
+// The static params of the chapter pages and print pages.
+export function getChapterParams() {
+  return getAllChapters().map((chapter) => ({ slug: chapter.slug }));
+}
+
+// The color of the chapter's section.
+export function getChapterColor(slug: string) {
+  return getSectionColor(getChapterInSection(getSectionsStructure(), slug)?.section.number ?? 1);
+}
 
 // The chapters in content/00-toc.md, in its order.
 export function getAllChapters(): ChapterInSection[] {

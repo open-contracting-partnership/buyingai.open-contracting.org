@@ -1,3 +1,5 @@
+export const SITE_TITLE = "BuyingAI: Tips and tools for public procurement";
+
 // The Open Graph properties that every page shares. A page's openGraph replaces its layout's, so each page spreads these.
 export const OPEN_GRAPH = {
   siteName: "Open Contracting Partnership",

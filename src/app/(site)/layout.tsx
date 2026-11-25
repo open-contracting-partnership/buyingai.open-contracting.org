@@ -10,14 +10,14 @@ import { GlossaryProvider } from "@/components/GlossaryProvider";
 import { RegionProvider } from "@/components/RegionProvider";
 import { SITE_URL } from "@/lib/links";
 import { getAllChapters } from "@/lib/markdown";
-import { OG_IMAGE, OPEN_GRAPH } from "@/lib/metadata";
+import { OG_IMAGE, OPEN_GRAPH, SITE_TITLE } from "@/lib/metadata";
 
 const ibmPlexSans = IBM_Plex_Sans({
   variable: "--font-ibm-plex-sans",
   subsets: ["latin"],
 });
 
-const title = "BuyingAI: Tips and tools for public procurement";
+const title = SITE_TITLE;
 const description =
   "This guide by Open Contracting Partnership offers practical guidance and hands-on tips to get the best results from your AI purchases.";
 

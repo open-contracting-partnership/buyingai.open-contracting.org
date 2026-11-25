@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import "./globals.css";
+import { SITE_TITLE } from "@/lib/metadata";
 
 export const metadata: Metadata = {
-  title: "Page not found - BuyingAI: Tips and tools for public procurement",
+  title: `Page not found - ${SITE_TITLE}`,
 };
 
 // The (site) and (print) route groups have separate root layouts, so the 404 page has its own.

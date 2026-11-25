@@ -6,24 +6,22 @@ import { ChapterLayout } from "@/components/ChapterLayout";
 import { ChapterTitle, plainText } from "@/components/ChapterTitle";
 import { CollapsibleInitializer } from "@/components/CollapsibleInitializer";
 import { SITE_URL } from "@/lib/links";
-import { getAdjacentChapters, getAllChapters, getChapterBySlug } from "@/lib/markdown";
+import {
+  type ChapterPageProps,
+  getAdjacentChapters,
+  getChapterBySlug,
+  getChapterColor,
+  getChapterParams,
+} from "@/lib/markdown";
 import { OG_IMAGE, OPEN_GRAPH } from "@/lib/metadata";
 import { getSectionsStructure } from "@/lib/sections";
-import { getChapterInSection, getSectionColor } from "@/lib/sections-types";
 
-interface PageProps {
-  params: Promise<{
-    slug: string;
-  }>;
-}
-
-// Generate static paths for all chapters
 export async function generateStaticParams() {
-  return getAllChapters().map((chapter) => ({ slug: chapter.slug }));
+  return getChapterParams();
 }
 
 // Generate metadata for each chapter
-export async function generateMetadata({ params }: PageProps) {
+export async function generateMetadata({ params }: ChapterPageProps) {
   const { slug } = await params;
   const chapter = getChapterBySlug(slug);
 
@@ -64,7 +62,7 @@ export async function generateMetadata({ params }: PageProps) {
   };
 }
 
-export default async function ChapterPage({ params }: PageProps) {
+export default async function ChapterPage({ params }: ChapterPageProps) {
   const { slug } = await params;
   const chapter = getChapterBySlug(slug);
 
@@ -74,8 +72,7 @@ export default async function ChapterPage({ params }: PageProps) {
 
   const { previous, next } = getAdjacentChapters(slug);
   const structure = getSectionsStructure();
-  const currentSection = getChapterInSection(structure, slug)?.section;
-  const sectionColor = getSectionColor(currentSection?.number ?? 1);
+  const sectionColor = getChapterColor(slug);
 
   return (
     <ChapterLayout currentSlug={slug} structure={structure}>

@@ -12,6 +12,7 @@ import logo from "@/app/assets/images/logo.svg";
 import twitterIcon from "@/app/assets/images/twitter-icon.svg";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { FULL_GUIDE_PDF_URL } from "@/lib/links";
+import { formatSectionNumber } from "@/lib/sections-types";
 import { ChapterTitle, plainText } from "./ChapterTitle";
 import { useRegion } from "./RegionProvider";
 
@@ -198,7 +199,7 @@ function SearchResults({ chapters, onSelect }: { chapters: Chapter[]; onSelect: 
         <ChapterTitle title={chapter.title} />
       </div>
       <div className="text-xs text-gray-500 mt-1">
-        {chapter.sectionNumber.toString().padStart(2, "0")} {chapter.sectionTitle}
+        {formatSectionNumber(chapter.sectionNumber)} {chapter.sectionTitle}
       </div>
     </Link>
   ));

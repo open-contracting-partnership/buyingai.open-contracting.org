@@ -4,7 +4,12 @@ import { Download } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useIsMobile } from "@/hooks/useIsMobile";
-import { getChapterInSection, getSectionColor, type SectionsStructure } from "@/lib/sections-types";
+import {
+  formatSectionNumber,
+  getChapterInSection,
+  getSectionColor,
+  type SectionsStructure,
+} from "@/lib/sections-types";
 import { StickyNavbar } from "./StickyNavbar";
 
 // Helper function to convert hex color to rgba with opacity
@@ -213,7 +218,7 @@ export function ChapterLayout({ currentSlug, children, structure }: ChapterLayou
                                 isActiveSection ? "font-bold" : "font-medium"
                               }`}
                             >
-                              {section.number.toString().padStart(2, "0")}
+                              {formatSectionNumber(section.number)}
                             </span>
                             <span
                               className={`text-sm font-gteesti-display text-black ${

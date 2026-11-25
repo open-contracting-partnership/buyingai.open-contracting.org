@@ -5,7 +5,7 @@ import Link from "next/link";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
 import { useIsMobile } from "@/hooks/useIsMobile";
-import { getSectionColor, type SectionsStructure } from "@/lib/sections-types";
+import { formatSectionNumber, getSectionColor, type SectionsStructure } from "@/lib/sections-types";
 
 interface BannerCarouselProps {
   structure: SectionsStructure;
@@ -105,12 +105,10 @@ export function BannerCarousel({ structure }: BannerCarouselProps) {
                 >
                   <div>
                     <div className={`${isMobile ? "text-4xl" : "text-5xl"} font-bold text-black font-gteesti-display`}>
-                      {section.number.toString().padStart(2, "0")}
+                      {formatSectionNumber(section.number)}
                     </div>
                     <h2
-                      className={`${
-                        isMobile ? "my-2 text-lg" : "my-2 text-2xl"
-                      } font-medium text-black font-gteesti-display`}
+                      className={`my-2 ${isMobile ? "text-lg" : "text-2xl"} font-medium text-black font-gteesti-display`}
                     >
                       {section.title}
                     </h2>
@@ -131,9 +129,7 @@ export function BannerCarousel({ structure }: BannerCarouselProps) {
                                   isMobile ? "text-sm" : "text-base"
                                 } text-black/80 hover:text-black transition-colors group`}
                               >
-                                <span className={`${isMobile ? "font-mono text-sm" : "font-mono text-base"}`}>
-                                  {chIdx + 1}.
-                                </span>
+                                <span className={`font-mono ${isMobile ? "text-sm" : "text-base"}`}>{chIdx + 1}.</span>
                                 <span className="flex-1 line-clamp-2">{ch.title}</span>
                                 {!isMobile && (
                                   <ArrowUpRight className="size-4 opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -181,8 +177,8 @@ export function BannerCarousel({ structure }: BannerCarouselProps) {
                   onClick={(event) => openSection(section.number, event)}
                   className={`h-full w-full flex items-start justify-center cursor-pointer ${isMobile ? "pt-5 pl-5" : "pt-8 pl-8"}`}
                 >
-                  <span className={`${isMobile ? "text-3xl" : "text-3xl"} font-bold text-black/50 transition-colors`}>
-                    {section.number.toString().padStart(2, "0")}
+                  <span className="text-3xl font-bold text-black/50 transition-colors">
+                    {formatSectionNumber(section.number)}
                   </span>
                 </button>
               )}
