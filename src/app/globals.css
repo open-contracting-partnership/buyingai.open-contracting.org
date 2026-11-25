@@ -87,21 +87,6 @@ body {
   overscroll-behavior: none;
 }
 
-.info-box-table {
-  width: 100% !important;
-  border-collapse: collapse !important;
-  table-layout: fixed !important;
-  border: none !important;
-}
-
-.info-box-table td {
-  border: none !important;
-  padding: 0 !important;
-  word-wrap: break-word !important;
-  overflow-wrap: break-word !important;
-  word-break: break-word !important;
-}
-
 /* Font Utility Classes */
 .font-gteesti-pro-display {
   font-family: "GT Eesti Pro Display", Arial, Helvetica, sans-serif;
@@ -241,13 +226,6 @@ article img {
     color: #000;
   }
 
-  .print-header h1 {
-    font-size: 24pt;
-    margin-bottom: 12pt;
-    color: #000;
-    font-family: "GT Eesti Display", Arial, Helvetica, sans-serif;
-  }
-
   .print-content {
     color: #000;
   }
@@ -267,6 +245,10 @@ article img {
 
   .print-content p {
     margin-bottom: 12pt;
+  }
+
+  .print-content p,
+  .print-content li {
     orphans: 3;
     widows: 3;
   }
@@ -290,31 +272,15 @@ article img {
     margin: 12pt 0;
   }
 
-  .print-footer {
-    margin-top: 40pt;
-    padding-top: 12pt;
-    border-top: 1pt solid #ccc;
-  }
-
   /* Hide navigation and UI elements when printing */
   nav,
   aside,
   button,
   .no-print,
   header,
-  .print-header,
   footer,
-  [aria-label="Download PDF"],
   .collapsible-header svg,
   .collapsible-icon {
-    display: none !important;
-  }
-
-  /* Hide logos when printing - only show content images */
-  header img,
-  .print-header img,
-  header svg,
-  .print-header svg {
     display: none !important;
   }
 
@@ -329,18 +295,6 @@ article img {
     -webkit-print-color-adjust: exact;
   }
 
-  /* Ensure proper page breaks */
-  .print-content h1,
-  .print-content h2 {
-    page-break-after: avoid;
-  }
-
-  .print-content p,
-  .print-content li {
-    orphans: 3;
-    widows: 3;
-  }
-
   .print-prose {
     font-size: 12pt;
     line-height: 1.6;
@@ -350,21 +304,18 @@ article img {
     font-size: 24pt;
     margin-top: 20pt;
     margin-bottom: 12pt;
-    font-family: "GT Eesti Display", Arial, Helvetica, sans-serif;
   }
 
   .print-prose h2 {
     font-size: 20pt;
     margin-top: 18pt;
     margin-bottom: 10pt;
-    font-family: "GT Eesti Display", Arial, Helvetica, sans-serif;
   }
 
   .print-prose h3 {
     font-size: 16pt;
     margin-top: 16pt;
     margin-bottom: 8pt;
-    font-family: "GT Eesti Display", Arial, Helvetica, sans-serif;
   }
 
   .print-prose p {
@@ -374,12 +325,6 @@ article img {
   .print-prose ul,
   .print-prose ol {
     margin-bottom: 12pt;
-  }
-
-  .print-prose blockquote {
-    margin: 12pt 0;
-    padding-left: 12pt;
-    border-left: 4pt solid #d6e100;
   }
 
   .print-prose table {
