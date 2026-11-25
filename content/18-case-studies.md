@@ -22,9 +22,9 @@
 
 DTA also keeps their policy documents live, so that they are able to update them on a regular basis and stay current with the latest policy and technology developments.   
    
-**What was harder:** At the time, use of the templates was mandatory, and felt overly ridged to SUSESO, especially the balance towards price and competition over criteria around vendor capacity and experience around important issues like data protection and model bias, transparency and explainability. These templates have been updated based on SUSESO’s and others’ experience, and new legislation, and are now optional. 
+**What was harder:** DTA encourages bringing in procurement and technical teams as early as possible in the procurement process. However, sometimes DTA sees situations where agencies are still bringing in these stakeholders too late in a rush to get to market, resulting in protracted contract negotiations that could have been avoided with better up-front cross-departmental engagement. 
 
-**Lesson learned:** AI procurement templates cannot solve for organizational AI-readiness. For example, Chile’s templates do not address how AI should be used in collaboration with human decision-making, and what acceptable risk looks like when it comes to leveraging AI for making decisions that matter for people’s lives.  
+**Lesson learned:** Applying AI technology in low-risk internal use cases can deliver valuable ROI, while generating useful learning and experience with AI technology.  
 
  
 
@@ -58,9 +58,9 @@ DTA also keeps their policy documents live, so that they are able to update them
 
 [SUSESO used these then-mandatory templates](https://worldprivacyforum.org/posts/ai-governance-on-the-ground-chiles-social-security-and-medical-insurance-agency-grapples-with-balancing-new-responsible-ai-criteria-and-vendor-cost/) for its procurement processes. SUSESO leadership feels that the templates helped push vendors to provide impact assessments and documentation around responsible AI requirements, as well as build internal awareness around what criteria to consider when buying AI, especially around bias, transparency, and data protection.  
 
-**What was harder:** Institutions are still learning about AI, how it works, and what is required to get the most from this technology, and sometimes building this awareness falls on the vendor. For example, there is still a lack of understanding of the value of a specialized versus generic AI solutions. Generic models can be useful, but are not a one-size fits all solution. Narrow government use cases can require highly specific knowledge management, and be a better fit for specialized solutions. 
+**What was harder:** At the time, use of the templates was mandatory, and felt overly rigid to SUSESO, especially the balance towards price and competition over criteria around vendor capacity and experience around important issues like data protection and model bias, transparency and explainability. These templates have been updated based on SUSESO’s and others’ experience, and new legislation, and are now optional. 
 
-**Lesson learned:** For a contracting approach like this to be successful, the government must be willing to trust their vendor partner.
+**Lesson learned:** AI procurement templates cannot solve for organizational AI-readiness. For example, Chile’s templates do not address how AI should be used in collaboration with human decision-making, and what acceptable risk looks like when it comes to leveraging AI for making decisions that matter for people’s lives.
 
 ![][image1]
 
