@@ -6,6 +6,7 @@ import procurementPathwaysData from "@/app/data/procurement-pathways.json";
 import { CustomTable } from "@/components/CustomTable";
 import ProcurementPathways from "@/components/ProcurementPathways";
 import { processChapterContent, remarkHeadingIds } from "@/lib/chapter-content";
+import { nodeText } from "@/lib/react-text";
 
 interface ChapterContentProps {
   content: string;
@@ -236,21 +237,9 @@ function isHeaderOnlyTable(children: React.ReactNode): boolean {
   });
 }
 
-function extractText(content: React.ReactNode): string {
-  const childText = (node: React.ReactNode) => {
-    if (typeof node === "string") return node;
-    if (React.isValidElement(node)) {
-      const { children } = node.props as { children?: unknown };
-      return typeof children === "string" ? children : "";
-    }
-    return "";
-  };
-  return Array.isArray(content) ? content.map(childText).join("") : childText(content);
-}
-
 // Render "- item - item" text in a table cell as a bulleted list, and "**Label**" items as labels.
 function renderCellContent(content: React.ReactNode): React.ReactNode {
-  const textContent = extractText(content);
+  const textContent = nodeText(content);
   if (!textContent || !/(?:^|\s)[-−–—]\s+/m.test(textContent)) {
     return content;
   }

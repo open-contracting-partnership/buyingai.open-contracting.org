@@ -1,4 +1,5 @@
 import React from "react";
+import { nodeText, renderBold } from "@/lib/react-text";
 
 interface CustomTableProps {
   children: React.ReactNode;
@@ -98,28 +99,6 @@ export function CustomTable({ children }: CustomTableProps) {
       hasStrongInFirstRow = true;
     }
   });
-
-  // Helper function to extract raw text from React nodes
-  const extractRawText = (node: React.ReactNode): string => {
-    if (!node) return "";
-
-    if (typeof node === "string") {
-      return node;
-    }
-
-    if (React.isValidElement(node)) {
-      const nodeProps = node.props as { children?: React.ReactNode };
-      if (nodeProps?.children) {
-        return extractRawText(nodeProps.children);
-      }
-    }
-
-    if (Array.isArray(node)) {
-      return node.map((item) => extractRawText(item)).join("");
-    }
-
-    return "";
-  };
 
   // Helper function to parse and render markdown-like text in header
   const parseHeaderMarkdown = (text: string): React.ReactNode => {
@@ -344,34 +323,11 @@ export function CustomTable({ children }: CustomTableProps) {
         // Process each bullet for inline bold
         const bulletElements = bullets.map((bullet, idx) => {
           const trimmedBullet = bullet.trim();
-          if (trimmedBullet.includes("**")) {
-            const processedText: React.ReactNode[] = [];
-            let bulletLastIndex = 0;
-            const boldRegex = /\*\*([^*]+?)\*\*/g;
-            for (const boldMatch of trimmedBullet.matchAll(boldRegex)) {
-              if (boldMatch.index > bulletLastIndex) {
-                processedText.push(trimmedBullet.substring(bulletLastIndex, boldMatch.index));
-              }
-              processedText.push(<strong key={`bold-${idx}-${boldMatch.index}`}>{boldMatch[1]}</strong>);
-              bulletLastIndex = boldMatch.index + boldMatch[0].length;
-            }
-
-            if (bulletLastIndex < trimmedBullet.length) {
-              processedText.push(trimmedBullet.substring(bulletLastIndex));
-            }
-
-            return (
-              <li key={`bullet-${idx}`} className="!leading-relaxed !text-xs sm:!text-sm">
-                {processedText}
-              </li>
-            );
-          } else {
-            return (
-              <li key={`bullet-${idx}`} className="!leading-relaxed !text-xs sm:!text-sm">
-                {trimmedBullet}
-              </li>
-            );
-          }
+          return (
+            <li key={`bullet-${idx}`} className="!leading-relaxed !text-xs sm:!text-sm">
+              {renderBold(trimmedBullet)}
+            </li>
+          );
         });
 
         return <ul className="!list-disc !pl-5 !space-y-1.5 !my-0 !leading-relaxed">{bulletElements}</ul>;
@@ -382,24 +338,7 @@ export function CustomTable({ children }: CustomTableProps) {
     if (!hasSectionPattern) {
       // Check if it's just simple bold text without bullets
       if (hasBold && !hasBullets) {
-        if (textContent.includes("**")) {
-          const processedText: React.ReactNode[] = [];
-          let lastIndex = 0;
-          const boldRegex = /\*\*([^*]+?)\*\*/g;
-          for (const match of textContent.matchAll(boldRegex)) {
-            if (match.index > lastIndex) {
-              processedText.push(textContent.substring(lastIndex, match.index));
-            }
-            processedText.push(<strong key={`bold-${match.index}`}>{match[1]}</strong>);
-            lastIndex = match.index + match[0].length;
-          }
-
-          if (lastIndex < textContent.length) {
-            processedText.push(textContent.substring(lastIndex));
-          }
-
-          return <>{processedText}</>;
-        }
+        return <>{renderBold(textContent)}</>;
       }
 
       // Return original content if no special processing needed
@@ -463,34 +402,11 @@ export function CustomTable({ children }: CustomTableProps) {
           const trimmedBullet = bullet.trim();
 
           // Check for inline bold
-          if (trimmedBullet.includes("**")) {
-            const processedText: React.ReactNode[] = [];
-            let bulletLastIndex = 0;
-            const boldRegex = /\*\*([^*]+?)\*\*/g;
-            for (const boldMatch of trimmedBullet.matchAll(boldRegex)) {
-              if (boldMatch.index > bulletLastIndex) {
-                processedText.push(trimmedBullet.substring(bulletLastIndex, boldMatch.index));
-              }
-              processedText.push(<strong key={`bold-${idx}-${boldMatch.index}`}>{boldMatch[1]}</strong>);
-              bulletLastIndex = boldMatch.index + boldMatch[0].length;
-            }
-
-            if (bulletLastIndex < trimmedBullet.length) {
-              processedText.push(trimmedBullet.substring(bulletLastIndex));
-            }
-
-            elements.push(
-              <li key={`bullet-remaining-${idx}`} className="!leading-relaxed !text-xs sm:!text-sm">
-                {processedText}
-              </li>,
-            );
-          } else {
-            elements.push(
-              <li key={`bullet-remaining-${idx}`} className="!leading-relaxed !text-xs sm:!text-sm">
-                {trimmedBullet}
-              </li>,
-            );
-          }
+          elements.push(
+            <li key={`bullet-remaining-${idx}`} className="!leading-relaxed !text-xs sm:!text-sm">
+              {renderBold(trimmedBullet)}
+            </li>,
+          );
         });
       }
     }
@@ -648,7 +564,7 @@ export function CustomTable({ children }: CustomTableProps) {
       // This is a title-style table where all tbody rows are data
       if (firstCellText.length > 0 && !otherCellsHaveContent && !hasStrongInFirstRow && tbodyRows.length > 0) {
         // Extract raw text from first thead cell
-        const rawText = extractRawText(firstCellContent);
+        const rawText = nodeText(firstCellContent);
 
         // All tbody rows are data rows (no headers row)
         // Process all rows as data
@@ -713,7 +629,7 @@ export function CustomTable({ children }: CustomTableProps) {
     const theadCells = React.Children.toArray(propsOf(theadRow).children);
     if (theadCells.length > 0 && React.isValidElement(theadCells[0])) {
       const cellContent = propsOf(theadCells[0]).children;
-      rawHeaderText = extractRawText(cellContent);
+      rawHeaderText = nodeText(cellContent);
     }
   }
 

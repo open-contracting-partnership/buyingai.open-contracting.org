@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
+import { renderBold } from "@/lib/react-text";
 
 // Types
 interface RowItem {
@@ -136,39 +137,6 @@ const ProcurementPathways: React.FC<{
     });
   };
 
-  // Helper function to parse markdown bold (**text**) and convert to React elements
-  const parseBoldText = (text: string): React.ReactNode => {
-    if (!text) return "";
-
-    const parts: React.ReactNode[] = [];
-    const regex = /\*\*(.*?)\*\*/g;
-    let lastIndex = 0;
-    let hasBold = false;
-
-    for (const match of text.matchAll(regex)) {
-      hasBold = true;
-      // Add text before the bold
-      if (match.index > lastIndex) {
-        parts.push(text.substring(lastIndex, match.index));
-      }
-      // Add bold text
-      parts.push(
-        <strong key={match.index} className="font-bold">
-          {match[1]}
-        </strong>,
-      );
-      lastIndex = match.index + match[0].length;
-    }
-
-    // Add remaining text
-    if (lastIndex < text.length) {
-      parts.push(text.substring(lastIndex));
-    }
-
-    // If no bold text found, return original text
-    return hasBold ? parts : text;
-  };
-
   const renderCategoryHeader = (category: Category) => {
     const CategoryIcon = getCategoryIcon(category.id);
     const maxLength = 150; // Character limit before showing "See more"
@@ -194,7 +162,7 @@ const ProcurementPathways: React.FC<{
               className="text-xs leading-relaxed break-words !m-0 !text-black"
               style={{ wordBreak: "break-word", overflowWrap: "break-word" }}
             >
-              {displayText ? parseBoldText(displayText) : ""}
+              {renderBold(displayText, "font-bold")}
             </p>
             {needsTruncation && !expanded && (
               <button
@@ -238,7 +206,7 @@ const ProcurementPathways: React.FC<{
                   className="text-xs leading-relaxed break-words !m-0 !text-black"
                   style={{ wordBreak: "break-word", overflowWrap: "break-word" }}
                 >
-                  {displayText ? parseBoldText(displayText) : ""}
+                  {renderBold(displayText, "font-bold")}
                 </p>
                 {needsTruncation && !expanded && (
                   <button
@@ -319,7 +287,7 @@ const ProcurementPathways: React.FC<{
                         overflowWrap: "break-word",
                       }}
                     >
-                      {displayText ? parseBoldText(displayText) : ""}
+                      {renderBold(displayText, "font-bold")}
                     </p>
                     {needsTruncation && !expanded && (
                       <button
