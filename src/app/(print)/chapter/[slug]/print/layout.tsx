@@ -9,11 +9,8 @@ export const metadata: Metadata = {
 export default function PrintLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-      <body
-        className="antialiased min-h-screen !bg-white text-black font-gteesti-text overflow-x-hidden"
-        style={{ display: "block", visibility: "visible", opacity: 1 }}
-      >
-        <div style={{ display: "block", visibility: "visible", opacity: 1, minHeight: "100vh" }}>{children}</div>
+      <body className="antialiased min-h-screen !bg-white text-black font-gteesti-text overflow-x-hidden">
+        {children}
       </body>
     </html>
   );
