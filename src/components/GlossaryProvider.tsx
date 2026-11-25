@@ -20,7 +20,6 @@ interface GlossaryContextType {
   terms: GlossaryTerm[];
   showTooltip: (term: string, definition: string, x: number, y: number) => void;
   hideTooltip: () => void;
-  tooltip: TooltipState | null;
 }
 
 const GlossaryContext = createContext<GlossaryContextType | undefined>(undefined);
@@ -28,11 +27,9 @@ const GlossaryContext = createContext<GlossaryContextType | undefined>(undefined
 export function GlossaryProvider({
   children,
   glossaryData,
-  autoProcess = false, // Nueva prop para activar procesamiento automático
 }: {
   children: React.ReactNode;
   glossaryData: GlossaryTerm[];
-  autoProcess?: boolean;
 }) {
   const [tooltip, setTooltip] = useState<TooltipState | null>(null);
 
@@ -45,8 +42,8 @@ export function GlossaryProvider({
   };
 
   return (
-    <GlossaryContext.Provider value={{ terms: glossaryData, showTooltip, hideTooltip, tooltip }}>
-      {autoProcess ? <AutoGlossaryWrapper>{children}</AutoGlossaryWrapper> : children}
+    <GlossaryContext.Provider value={{ terms: glossaryData, showTooltip, hideTooltip }}>
+      <AutoGlossaryWrapper>{children}</AutoGlossaryWrapper>
       {tooltip && <Tooltip {...tooltip} />}
     </GlossaryContext.Provider>
   );
@@ -104,7 +101,7 @@ function Tooltip({ definition, position }: TooltipState) {
   );
 }
 
-// Nuevo componente que procesa automáticamente todo el contenido
+// Highlight the glossary's terms in the content.
 function AutoGlossaryWrapper({ children }: { children: React.ReactNode }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { terms, showTooltip, hideTooltip } = useGlossary();

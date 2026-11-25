@@ -50,8 +50,8 @@ export default function RootLayout({
       <body
         className={`${ibmPlexSans.variable} antialiased min-h-screen !bg-[#F2F3F4] text-black font-gteesti-text overflow-x-hidden`}
       >
-        <RegionProvider autoProcess={true}>
-          <GlossaryProvider glossaryData={glossaryData} autoProcess={true}>
+        <RegionProvider>
+          <GlossaryProvider glossaryData={glossaryData}>
             <GoogleAnalytics gaId="G-ST56FGCHR2" />
             <Script id="google-ads-conversion" strategy="afterInteractive">
               {`gtag('event', 'conversion', {'send_to': 'AW-11089237594/4yOlCPGbz5EYENqs4acp'});`}

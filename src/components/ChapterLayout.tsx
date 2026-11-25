@@ -3,11 +3,8 @@
 import { Download } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import { useIsMobile } from "@/hooks/useIsMobile";
-import { logger } from "@/lib/logger";
 import { getChapterInSection, getSectionColor, type SectionsStructure } from "@/lib/sections-types";
-import { SectionMarker } from "./SectionMarker";
 import { StickyNavbar } from "./StickyNavbar";
 
 // Helper function to convert hex color to rgba with opacity
@@ -61,18 +58,6 @@ export function ChapterLayout({ currentSlug, children, structure }: ChapterLayou
   useEffect(() => {
     setSidebarVisible(!isMobile);
   }, [isMobile]);
-
-  // Use intersection observer hook
-  const activeSectionId = useIntersectionObserver({
-    threshold: 0.01,
-    rootMargin: "0px 0px -50% 0px",
-    currentSlug,
-  });
-
-  // Debug log for activeSectionId
-  useEffect(() => {
-    logger.debug("Active section ID:", activeSectionId);
-  }, [activeSectionId]);
 
   // Check for hash on mount and scroll to position
   useEffect(() => {
@@ -206,11 +191,7 @@ export function ChapterLayout({ currentSlug, children, structure }: ChapterLayou
                   className="space-y-0 max-h-[calc(100vh-240px)] overflow-y-auto overscroll-contain"
                 >
                   {structure.sections.map((section) => {
-                    // Check if this section is active based on intersection observer or current chapter
-                    const hasCurrentChapter = section.chapters.some((ch) => ch.slug === currentSlug);
-                    const isActiveSection =
-                      hasCurrentChapter ||
-                      (activeSectionId && section.chapters.some((ch) => ch.slug === activeSectionId));
+                    const isActiveSection = section.chapters.some((ch) => ch.slug === currentSlug);
                     const color = getSectionColor(section.number);
 
                     return (
@@ -247,7 +228,7 @@ export function ChapterLayout({ currentSlug, children, structure }: ChapterLayou
                         {/* Section Chapters - Always show all chapters */}
                         <ul className="space-y-1 ml-6 border-l border-black">
                           {section.chapters.map((ch) => {
-                            const isActiveChapter = ch.slug === currentSlug || ch.slug === activeSectionId;
+                            const isActiveChapter = ch.slug === currentSlug;
                             return (
                               <li key={ch.slug}>
                                 <Link
@@ -286,7 +267,7 @@ export function ChapterLayout({ currentSlug, children, structure }: ChapterLayou
 
         {/* Main content, in the layout's main element */}
         <div className="transition-all duration-300 w-full lg:flex-1">
-          <SectionMarker sectionId={currentSlug}>
+          <div className="min-h-screen">
             <div
               id="content"
               className="px-4 sm:px-6 lg:px-12 pt-6 sm:pt-8 pb-8 sm:pb-12 transition-all duration-300 w-full lg:max-w-4xl lg:mx-auto"
@@ -294,7 +275,7 @@ export function ChapterLayout({ currentSlug, children, structure }: ChapterLayou
             >
               {children}
             </div>
-          </SectionMarker>
+          </div>
         </div>
       </div>
 

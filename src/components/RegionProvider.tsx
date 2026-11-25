@@ -17,29 +17,19 @@ interface RegionContextType {
   region: Region;
   setRegion: (region: Region) => void;
   terms: TermMapping[];
-  getTermForRegion: (usTerm: string) => string;
-  getTermForRegionReverse: (globalTerm: string) => string;
 }
 
 const RegionContext = createContext<RegionContextType | undefined>(undefined);
 
-export function RegionProvider({
-  children,
-  autoProcess = true,
-}: {
-  children: React.ReactNode;
-  autoProcess?: boolean;
-}) {
+export function RegionProvider({ children }: { children: React.ReactNode }) {
   // Start with the region of the pre-rendered HTML, to hydrate without a mismatch.
   const [region, setRegionState] = useState<Region>("US");
 
-  // Restore the saved region after hydration, except on print pages
+  // Restore the saved region after hydration.
   useEffect(() => {
-    if (typeof window !== "undefined" && !window.location.pathname.includes("/print")) {
-      const savedRegion = localStorage.getItem("region") as Region | null;
-      if (savedRegion === "US" || savedRegion === "GLOBAL") {
-        setRegionState(savedRegion);
-      }
+    const savedRegion = localStorage.getItem("region");
+    if (savedRegion === "US" || savedRegion === "GLOBAL") {
+      setRegionState(savedRegion);
     }
   }, []);
 
@@ -52,31 +42,15 @@ export function RegionProvider({
 
   const terms = termsData as TermMapping[];
 
-  // Get the term for current region from US term
-  const getTermForRegion = (usTerm: string): string => {
-    const termMapping = terms.find((t) => t.US === usTerm);
-    if (!termMapping) return usTerm;
-    return region === "US" ? termMapping.US : termMapping.GLOBAL;
-  };
-
-  // Get the term for current region from GLOBAL term (reverse lookup)
-  const getTermForRegionReverse = (globalTerm: string): string => {
-    const termMapping = terms.find((t) => t.GLOBAL === globalTerm);
-    if (!termMapping) return globalTerm;
-    return region === "US" ? termMapping.US : termMapping.GLOBAL;
-  };
-
   return (
     <RegionContext.Provider
       value={{
         region,
         setRegion,
         terms,
-        getTermForRegion,
-        getTermForRegionReverse,
       }}
     >
-      {autoProcess ? <AutoRegionWrapper>{children}</AutoRegionWrapper> : children}
+      <AutoRegionWrapper>{children}</AutoRegionWrapper>
     </RegionContext.Provider>
   );
 }
