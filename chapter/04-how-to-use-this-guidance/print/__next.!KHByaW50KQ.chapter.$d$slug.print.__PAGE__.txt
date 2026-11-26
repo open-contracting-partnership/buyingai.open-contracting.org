@@ -1,0 +1,59 @@
+1:"$Sreact.fragment"
+2:"/_next/static/chunks/0_0g-et1hv2kd.js"
+3:I[13032,["$2"],"default"]
+4:I[57174,["$2"],"default"]
+17:"ViewportBoundary"
+18:I[76925,["$2"],"$17"]
+19:"MetadataBoundary"
+1a:I[76925,["$2"],"$19"]
+1b:"$Sreact.suspense"
+1c:I[76134,["$2"],"IconMark"]
+:HL["/_next/static/chunks/3di4ke_qo6nkl.css","style"]
+6:X
+6:C
+7:X
+11:T542,prose prose-slate max-w-none
+  prose-headings:font-bold prose-headings:font-gteesti-display
+  prose-h1:text-4xl prose-h1:mb-6 prose-h1:mt-0
+  prose-h2:text-3xl prose-h2:mb-4 prose-h2:mt-8
+  prose-h3:text-2xl prose-h3:mb-3 prose-h3:mt-6
+  prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-4 prose-p:text-base
+  prose-a:text-[#17736B] prose-a:underline prose-a:font-medium
+  prose-strong:text-gray-900 prose-strong:font-semibold
+  prose-ul:my-4 prose-ul:list-disc prose-ul:pl-6
+  prose-ol:my-4 prose-ol:list-decimal prose-ol:pl-6
+  prose-li:text-gray-700 prose-li:mb-2
+  prose-blockquote:border-l-4 prose-blockquote:border-[#D6E100] prose-blockquote:pl-4 prose-blockquote:italic
+  prose-code:bg-transparent prose-code:p-0
+  prose-img:rounded-lg prose-img:shadow-md
+  prose-hr:border-gray-200 prose-hr:my-8
+  prose-table:border-collapse prose-table:border prose-table:border-gray-300 prose-table:my-4 sm:prose-table:my-6
+  prose-th:border prose-th:border-gray-300 prose-th:px-2 sm:prose-th:px-4 prose-th:py-1.5 sm:prose-th:py-2 prose-th:text-left prose-th:font-medium prose-th:text-xs sm:prose-th:text-sm
+  prose-td:border prose-td:border-gray-300 prose-td:px-2 sm:prose-td:px-4 prose-td:py-1.5 sm:prose-td:py-2 prose-td:text-xs sm:prose-td:text-sm
+  prose-pre:bg-transparent prose-pre:p-0 prose-pre:m-0 prose-pre:overflow-visible print-prose10:[["children",{"s":"__PAGE__","h":160,"d":{"r":["$","$1","c",{"children":[["$","div",null,{"className":"min-h-screen bg-white print-view-container","children":[["$","main",null,{"className":"print-content-wrapper px-8 py-8 max-w-4xl mx-auto","children":["$","article",null,{"className":"print-content","children":["$","div",null,{"className":"$11","children":["$L12"]}]}]}],"$L13"]}],["$L14"],"$L15"]}],"p":"$@16","v":null,"s":"$7"}}]]
+e:[["children",{"s":"print","h":112,"d":{"r":["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/chunks/3di4ke_qo6nkl.css","precedence":"next"}]],["$","html",null,{"lang":"en","children":["$","body",null,{"className":"antialiased min-h-screen !bg-white text-black font-gteesti-text overflow-x-hidden","children":["$","$L3",null,{"parallelRouterKey":"children","template":["$","$L4",null,{}]}]}]}]]}],"p":"$@f","v":null,"s":"$7"},"c":"$Q10"}]]
+c:[["children",{"s":{"n":"slug","t":"d","k":"04-how-to-use-this-guidance","s":[]},"h":112,"d":{"r":["$","$1","c",{"children":[null,["$","$L3",null,{"parallelRouterKey":"children","template":["$","$L4",null,{}]}]]}],"p":"$@d","v":"$6","s":"$7"},"c":"$Qe"}]]
+a:[["children",{"s":"chapter","h":112,"d":{"r":["$","$1","c",{"children":[null,["$","$L3",null,{"parallelRouterKey":"children","template":["$","$L4",null,{}]}]]}],"p":"$@b","v":"$6","s":"$7"},"c":"$Qc"}]]
+8:[["children",{"s":"(print)","h":112,"d":{"r":["$","$1","c",{"children":[null,["$","$L3",null,{"parallelRouterKey":"children","template":["$","$L4",null,{}],"notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":"$0:t:t:d:r:props:children:1:props:notFound:0:1:props:style","children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":"$0:t:t:d:r:props:children:1:props:notFound:0:1:props:children:props:children:1:props:style","children":404}],["$","div",null,{"style":"$0:t:t:d:r:props:children:1:props:notFound:0:1:props:children:props:children:2:props:style","children":["$","h2",null,{"style":"$0:t:t:d:r:props:children:1:props:notFound:0:1:props:children:props:children:2:props:children:props:style","children":"This page could not be found."}]}]]}]}]],[]]}]]}],"p":"$@9","v":"$6","s":"$7"},"c":"$Qa"}]]
+0:{"t":{"t":{"s":"","h":80,"d":{"r":["$","$1","c",{"children":[null,["$","$L3",null,{"parallelRouterKey":"children","template":["$","$L4",null,{}],"notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]],[]]}]]}],"p":"$@5","v":"$6","s":"$7"},"c":"$Q8"},"h":{"r":["$","$1","h",{"children":[null,["$","$L18",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]}],["$","$L1a",null,{"children":[["$","div",null,{"hidden":true,"children":["$","$1b",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"How to use this guidance - Buying AI"}],["$","link","1",{"rel":"icon","href":"/favicon.ico?favicon.3r671jri8cvbu.ico","sizes":"32x32","type":"image/x-icon"}],["$","$L1c","2",{}]]}]}],null]}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}],"p":"$@1d","v":null,"s":"$7"}},"a":"$@1e","u":"$@1f","b":"1m6XtRzPgcr4qqoCN_UzD"}
+20:"/_next/static/chunks/3h5956hwn6jmj.js"
+21:"CollapsibleInitializer"
+22:I[47049,["$20"],"$21"]
+23:I[76925,["$2"],"OutletBoundary"]
+:HL["/icons/lightbulb.png","image"]
+12:["$","$1","markdown-0",{"children":[["$","h1","h1-0",{"className":" font-gteesti-display","style":{"scrollMarginTop":"200px"},"children":[["$","span","italic-0",{"className":"px-1 py-0.5 rounded not-italic","style":{"backgroundColor":"#D6E100"},"children":"How to use"}]," this guidance"]}],"\n",["$","p","p-0",{"children":"This guidance can help you no matter where you are on your AI procurement journey. For example, you may refer to this guidance when you’re:"}],"\n",["$","ul","ul-0",{"children":["\n",["$","li","li-0",{"children":"Helping buy a technology solution with AI features"}],"\n",["$","li","li-1",{"children":"Developing your procurement strategy for a specific AI solution"}],"\n",["$","li","li-2",{"children":"Upskilling yourself on procuring AI"}],"\n"]}],"\n",["$","p","p-1",{"children":["Each piece of content in this guidance is designed to stand alone. This means that you are welcome to review this guidance from top to bottom, or jump around. We assume that you are familiar with the procurement process and have some knowledge of ",["$","a","a-0",{"href":"https://www.open-contracting.org/2024/03/28/the-four-key-drivers-that-can-enable-better-it-procurement/","children":"good IT procurement practices"}],"."]}],"\n",["$","p","p-2",{"children":["Several sections also feature key questions to ask, which are summarized in the ",["$","a","a-0",{"href":"https://buyingai.open-contracting.org/chapter/17-key-questions-to-ask#content","children":["$","strong","strong-0",{"children":"Key questions section"}]}]," at the end of this guidance. You will note that these questions include both aspects for procurement and non-procurement staff to consider. This is because successful AI procurement is a team effort, and understanding generally what questions need to be asked, and when, can help you facilitate internal conversations and ensure that the right experts are involved in decision-making."]}],"\n",["$","p","p-3",{"children":"This guidance is for consulting alongside your existing government policies, and frameworks. This is not legal advice."}],"\n",["$","h2","h2-0",{"className":" font-gteesti-display","style":{"scrollMarginTop":"200px"},"children":"Applying these tools in your organization"}],"\n",["$","p","p-4",{"children":"If you are a member of leadership, we will be creating additional resources to help you deploy this guidance in your organization."}],"\n",["$","ul","ul-1",{"children":["\n",["$","li","li-0",{"children":[["$","strong","strong-0",{"children":"Buying AI training webinar:"}]," This video training walks through the material."]}],"\n",["$","li","li-1",{"children":[["$","strong","strong-0",{"children":"Slides:"}]," You are welcome to reuse our guidance in slide format with attribution."]}],"\n",["$","li","li-2",{"children":[["$","strong","strong-0",{"children":"Agenda template:"}]," This customizable in-person agenda template outlines key information for an AI procurement staff training."]}],"\n"]}],"\n",["$","div","pre-0",{"className":"my-8 -mx-12 px-12 py-6 relative","style":{"backgroundColor":"#F5F7E6"},"children":[["$","img",null,{"src":"/icons/lightbulb.png","alt":"","className":"absolute top-6 left-12 w-12 h-12 !shadow-none"}],["$","div",null,{"className":"prose prose-sm max-w-none prose-headings:font-gteesti-display prose-headings:mb-4 prose-ul:my-2 prose-ul:list-disc prose-ul:pl-5 prose-li:my-1 prose-li:text-gray-700 prose-li:leading-relaxed prose-p:my-2 prose-p:text-gray-700 prose-p:leading-relaxed prose-a:text-[#17736B] prose-a:underline ml-16","children":[["$","h3","h3-0",{"children":"Acknowledgements"}],"\n",["$","p","p-0",{"children":"This guidance was made possible through the support of AWS and by the contributions of over fifty experts and practitioners from the public sector, private sector, and academia. Our deepest gratitude to you all for your personal insights, including: Albert Sanchez Graells, André Petheram, Carl Hahn, Chris Fechner, Daniel Arosa Otero, Daniel Chenok, Dmytro Solovei, Isaac Martín Delgado, Jessica Tillipman, Keasha L. Brown, Kęstutis Kazulis, LaTalya Palmer, Mariel Reed, Marion Eigner, Matt Sanderson, Milena Krogsgaard, Nadia Sava, Quinn Anex-Ries, Rebecca Piazza, Ryan Maher, Sabine Gerdon, Savina Kalanj, Waldo Jaquith, Warren Smith."}]]}]]}]]}]
+13:["$","$L22",null,{}]
+14:["$","script","script-0",{"src":"/_next/static/chunks/3h5956hwn6jmj.js","async":true}]
+15:["$","$L23",null,{"children":["$","$1b",null,{"name":"Next.MetadataOutlet","children":"$@24"}]}]
+7:300
+24:null
+1f:true
+7:C
+1e:0
+f:"$undefined"
+d:"$undefined"
+b:"$undefined"
+9:"$undefined"
+5:"$undefined"
+1d:"$undefined"
+16:"$undefined"
