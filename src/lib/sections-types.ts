@@ -3,7 +3,6 @@ export interface SectionChapter {
   slug: string;
   title: string;
   order: number;
-  note?: string;
 }
 
 export interface Section {
@@ -13,14 +12,7 @@ export interface Section {
 }
 
 export interface SectionsStructure {
-  title: string;
   sections: Section[];
-  metadata: {
-    totalSections: number;
-    totalChapters: number;
-    version: string;
-    lastUpdated: string;
-  };
 }
 
 // Color scheme for sections (from yellow-green to teal)

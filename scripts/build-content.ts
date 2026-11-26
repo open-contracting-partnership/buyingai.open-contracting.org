@@ -1,38 +1,17 @@
 import fs from "node:fs";
 import path from "node:path";
+import { CONTENT_DIRECTORY } from "../src/lib/sections";
+import type { Section, SectionsStructure } from "../src/lib/sections-types";
 
 // ============================================
 // BUILD CHAPTERS STRUCTURE
 // ============================================
 
-interface Chapter {
-  slug: string;
-  title: string;
-  order: number;
-}
-
-interface Section {
-  number: number;
-  title: string;
-  chapters: Chapter[];
-}
-
-interface SectionsStructure {
-  title: string;
-  sections: Section[];
-  metadata: {
-    totalSections: number;
-    totalChapters: number;
-    version: string;
-    lastUpdated: string;
-  };
-}
-
 function buildChaptersStructure() {
   console.log("\n📚 Building chapters structure...");
 
   // Read the TOC markdown file
-  const tocPath = path.join(process.cwd(), "content", "00-toc.md");
+  const tocPath = path.join(CONTENT_DIRECTORY, "00-toc.md");
   const tocContent = fs.readFileSync(tocPath, "utf8");
 
   // Parse the structure
@@ -40,10 +19,6 @@ function buildChaptersStructure() {
   const sections: Section[] = [];
   let currentSection: Section | null = null;
   let chapterOrder = 0;
-
-  // Extract main title
-  const titleMatch = tocContent.match(/^#\s+(.+)$/m);
-  const mainTitle = titleMatch ? titleMatch[1].trim() : "Buying AI: tips and tools for the public sector";
 
   for (const line of lines) {
     // Match main section (e.g., "1. Introduction")
@@ -83,8 +58,7 @@ function buildChaptersStructure() {
 
   // Helper function to find matching slug
   function findMatchingSlug(title: string): string | null {
-    const contentDir = path.join(process.cwd(), "content");
-    const files = fs.readdirSync(contentDir);
+    const files = fs.readdirSync(CONTENT_DIRECTORY);
 
     // Match by title similarity
     const normalizedTitle = title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
@@ -114,24 +88,15 @@ function buildChaptersStructure() {
   const filteredSections = sections.filter((s) => s.chapters.length > 0);
   const totalChapters = filteredSections.reduce((sum, section) => sum + section.chapters.length, 0);
 
-  const structure: SectionsStructure = {
-    title: mainTitle,
-    sections: filteredSections,
-    metadata: {
-      totalSections: filteredSections.length,
-      totalChapters: totalChapters,
-      version: "1.0",
-      lastUpdated: new Date().toISOString().split("T")[0],
-    },
-  };
+  const structure: SectionsStructure = { sections: filteredSections };
 
   // Write to file
-  const outputPath = path.join(process.cwd(), "content", "chapters-structure.json");
+  const outputPath = path.join(CONTENT_DIRECTORY, "chapters-structure.json");
   fs.writeFileSync(outputPath, JSON.stringify(structure, null, 2), "utf8");
 
   console.log("✅ Successfully built chapters-structure.json");
-  console.log(`   Sections: ${structure.metadata.totalSections}`);
-  console.log(`   Chapters: ${structure.metadata.totalChapters}`);
+  console.log(`   Sections: ${filteredSections.length}`);
+  console.log(`   Chapters: ${totalChapters}`);
 }
 
 // ============================================
@@ -147,7 +112,7 @@ function buildGlossary() {
   console.log("\n📖 Building glossary...");
 
   // Read the CSV file
-  const csvPath = path.join(process.cwd(), "content", "glossary.csv");
+  const csvPath = path.join(CONTENT_DIRECTORY, "glossary.csv");
   const csvContent = fs.readFileSync(csvPath, "utf8");
 
   // Parse CSV
@@ -190,12 +155,7 @@ function buildGlossary() {
 
   // Write to JSON file
   const outputPath = path.join(process.cwd(), "src", "app", "data", "glossary.json");
-
-  // Ensure directory exists
-  const outputDir = path.dirname(outputPath);
-  if (!fs.existsSync(outputDir)) {
-    fs.mkdirSync(outputDir, { recursive: true });
-  }
+  fs.mkdirSync(path.dirname(outputPath), { recursive: true });
 
   fs.writeFileSync(outputPath, JSON.stringify(glossary, null, 2), "utf8");
 

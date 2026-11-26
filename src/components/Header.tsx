@@ -12,21 +12,13 @@ import logo from "@/app/assets/images/logo.svg";
 import twitterIcon from "@/app/assets/images/twitter-icon.svg";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { FULL_GUIDE_PDF_URL } from "@/lib/links";
+import type { ChapterInSection } from "@/lib/markdown";
 import { formatSectionNumber } from "@/lib/sections-types";
 import { ChapterTitle, plainText } from "./ChapterTitle";
 import { useRegion } from "./RegionProvider";
 
-interface Chapter {
-  slug: string;
-  title: string;
-  order: number;
-  filename: string;
-  sectionNumber: number;
-  sectionTitle: string;
-}
-
 interface HeaderProps {
-  chapters: Chapter[];
+  chapters: ChapterInSection[];
 }
 
 // US Flag SVG Component (simplified for icon use)
@@ -151,7 +143,7 @@ function MenuLabel({ className, children }: { className?: string; children: Reac
   );
 }
 
-function SearchResults({ chapters, onSelect }: { chapters: Chapter[]; onSelect: () => void }) {
+function SearchResults({ chapters, onSelect }: { chapters: ChapterInSection[]; onSelect: () => void }) {
   return chapters.map((chapter) => (
     <Link
       key={chapter.slug}

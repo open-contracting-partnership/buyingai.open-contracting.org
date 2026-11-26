@@ -1,13 +1,11 @@
 import fs from "node:fs";
 import path from "node:path";
-import { getSectionsStructure } from "./sections";
+import { CONTENT_DIRECTORY, getSectionsStructure } from "./sections";
 import { getChapterInSection, getSectionColor } from "./sections-types";
 
 interface Chapter {
   slug: string;
   title: string;
-  order: number;
-  filename: string;
 }
 
 export interface ChapterContent extends Chapter {
@@ -18,8 +16,6 @@ export interface ChapterInSection extends Chapter {
   sectionNumber: number;
   sectionTitle: string;
 }
-
-const contentDirectory = path.join(process.cwd(), "content");
 
 export interface ChapterPageProps {
   params: Promise<{ slug: string }>;
@@ -49,24 +45,16 @@ export function getAllChapters(): ChapterInSection[] {
   );
 }
 
-// Get a single chapter by slug. Its order is 0 if it isn't in the TOC.
+// Get a single chapter by slug.
 export function getChapterBySlug(slug: string): ChapterContent | null {
   try {
-    const content = fs.readFileSync(path.join(contentDirectory, `${slug}.md`), "utf8");
+    const content = fs.readFileSync(path.join(CONTENT_DIRECTORY, `${slug}.md`), "utf8");
 
     // Extract title from first heading
     const titleMatch = content.match(/^#\s+(.+)$/m);
     const title = titleMatch ? titleMatch[1].trim() : slug;
 
-    const order = getChapterInSection(getSectionsStructure(), slug)?.chapter.order ?? 0;
-
-    return {
-      slug,
-      title,
-      order,
-      filename: `${slug}.md`,
-      content,
-    };
+    return { slug, title, content };
   } catch {
     return null;
   }
