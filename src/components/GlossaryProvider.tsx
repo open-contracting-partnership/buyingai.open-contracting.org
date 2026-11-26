@@ -89,7 +89,7 @@ function Tooltip({ definition, position }: TooltipState) {
   return (
     <div
       ref={tooltipRef}
-      className="fixed z-50 max-w-sm bg-gray-900 text-white rounded-lg shadow-xl p-4 pointer-events-none animate-fadeIn"
+      className="fixed z-50 max-w-sm bg-gray-900 text-white rounded-lg shadow-xl p-4 pointer-events-none"
       style={{
         left: `${adjustedPosition.x}px`,
         top: `${adjustedPosition.y}px`,

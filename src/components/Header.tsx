@@ -5,7 +5,7 @@ import clsx from "clsx";
 import { GlobeIcon, MenuIcon, SearchIcon, Share2Icon, XIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import facebookIcon from "@/app/assets/images/facebook-icon.svg";
 import linkedinIcon from "@/app/assets/images/linkedin-icon.svg";
 import logo from "@/app/assets/images/logo.svg";
@@ -141,6 +141,16 @@ function RegionButtons({
   ));
 }
 
+const POPOVER_CLASS = "rounded-lg bg-[#3D393D] p-4 shadow-2xl z-[10000] border border-white/10";
+
+function MenuLabel({ className, children }: { className?: string; children: React.ReactNode }) {
+  return (
+    <p className={clsx("text-xs font-semibold text-white/60 uppercase tracking-wide font-gteesti-display", className)}>
+      {children}
+    </p>
+  );
+}
+
 function SearchResults({ chapters, onSelect }: { chapters: Chapter[]; onSelect: () => void }) {
   return chapters.map((chapter) => (
     <Link
@@ -163,7 +173,6 @@ export default function Header({ chapters }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [filteredChapters, setFilteredChapters] = useState<Chapter[]>([]);
   const { region } = useRegion();
   const [isRegionPopoverOpen, setIsRegionPopoverOpen] = useState(false);
   const desktopSearchInputRef = useRef<HTMLInputElement>(null);
@@ -186,51 +195,18 @@ export default function Header({ chapters }: HeaderProps) {
     setSearchQuery("");
   }, []);
 
-  // Filter chapters based on search query - advanced search
-  useEffect(() => {
-    if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase().trim();
-      const queryWords = query.split(/\s+/).filter(Boolean);
-
-      const filtered = chapters.filter((chapter) => {
-        const titleLower = plainText(chapter.title).toLowerCase();
-
-        // Exact match
-        if (titleLower === query) return true;
-
-        // All words match
-        if (queryWords.length > 1) {
-          return queryWords.every((word) => titleLower.includes(word));
-        }
-
-        // Single word or phrase match
-        return titleLower.includes(query);
-      });
-
-      // Sort by relevance: exact matches first, then by position of match
-      const sorted = filtered.sort((a, b) => {
-        const aTitle = plainText(a.title).toLowerCase();
-        const bTitle = plainText(b.title).toLowerCase();
-
-        // Exact match gets highest priority
-        if (aTitle === query) return -1;
-        if (bTitle === query) return 1;
-
-        // Earlier matches get priority
-        const aIndex = aTitle.indexOf(query);
-        const bIndex = bTitle.indexOf(query);
-
-        if (aIndex !== bIndex) {
-          return aIndex - bIndex;
-        }
-
-        return aTitle.localeCompare(bTitle);
-      });
-
-      setFilteredChapters(sorted);
-    } else {
-      setFilteredChapters([]);
+  // Chapters whose titles contain every word of the query, sorted by the position of the whole query.
+  const filteredChapters = useMemo(() => {
+    const query = searchQuery.toLowerCase().trim();
+    if (!query) {
+      return [];
     }
+    const words = query.split(/\s+/);
+    return chapters
+      .map((chapter) => ({ chapter, title: plainText(chapter.title).toLowerCase() }))
+      .filter(({ title }) => words.every((word) => title.includes(word)))
+      .sort((a, b) => a.title.indexOf(query) - b.title.indexOf(query) || a.title.localeCompare(b.title))
+      .map(({ chapter }) => chapter);
   }, [searchQuery, chapters]);
 
   // Auto-focus search input when opened
@@ -297,14 +273,14 @@ export default function Header({ chapters }: HeaderProps) {
                 <>
                   {/* Search results popup - floating dropdown */}
                   {searchQuery && filteredChapters.length > 0 && (
-                    <div className="absolute top-full left-0 mt-2 w-[400px] bg-white rounded-lg shadow-2xl border border-gray-200 overflow-hidden z-[10000] animate-in fade-in slide-in-from-top-2 duration-200">
+                    <div className="absolute top-full left-0 mt-2 w-[400px] bg-white rounded-lg shadow-2xl border border-gray-200 overflow-hidden z-[10000]">
                       <div className="max-h-[400px] overflow-y-auto">
                         <SearchResults chapters={filteredChapters} onSelect={closeSearch} />
                       </div>
                     </div>
                   )}
                   {searchQuery && filteredChapters.length === 0 && (
-                    <div className="absolute top-full left-0 mt-2 w-[400px] bg-white rounded-lg shadow-2xl border border-gray-200 p-4 z-[10000] animate-in fade-in slide-in-from-top-2 duration-200">
+                    <div className="absolute top-full left-0 mt-2 w-[400px] bg-white rounded-lg shadow-2xl border border-gray-200 p-4 z-[10000]">
                       <div className="text-sm text-gray-500">No chapters found</div>
                     </div>
                   )}
@@ -329,14 +305,9 @@ export default function Header({ chapters }: HeaderProps) {
                 </button>
               </Popover.Trigger>
               <Popover.Portal>
-                <Popover.Content
-                  className="rounded-lg bg-[#3D393D] p-4 shadow-2xl z-[10000] animate-in fade-in slide-in-from-top-2 duration-200 border border-white/10"
-                  sideOffset={8}
-                >
+                <Popover.Content className={POPOVER_CLASS} sideOffset={8}>
                   <div className="flex flex-col gap-3">
-                    <p className="text-xs font-semibold text-white/60 uppercase tracking-wide font-gteesti-display">
-                      Share
-                    </p>
+                    <MenuLabel>Share</MenuLabel>
                     <div className="flex items-center gap-2">
                       <ShareButtons iconSize={24} className="p-2 hover:bg-white/10 rounded-lg transition-colors" />
                     </div>
@@ -358,14 +329,9 @@ export default function Header({ chapters }: HeaderProps) {
                 </button>
               </Popover.Trigger>
               <Popover.Portal>
-                <Popover.Content
-                  className="rounded-lg bg-[#3D393D] p-4 shadow-2xl z-[10000] animate-in fade-in slide-in-from-top-2 duration-200 border border-white/10 min-w-[180px]"
-                  sideOffset={8}
-                >
+                <Popover.Content className={clsx(POPOVER_CLASS, "min-w-[180px]")} sideOffset={8}>
                   <div className="flex flex-col gap-2">
-                    <p className="text-xs font-semibold text-white/60 uppercase tracking-wide font-gteesti-display mb-1">
-                      Region
-                    </p>
+                    <MenuLabel className="mb-1">Region</MenuLabel>
                     <RegionButtons
                       className="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-left"
                       inactiveClassName="hover:bg-white/10 text-white/80"
@@ -432,9 +398,7 @@ export default function Header({ chapters }: HeaderProps) {
 
                 {/* Region/Language Switcher */}
                 <div className="flex flex-col gap-2">
-                  <p className="px-4 text-xs font-semibold text-white/60 uppercase tracking-wide font-gteesti-display">
-                    Region
-                  </p>
+                  <MenuLabel className="px-4">Region</MenuLabel>
                   <div className="px-2 flex flex-col gap-2">
                     <RegionButtons
                       className="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-left w-full"
@@ -446,9 +410,7 @@ export default function Header({ chapters }: HeaderProps) {
 
                 {/* Share current page */}
                 <div className="flex flex-col gap-2">
-                  <p className="px-4 text-xs font-semibold text-white/60 uppercase tracking-wide font-gteesti-display">
-                    Share
-                  </p>
+                  <MenuLabel className="px-4">Share</MenuLabel>
                   <div className="px-2 flex items-center gap-2">
                     <ShareButtons
                       iconSize={20}
@@ -486,7 +448,7 @@ export default function Header({ chapters }: HeaderProps) {
       {isSearchOpen && (
         <div className="fixed inset-0 z-[60] md:hidden">
           <div className="absolute inset-0 bg-black/50" onClick={closeSearch} aria-hidden="true" />
-          <div className="absolute top-0 left-0 right-0 bg-white p-6 shadow-lg animate-in slide-in-from-top duration-300">
+          <div className="absolute top-0 left-0 right-0 bg-white p-6 shadow-lg">
             <div className="flex flex-col gap-0 bg-white rounded-lg border border-gray-300 overflow-hidden">
               <div className="flex items-center gap-3 px-4 py-3">
                 <SearchIcon size={20} color="#9CA3AF" />
