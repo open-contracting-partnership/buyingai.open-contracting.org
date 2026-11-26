@@ -11,6 +11,7 @@ import {
   getSectionColor,
   type SectionsStructure,
 } from "@/lib/sections-types";
+import { readStorage, writeStorage } from "@/lib/storage";
 import { StickyNavbar } from "./StickyNavbar";
 
 // Helper function to convert hex color to rgba with opacity
@@ -86,7 +87,7 @@ export function ChapterLayout({ currentSlug, children, structure }: ChapterLayou
     if (!nav) return;
 
     const handleScroll = () => {
-      sessionStorage.setItem("toc-scroll-position", nav.scrollTop.toString());
+      writeStorage(() => sessionStorage, "toc-scroll-position", nav.scrollTop.toString());
     };
 
     nav.addEventListener("scroll", handleScroll);
@@ -108,7 +109,7 @@ export function ChapterLayout({ currentSlug, children, structure }: ChapterLayou
     }
 
     // Restore the saved position, to keep the context, then scroll the active item into view.
-    const savedScroll = sessionStorage.getItem("toc-scroll-position");
+    const savedScroll = readStorage(() => sessionStorage, "toc-scroll-position");
     if (savedScroll) {
       nav.scrollTop = parseInt(savedScroll, 10);
     }

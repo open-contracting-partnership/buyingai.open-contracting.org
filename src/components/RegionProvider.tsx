@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import type React from "react";
 import { createContext, useContext, useLayoutEffect, useRef, useState } from "react";
 import termsData from "@/app/data/terms.json";
+import { readStorage, writeStorage } from "@/lib/storage";
 import { findTerms, forEachTextNode } from "@/lib/text-terms";
 
 type Region = "US" | "GLOBAL";
@@ -33,7 +34,7 @@ export function RegionProvider({ children }: { children: React.ReactNode }) {
 
   // Restore the saved region after hydration, before painting.
   useLayoutEffect(() => {
-    const savedRegion = localStorage.getItem("region");
+    const savedRegion = readStorage(() => localStorage, "region");
     if (savedRegion === "US" || savedRegion === "GLOBAL") {
       setRegionState(savedRegion);
     }
@@ -41,7 +42,7 @@ export function RegionProvider({ children }: { children: React.ReactNode }) {
 
   const setRegion = (newRegion: Region) => {
     setRegionState(newRegion);
-    localStorage.setItem("region", newRegion);
+    writeStorage(() => localStorage, "region", newRegion);
   };
 
   return (
