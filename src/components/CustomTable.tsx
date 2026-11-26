@@ -38,6 +38,9 @@ function cellText(cell: React.ReactNode): string {
  * - Gray column header row
  * - White data rows
  */
+const BULLET_LIST_CLASS = "!list-disc !pl-5 !space-y-1.5 !my-0 !leading-relaxed";
+const BULLET_CLASS = "!leading-relaxed !text-xs sm:!text-sm";
+
 export function CustomTable({ children }: CustomTableProps) {
   // Check if this is a table with title in thead and actual headers in first tbody row
   let theadElement: React.ReactElement | null = null;
@@ -88,36 +91,40 @@ export function CustomTable({ children }: CustomTableProps) {
   const firstRowProps = firstRow.props as { children?: React.ReactNode };
   const firstRowCells = React.Children.toArray(firstRowProps.children);
 
-  // Helper function to recursively check for strong tags
-  const hasStrong = (node: React.ReactNode): boolean => {
-    if (!node) return false;
+  // The text of the first strong element in the node.
+  const extractStrongText = (node: React.ReactNode): string => {
+    if (!node) return "";
+    if (typeof node === "string") return "";
     if (React.isValidElement(node)) {
-      if (node.type === "strong") return true;
+      if (node.type === "strong") {
+        const strongProps = node.props as { children?: React.ReactNode };
+        return String(strongProps.children || "");
+      }
       const nodeProps = node.props as { children?: React.ReactNode };
       if (nodeProps?.children) {
-        return React.Children.toArray(nodeProps.children).some(hasStrong);
+        const children = React.Children.toArray(nodeProps.children);
+        for (const child of children) {
+          const text = extractStrongText(child);
+          if (text) return text;
+        }
       }
     }
     if (Array.isArray(node)) {
-      return node.some(hasStrong);
+      for (const item of node) {
+        const text = extractStrongText(item);
+        if (text) return text;
+      }
     }
-    return false;
+    return "";
   };
 
-  // Check each cell in first row
-  let hasStrongInFirstRow = false;
-  firstRowCells.forEach((cell) => {
-    if (hasStrong(cell)) {
-      hasStrongInFirstRow = true;
-    }
-  });
+  // The first body row's bold text, which are column headers in some tables.
+  const headerCells = firstRowCells.map((cell) => extractStrongText(cell));
+  const hasStrongInFirstRow = headerCells.some(Boolean);
 
   // Helper function to parse and render markdown-like text in header
   const parseHeaderMarkdown = (text: string): React.ReactNode => {
     if (!text) return null;
-
-    // Replace <br> tags with actual line breaks
-    text = text.replace(/<br\s*\/?>/gi, "\n");
 
     const elements: React.ReactNode[] = [];
 
@@ -318,11 +325,7 @@ export function CustomTable({ children }: CustomTableProps) {
     };
 
     // Check if content has bullets (- or \-) or bold markers (** or \*\*)
-    const hasBullets =
-      textContent.includes(" - ") ||
-      textContent.includes(" -") ||
-      /^\s*-/.test(textContent) ||
-      /\s-\s/.test(textContent);
+    const hasBullets = /(^|\s)-/.test(textContent);
     const hasBold = textContent.includes("**");
 
     // Check for section pattern: **Section** followed by bullets
@@ -336,13 +339,13 @@ export function CustomTable({ children }: CustomTableProps) {
         const bulletElements = bullets.map((bullet, idx) => {
           const trimmedBullet = bullet.trim();
           return (
-            <li key={`bullet-${idx}`} className="!leading-relaxed !text-xs sm:!text-sm">
+            <li key={`bullet-${idx}`} className={BULLET_CLASS}>
               {renderBold(trimmedBullet)}
             </li>
           );
         });
 
-        return <ul className="!list-disc !pl-5 !space-y-1.5 !my-0 !leading-relaxed">{bulletElements}</ul>;
+        return <ul className={BULLET_LIST_CLASS}>{bulletElements}</ul>;
       }
     }
 
@@ -375,14 +378,14 @@ export function CustomTable({ children }: CustomTableProps) {
           if (beforeBullets.length > 1) {
             beforeBullets.forEach((bullet, idx) => {
               elements.push(
-                <li key={`bullet-before-${lastIndex}-${idx}`} className="!leading-relaxed !text-xs sm:!text-sm">
+                <li key={`bullet-before-${lastIndex}-${idx}`} className={BULLET_CLASS}>
                   {bullet}
                 </li>,
               );
             });
           } else if (beforeText) {
             elements.push(
-              <li key={`bullet-before-${lastIndex}`} className="!leading-relaxed !text-xs sm:!text-sm">
+              <li key={`bullet-before-${lastIndex}`} className={BULLET_CLASS}>
                 {beforeText}
               </li>,
             );
@@ -415,7 +418,7 @@ export function CustomTable({ children }: CustomTableProps) {
 
           // Check for inline bold
           elements.push(
-            <li key={`bullet-remaining-${idx}`} className="!leading-relaxed !text-xs sm:!text-sm">
+            <li key={`bullet-remaining-${idx}`} className={BULLET_CLASS}>
               {renderBold(trimmedBullet)}
             </li>,
           );
@@ -436,7 +439,7 @@ export function CustomTable({ children }: CustomTableProps) {
           // Flush current bullets
           if (currentBullets.length > 0) {
             grouped.push(
-              <ul key={`ul-${grouped.length}`} className="!list-disc !pl-5 !space-y-1.5 !my-0 !leading-relaxed">
+              <ul key={`ul-${grouped.length}`} className={BULLET_LIST_CLASS}>
                 {currentBullets}
               </ul>,
             );
@@ -550,35 +553,6 @@ export function CustomTable({ children }: CustomTableProps) {
   if (!hasStrongInFirstRow) {
     return null;
   }
-
-  // Extract actual column headers from first tbody row
-  const extractStrongText = (node: React.ReactNode): string => {
-    if (!node) return "";
-    if (typeof node === "string") return "";
-    if (React.isValidElement(node)) {
-      if (node.type === "strong") {
-        const strongProps = node.props as { children?: React.ReactNode };
-        return String(strongProps.children || "");
-      }
-      const nodeProps = node.props as { children?: React.ReactNode };
-      if (nodeProps?.children) {
-        const children = React.Children.toArray(nodeProps.children);
-        for (const child of children) {
-          const text = extractStrongText(child);
-          if (text) return text;
-        }
-      }
-    }
-    if (Array.isArray(node)) {
-      for (const item of node) {
-        const text = extractStrongText(item);
-        if (text) return text;
-      }
-    }
-    return "";
-  };
-
-  const headerCells = firstRowCells.map((cell) => extractStrongText(cell));
 
   // A title, column headers from the first body row, and data rows.
   return renderTitledTable(
