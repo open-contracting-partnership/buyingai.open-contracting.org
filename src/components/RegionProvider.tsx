@@ -4,19 +4,20 @@ import { usePathname } from "next/navigation";
 import type React from "react";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import termsData from "@/app/data/terms.json";
+import { useAfterHydration } from "@/hooks/useAfterHydration";
 import { findTerms, forEachTextNode } from "@/lib/text-terms";
 
 type Region = "US" | "GLOBAL";
 
-interface TermMapping {
-  US: string;
-  GLOBAL: string;
-}
+// Each region's terms, replacing the other region's.
+const REGION_TERMS: Record<Region, { term: string; value: string }[]> = {
+  US: termsData.map((mapping) => ({ term: mapping.GLOBAL, value: mapping.US })),
+  GLOBAL: termsData.map((mapping) => ({ term: mapping.US, value: mapping.GLOBAL })),
+};
 
 interface RegionContextType {
   region: Region;
   setRegion: (region: Region) => void;
-  terms: TermMapping[];
 }
 
 const RegionContext = createContext<RegionContextType | undefined>(undefined);
@@ -35,21 +36,11 @@ export function RegionProvider({ children }: { children: React.ReactNode }) {
 
   const setRegion = (newRegion: Region) => {
     setRegionState(newRegion);
-    if (typeof window !== "undefined") {
-      localStorage.setItem("region", newRegion);
-    }
+    localStorage.setItem("region", newRegion);
   };
 
-  const terms = termsData as TermMapping[];
-
   return (
-    <RegionContext.Provider
-      value={{
-        region,
-        setRegion,
-        terms,
-      }}
-    >
+    <RegionContext.Provider value={{ region, setRegion }}>
       <AutoRegionWrapper>{children}</AutoRegionWrapper>
     </RegionContext.Provider>
   );
@@ -63,79 +54,31 @@ export function useRegion() {
   return context;
 }
 
-// Component that processes all content and replaces terms based on region
+// Replace the other region's terms in the content, when the region or page changes.
 function AutoRegionWrapper({ children }: { children: React.ReactNode }) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const { region, terms } = useRegion();
+  const { region } = useRegion();
   const pathname = usePathname();
-  const lastRegionRef = useRef<Region>(region);
-  const lastPathnameRef = useRef<string>(pathname);
-  const processingKeyRef = useRef<string>("");
 
-  useEffect(() => {
-    if (!containerRef.current) return;
-
-    // Create a unique key for this processing cycle
-    const regionChanged = lastRegionRef.current !== region;
-    const pathnameChanged = lastPathnameRef.current !== pathname;
-
-    if (regionChanged || pathnameChanged) {
-      lastRegionRef.current = region;
-      lastPathnameRef.current = pathname;
-      // Create a new processing key to force reprocessing
-      processingKeyRef.current = `${pathname}-${region}-${Date.now()}`;
-    }
-
-    // Always process when pathname or region changes, or on initial mount
-    const shouldProcess = regionChanged || pathnameChanged || !processingKeyRef.current;
-
-    if (!shouldProcess) {
+  useAfterHydration(() => {
+    if (!containerRef.current) {
       return;
     }
-
-    // Replace the other region's terms with this region's.
-    const regionTerms = terms.map((mapping) =>
-      region === "US" ? { term: mapping.GLOBAL, value: mapping.US } : { term: mapping.US, value: mapping.GLOBAL },
-    );
-
-    const processTextNodes = (root: Node) => {
-      forEachTextNode(root, ["no-region-replace", "glossary-term"], (node) => {
-        const text = node.textContent ?? "";
-        const matches = findTerms(text, regionTerms);
-        if (matches.length === 0) {
-          return;
-        }
-
-        let newText = "";
-        let lastIndex = 0;
-        for (const match of matches) {
-          newText += text.substring(lastIndex, match.index) + match.value;
-          lastIndex = match.index + match.length;
-        }
-        node.textContent = newText + text.substring(lastIndex);
-      });
-    };
-
-    // Process the content with a delay to ensure React hydration is complete
-    // Use requestIdleCallback if available, otherwise use setTimeout with longer delay
-    const processContent = () => {
-      if (containerRef.current) {
-        processTextNodes(containerRef.current);
+    forEachTextNode(containerRef.current, ["no-region-replace", "glossary-term"], (node) => {
+      const text = node.textContent ?? "";
+      const matches = findTerms(text, REGION_TERMS[region]);
+      if (matches.length === 0) {
+        return;
       }
-    };
-
-    // Wait for React hydration to complete before processing
-    const timeoutId = setTimeout(() => {
-      // Use requestIdleCallback for better performance, fallback to immediate execution
-      if (typeof window !== "undefined" && "requestIdleCallback" in window) {
-        requestIdleCallback(processContent, { timeout: 1000 });
-      } else {
-        processContent();
+      let newText = "";
+      let lastIndex = 0;
+      for (const match of matches) {
+        newText += text.substring(lastIndex, match.index) + match.value;
+        lastIndex = match.index + match.length;
       }
-    }, 300);
-
-    return () => clearTimeout(timeoutId);
-  }, [region, terms, pathname]);
+      node.textContent = newText + text.substring(lastIndex);
+    });
+  }, [region, pathname]);
 
   return (
     <div ref={containerRef} suppressHydrationWarning>

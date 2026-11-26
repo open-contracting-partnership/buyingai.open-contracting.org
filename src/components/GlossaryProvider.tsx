@@ -2,7 +2,7 @@
 
 import type React from "react";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
-import { logger } from "@/lib/logger";
+import { useAfterHydration } from "@/hooks/useAfterHydration";
 import { findTerms, forEachTextNode } from "@/lib/text-terms";
 
 interface GlossaryTerm {
@@ -101,186 +101,68 @@ function Tooltip({ definition, position }: TooltipState) {
   );
 }
 
-// Highlight the glossary's terms in the content.
+// Highlight the glossary's terms in the content, including content that is added later.
 function AutoGlossaryWrapper({ children }: { children: React.ReactNode }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { terms, showTooltip, hideTooltip } = useGlossary();
-  const processedNodesRef = useRef<WeakSet<Node>>(new WeakSet());
-  const isProcessingRef = useRef(false);
 
-  useEffect(() => {
-    const glossaryTerms = terms.map((term) => ({ term: term.Term, value: term }));
-
-    const processTextNodes = (root: Node) => {
-      forEachTextNode(root, ["glossary-term", "no-glossary"], (node) => {
-        const text = node.textContent ?? "";
-        const parent = node.parentElement;
-        if (processedNodesRef.current.has(node) || !parent) {
-          return;
-        }
-
-        const matches = findTerms(text, glossaryTerms);
-        if (matches.length === 0) {
-          return;
-        }
-
-        const fragment = document.createDocumentFragment();
-        let lastIndex = 0;
-
-        for (const match of matches) {
-          if (match.index > lastIndex) {
-            fragment.appendChild(document.createTextNode(text.substring(lastIndex, match.index)));
-          }
-
-          const span = document.createElement("span");
-          span.className = "glossary-term cursor-help bg-[#d6e100] text-black rounded-full px-1 py-0.5";
-          span.textContent = text.substring(match.index, match.index + match.length);
-          span.addEventListener("mouseenter", () => {
-            const rect = span.getBoundingClientRect();
-            showTooltip(match.value.Term, match.value.Definition, rect.left, rect.bottom + 5);
-          });
-          span.addEventListener("mouseleave", hideTooltip);
-
-          fragment.appendChild(span);
-          lastIndex = match.index + match.length;
-        }
-
-        if (lastIndex < text.length) {
-          fragment.appendChild(document.createTextNode(text.substring(lastIndex)));
-        }
-
-        const insertedNodes = Array.from(fragment.childNodes);
-        try {
-          parent.replaceChild(fragment, node);
-          // Don't process the new text nodes again.
-          for (const insertedNode of insertedNodes) {
-            processedNodesRef.current.add(insertedNode);
-          }
-        } catch (error) {
-          // The node was already removed.
-          logger.warn("GlossaryProvider: Failed to replace node", error);
-        }
-      });
-    };
-
-    // Process content after React hydration is complete
-    const processContent = () => {
-      if (!containerRef.current) {
-        // Try again if container not ready
-        setTimeout(processContent, 100);
-        return;
-      }
-
-      // Check if there's actual text content to process
-      const hasTextContent = containerRef.current.textContent && containerRef.current.textContent.trim().length > 0;
-
-      if (!hasTextContent) {
-        // If no content yet, try again after a short delay
-        setTimeout(processContent, 100);
-        return;
-      }
-
-      // Prevent multiple simultaneous processing
-      if (isProcessingRef.current) return;
-      isProcessingRef.current = true;
-
-      // Reset processed nodes for new content
-      processedNodesRef.current = new WeakSet();
-
-      // Process the container and also look for main element inside
-      processTextNodes(containerRef.current);
-
-      // Also process content inside main element if it exists
-      const mainElement = containerRef.current.querySelector("main");
-      if (mainElement) {
-        processTextNodes(mainElement);
-      }
-
-      // Also process content inside article elements (common in chapter pages)
-      const articleElements = containerRef.current.querySelectorAll("article");
-      articleElements.forEach((article) => {
-        processTextNodes(article);
-      });
-
-      isProcessingRef.current = false;
-    };
-
-    // Wait for React hydration to complete before processing
-    // Use multiple attempts to ensure content is ready
-    const timeoutId1 = setTimeout(() => {
-      processContent();
-    }, 300);
-
-    const timeoutId2 = setTimeout(() => {
-      processContent();
-    }, 600);
-
-    const timeoutId3 = setTimeout(() => {
-      processContent();
-    }, 1000);
-
-    // Also use requestIdleCallback if available
-    let idleCallbackId: number | null = null;
-    if (typeof window !== "undefined" && "requestIdleCallback" in window) {
-      idleCallbackId = requestIdleCallback(
-        () => {
-          processContent();
-        },
-        { timeout: 1500 },
-      ) as unknown as number;
+  const highlight = () => {
+    if (!containerRef.current) {
+      return;
     }
-
-    // Use MutationObserver to detect when content is added dynamically
-    // Set it up after initial processing attempts
-    let observer: MutationObserver | null = null;
-    const setupObserver = () => {
-      if (typeof window !== "undefined" && "MutationObserver" in window && containerRef.current && !observer) {
-        observer = new MutationObserver((mutations) => {
-          // Only process if new nodes were added
-          const hasNewNodes = mutations.some(
-            (mutation) =>
-              mutation.addedNodes.length > 0 &&
-              Array.from(mutation.addedNodes).some(
-                (node) =>
-                  node.nodeType === Node.TEXT_NODE ||
-                  (node.nodeType === Node.ELEMENT_NODE && (node as Element).textContent?.trim().length > 0),
-              ),
-          );
-
-          if (hasNewNodes && !isProcessingRef.current) {
-            // Debounce processing
-            setTimeout(() => {
-              if (!isProcessingRef.current) {
-                processContent();
-              }
-            }, 200);
-          }
-        });
-
-        observer.observe(containerRef.current, {
-          childList: true,
-          subtree: true,
-          characterData: true,
-        });
+    const glossaryTerms = terms.map((term) => ({ term: term.Term, value: term }));
+    forEachTextNode(containerRef.current, ["glossary-term", "no-glossary"], (node) => {
+      const text = node.textContent ?? "";
+      const matches = findTerms(text, glossaryTerms);
+      if (matches.length === 0 || !node.parentElement) {
+        return;
       }
-    };
 
-    // Setup observer after a delay to ensure container is ready
-    const observerTimeout = setTimeout(setupObserver, 500);
+      const fragment = document.createDocumentFragment();
+      let lastIndex = 0;
+      for (const match of matches) {
+        if (match.index > lastIndex) {
+          fragment.appendChild(document.createTextNode(text.substring(lastIndex, match.index)));
+        }
+        const span = document.createElement("span");
+        span.className = "glossary-term cursor-help bg-[#d6e100] text-black rounded-full px-1 py-0.5";
+        span.textContent = text.substring(match.index, match.index + match.length);
+        span.addEventListener("mouseenter", () => {
+          const rect = span.getBoundingClientRect();
+          showTooltip(match.value.Term, match.value.Definition, rect.left, rect.bottom + 5);
+        });
+        span.addEventListener("mouseleave", hideTooltip);
+        fragment.appendChild(span);
+        lastIndex = match.index + match.length;
+      }
+      if (lastIndex < text.length) {
+        fragment.appendChild(document.createTextNode(text.substring(lastIndex)));
+      }
+      node.parentElement.replaceChild(fragment, node);
+    });
+  };
 
+  useAfterHydration(highlight, [terms, children]);
+
+  // Highlight content that is added later, like on client-side navigation.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: highlight changes only with the terms.
+  useEffect(() => {
+    if (!containerRef.current) {
+      return;
+    }
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
+    const observer = new MutationObserver((mutations) => {
+      if (mutations.some((mutation) => mutation.addedNodes.length > 0)) {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(highlight, 200);
+      }
+    });
+    observer.observe(containerRef.current, { childList: true, subtree: true });
     return () => {
-      clearTimeout(timeoutId1);
-      clearTimeout(timeoutId2);
-      clearTimeout(timeoutId3);
-      clearTimeout(observerTimeout);
-      if (idleCallbackId !== null && typeof window !== "undefined" && "cancelIdleCallback" in window) {
-        cancelIdleCallback(idleCallbackId);
-      }
-      if (observer) {
-        observer.disconnect();
-      }
+      clearTimeout(timeoutId);
+      observer.disconnect();
     };
-  }, [terms, showTooltip, hideTooltip, children]);
+  }, [terms]);
 
   return (
     <div ref={containerRef} suppressHydrationWarning>
