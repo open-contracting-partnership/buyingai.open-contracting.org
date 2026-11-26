@@ -2,7 +2,7 @@
 
 import * as Popover from "@radix-ui/react-popover";
 import clsx from "clsx";
-import { MenuIcon, XIcon } from "lucide-react";
+import { GlobeIcon, MenuIcon, SearchIcon, Share2Icon, XIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -65,52 +65,6 @@ function USFlagIcon({ className }: { className?: string }) {
       <circle cx="13" cy="18" r="1" fill="#fff" />
       <circle cx="18" cy="18" r="1" fill="#fff" />
       <circle cx="21" cy="18" r="1" fill="#fff" />
-    </svg>
-  );
-}
-
-// Globe Icon SVG Component
-function GlobeIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      aria-hidden="true"
-      viewBox="0 0 24 24"
-      className={className}
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="12" cy="12" r="10" />
-      <line x1="2" y1="12" x2="22" y2="12" />
-      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-    </svg>
-  );
-}
-
-function SearchIcon({
-  size,
-  stroke = "currentColor",
-  className,
-}: {
-  size: number;
-  stroke?: string;
-  className?: string;
-}) {
-  return (
-    <svg
-      aria-hidden="true"
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke={stroke}
-      strokeWidth="2"
-      className={className}
-    >
-      <circle cx="11" cy="11" r="8" />
-      <path d="m21 21-4.35-4.35" />
     </svg>
   );
 }
@@ -319,7 +273,7 @@ export default function Header({ chapters }: HeaderProps) {
                   isSearchOpen ? "w-[400px] opacity-100" : "w-0 opacity-0"
                 }`}
               >
-                <SearchIcon size={18} stroke="#9CA3AF" className="shrink-0" />
+                <SearchIcon size={18} color="#9CA3AF" className="shrink-0" />
                 <input
                   ref={desktopSearchInputRef}
                   type="text"
@@ -371,21 +325,7 @@ export default function Header({ chapters }: HeaderProps) {
             <Popover.Root>
               <Popover.Trigger asChild>
                 <button type="button" className="p-2 hover:bg-white/10 rounded text-white" aria-label="Share">
-                  <svg
-                    aria-hidden="true"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <circle cx="18" cy="5" r="3" />
-                    <circle cx="6" cy="12" r="3" />
-                    <circle cx="18" cy="19" r="3" />
-                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
-                    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
-                  </svg>
+                  <Share2Icon size={24} />
                 </button>
               </Popover.Trigger>
               <Popover.Portal>
@@ -549,7 +489,7 @@ export default function Header({ chapters }: HeaderProps) {
           <div className="absolute top-0 left-0 right-0 bg-white p-6 shadow-lg animate-in slide-in-from-top duration-300">
             <div className="flex flex-col gap-0 bg-white rounded-lg border border-gray-300 overflow-hidden">
               <div className="flex items-center gap-3 px-4 py-3">
-                <SearchIcon size={20} stroke="#9CA3AF" />
+                <SearchIcon size={20} color="#9CA3AF" />
                 <input
                   ref={mobileSearchInputRef}
                   type="text"

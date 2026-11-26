@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, CircleArrowDownIcon } from "lucide-react";
 import Link from "next/link";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
@@ -149,22 +149,7 @@ export function BannerCarousel({ structure }: BannerCarouselProps) {
                       className="flex items-center justify-end gap-2 text-black mt-4 hover:gap-3 transition-all"
                     >
                       <span className="text-base font-medium">Read</span>
-                      <div className="transform rotate-180">
-                        <svg
-                          aria-hidden="true"
-                          width="20"
-                          height="20"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          className="-rotate-90"
-                        >
-                          <circle cx="12" cy="12" r="10" />
-                          <polyline points="12 8 16 12 12 16" />
-                          <line x1="8" y1="12" x2="16" y2="12" />
-                        </svg>
-                      </div>
+                      <CircleArrowDownIcon size={20} />
                     </Link>
                   )}
                 </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import clsx from "clsx";
-import { ChevronRightIcon } from "lucide-react";
+import { ChevronRightIcon, MenuIcon } from "lucide-react";
 import Link from "next/link";
 import {
   formatSectionNumber,
@@ -46,19 +46,7 @@ export function StickyNavbar({ structure, currentSlug, visible, sidebarVisible, 
             aria-label="Show sidebar"
           >
             <div className="size-6 md:size-8 grid place-items-center text-black">
-              <svg
-                aria-hidden="true"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <line x1="3" y1="6" x2="21" y2="6" />
-                <line x1="3" y1="12" x2="21" y2="12" />
-                <line x1="3" y1="18" x2="21" y2="18" />
-              </svg>
+              <MenuIcon size={16} />
             </div>
           </button>
         )}
