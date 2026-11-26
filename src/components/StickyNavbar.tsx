@@ -13,21 +13,18 @@ import {
 interface StickyNavbarProps {
   structure: SectionsStructure;
   currentSlug: string;
-  visible: boolean;
   sidebarVisible: boolean;
   onToggleSidebar: () => void;
 }
 
-export function StickyNavbar({ structure, currentSlug, visible, sidebarVisible, onToggleSidebar }: StickyNavbarProps) {
+export function StickyNavbar({ structure, currentSlug, sidebarVisible, onToggleSidebar }: StickyNavbarProps) {
   const current = getChapterInSection(structure, currentSlug);
   const currentSectionNumber = current?.section.number ?? 1;
 
   return (
     <nav
       aria-label="Sections"
-      className={`fixed left-0 right-0 z-40 transition-opacity duration-300 bg-[#D6E100] ${
-        visible ? "opacity-100" : "opacity-0 pointer-events-none"
-      }`}
+      className="fixed left-0 right-0 z-40 bg-[#D6E100]"
       style={{
         top: "117px", // Position below the main header (py-7 = 28px*2 + 61px logo = 117px)
       }}
