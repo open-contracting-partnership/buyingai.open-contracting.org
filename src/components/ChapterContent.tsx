@@ -6,7 +6,6 @@ import procurementPathwaysData from "@/app/data/procurement-pathways.json";
 import { CustomTable } from "@/components/CustomTable";
 import ProcurementPathways from "@/components/ProcurementPathways";
 import { processChapterContent, remarkHeadingIds } from "@/lib/chapter-content";
-import { nodeText } from "@/lib/react-text";
 
 interface ChapterContentProps {
   content: string;
@@ -204,64 +203,6 @@ function renderPre({ children }: React.ComponentProps<"pre"> & ExtraProps) {
   return null;
 }
 
-function isEmptyCell(td: React.ReactNode): boolean {
-  if (!React.isValidElement(td) || td.type !== "td") {
-    return false;
-  }
-  const { children } = td.props as { children?: React.ReactNode };
-  return (
-    !children ||
-    (typeof children === "string" && children.trim() === "") ||
-    (Array.isArray(children) && children.every((c) => typeof c === "string" && c.trim() === ""))
-  );
-}
-
-function isHeaderOnlyTable(children: React.ReactNode): boolean {
-  return React.Children.toArray(children).every((child) => {
-    if (!React.isValidElement(child)) {
-      return false;
-    }
-    if (child.type === "thead") {
-      return true;
-    }
-    if (child.type === "tbody") {
-      const rows = React.Children.toArray((child.props as { children?: React.ReactNode }).children);
-      return rows.every(
-        (tr) =>
-          React.isValidElement(tr) &&
-          tr.type === "tr" &&
-          React.Children.toArray((tr.props as { children?: React.ReactNode }).children).every(isEmptyCell),
-      );
-    }
-    return false;
-  });
-}
-
-// Render "- item - item" text in a table cell as a bulleted list, and "**Label**" items as labels.
-function renderCellContent(content: React.ReactNode): React.ReactNode {
-  const textContent = nodeText(content);
-  if (!textContent || !/(?:^|\s)[-−–—]\s+/m.test(textContent)) {
-    return content;
-  }
-
-  const parts = textContent.split(/\s*[-−–—]\s+/).filter(Boolean);
-  return (
-    <ul className="list-disc pl-5 space-y-2">
-      {parts.map((part, idx) => {
-        const boldMatch = part.match(/\*\*([^*]+)\*\*/);
-        if (boldMatch && part.trim() === boldMatch[0]) {
-          return (
-            <p key={idx} className="font-semibold mt-3 mb-1 text-black">
-              {boldMatch[1]}
-            </p>
-          );
-        }
-        return <li key={idx}>{part.trim()}</li>;
-      })}
-    </ul>
-  );
-}
-
 function markdownComponents(highlightColor: string, print: boolean): Components {
   const heading =
     (Tag: "h1" | "h2" | "h3" | "h4" | "h5" | "h6") =>
@@ -298,57 +239,13 @@ function markdownComponents(highlightColor: string, print: boolean): Components 
     h5: heading("h5"),
     h6: heading("h6"),
     pre: renderPre,
-    table: ({ children, node, ...props }) => {
-      const customTable = CustomTable({ children });
-      if (customTable !== null) {
-        return customTable;
-      }
-
-      if (isHeaderOnlyTable(children)) {
-        return (
-          <div className="my-6 px-3 sm:px-6 py-3 sm:py-4 bg-[#F5F7E6] border-l-4 border-[#8B9A2E] rounded-xl -mx-4 sm:mx-0">
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-full" {...props}>
-                {children}
-              </table>
-            </div>
-          </div>
-        );
-      }
-
-      return (
-        <div className="my-6 sm:my-8 overflow-x-auto -mx-4 sm:mx-0 rounded-lg border border-gray-300">
-          <table className="w-full min-w-full border-collapse" {...props}>
-            {children}
-          </table>
+    // Tables that CustomTable doesn't render keep the prose styles.
+    table: ({ children }) =>
+      CustomTable({ children }) ?? (
+        <div className="overflow-x-auto">
+          <table>{children}</table>
         </div>
-      );
-    },
-    thead: ({ children, node, ...props }) => (
-      <thead className="bg-[#92C36F]" {...props}>
-        {children}
-      </thead>
-    ),
-    th: ({ children, node, ...props }) => (
-      <th
-        className={`px-3 sm:px-6 py-2 sm:py-4 text-left font-semibold text-sm sm:text-base text-black border-b border-gray-300 ${
-          print ? "" : "whitespace-nowrap"
-        }`}
-        {...props}
-      >
-        {children}
-      </th>
-    ),
-    tr: ({ children, node, ...props }) => (
-      <tr className="border-b border-gray-300 last:border-b-0" {...props}>
-        {children}
-      </tr>
-    ),
-    td: ({ children, node, ...props }) => (
-      <td className="pl-3 sm:pl-8 pr-2 sm:pr-4 py-2 sm:py-4 text-xs sm:text-sm align-top bg-white" {...props}>
-        {renderCellContent(children)}
-      </td>
-    ),
+      ),
   };
 }
 
