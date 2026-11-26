@@ -46,7 +46,7 @@ export default function RootLayout({
   const chapters = getAllChapters();
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${ibmPlexSans.variable} antialiased min-h-screen !bg-[#F2F3F4] text-black font-gteesti-text overflow-x-hidden`}
       >

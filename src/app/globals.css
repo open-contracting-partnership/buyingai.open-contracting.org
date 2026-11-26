@@ -419,3 +419,15 @@ article img {
 .prose ol {
   margin: 1.5rem 0;
 }
+
+/* Hide the content until RegionProvider replaces the pre-rendered US terms, or for at most 1s. */
+.region-pending main {
+  visibility: hidden;
+  animation: region-reveal 0s 1s forwards;
+}
+
+@keyframes region-reveal {
+  to {
+    visibility: visible;
+  }
+}

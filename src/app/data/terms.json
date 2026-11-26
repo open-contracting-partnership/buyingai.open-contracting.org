@@ -1,7 +1,7 @@
 [
   {
     "US": "solicitation",
-    "GLOBAL": "Call for tenders"
+    "GLOBAL": "call for tenders"
   },
   {
     "US": "bid",
@@ -20,12 +20,12 @@
     "GLOBAL": "call‑off contract"
   },
   {
-    "US": "Best value",
+    "US": "best value",
     "GLOBAL": "MEAT"
   },
   {
-    "US": "Challenge-based procurements",
-    "GLOBAL": "Innovation partnership"
+    "US": "challenge-based procurements",
+    "GLOBAL": "innovation partnership"
   },
   {
     "US": "RFP",
