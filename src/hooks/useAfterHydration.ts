@@ -5,7 +5,12 @@ export function useAfterHydration(callback: () => void, deps: DependencyList) {
   useEffect(() => {
     let idleCallbackId: number | undefined;
     const timeoutId = setTimeout(() => {
-      idleCallbackId = requestIdleCallback(callback, { timeout: 1000 });
+      // Safari has no requestIdleCallback.
+      if ("requestIdleCallback" in window) {
+        idleCallbackId = requestIdleCallback(callback, { timeout: 1000 });
+      } else {
+        callback();
+      }
     }, 300);
     return () => {
       clearTimeout(timeoutId);
